@@ -1,0 +1,27 @@
+{
+  "$comment": "Suggested caption and alt text per shot slug. {{placeholders}} are filled from the run's config; {{blockType}} falls back to 'the selected block'.",
+  "editor-shell": {
+    "caption": "The P1 editor showing {{pagePath}} with the Blocks panel, canvas, and properties panel.",
+    "alt": "P1 editor with the header at the top, the Blocks panel on the left, the page preview in the center, and page properties on the right."
+  },
+  "blocks-browser": {
+    "caption": "The Blocks panel with all categories expanded.",
+    "alt": "Blocks panel listing block categories, with the {{blockCategory}} group open and its blocks shown."
+  },
+  "block-selected-properties": {
+    "caption": "A selected block and its properties.",
+    "alt": "{{blockType}} selected in the canvas, with its name and options in the properties panel on the right."
+  },
+  "block-selected-canvas-context": {
+    "caption": "The same block with the Blocks panel collapsed for a wider canvas.",
+    "alt": "{{blockType}} still selected, the left Blocks panel collapsed to an icon rail, and the page preview filling the extra width."
+  },
+  "workstream-selector-open": {
+    "caption": "Choosing a workstream.",
+    "alt": "The workstream selector open, listing the available workstreams, with a search field above the list."
+  },
+  "publish-menu-open": {
+    "caption": "The More actions menu, including the publish option.",
+    "alt": "The More actions menu open under the primary button, listing {{publishMenuLabel}} and other page actions."
+  }
+}

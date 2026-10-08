@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "records": [
+    {
+      "screenshot_id": "p1.editor.no-source",
+      "title": "Workstream selector",
+      "status": "approved",
+      "release_status": "new",
+      "priority": "recommended",
+      "owner": "docs-team",
+      "reviewer": "devrel-team",
+      "source": {
+        "type": "docs"
+      },
+      "capture": {
+        "project": "Fixture Project",
+        "workstream": "qa-workstream",
+        "page": "/about",
+        "release": "2026.10",
+        "state": "Workstream selector open and listing the available workstreams.",
+        "actions": [
+          "openWorkstreamMenu"
+        ],
+        "checks": [
+          {
+            "selector": "[data-testid=workstream-list]",
+            "text": "qa-workstream"
+          }
+        ],
+        "constraints": []
+      },
+      "content": {
+        "caption": "Choosing a workstream.",
+        "alt_text": "The workstream selector open, listing the available workstreams, with a search field above the list.",
+        "annotations": []
+      },
+      "publication": {
+        "docs_image_slot": "Switch workstreams #2"
+      }
+    }
+  ]
+}

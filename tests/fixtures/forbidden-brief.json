@@ -1,0 +1,11 @@
+{
+  "topic": "fixture-403",
+  "site": "http://localhost:4203",
+  "dpr": 1,
+  "shots": [
+    {
+      "slug": "forbidden",
+      "url": "/"
+    }
+  ]
+}

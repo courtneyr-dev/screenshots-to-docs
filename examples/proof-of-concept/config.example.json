@@ -1,0 +1,20 @@
+{
+  "$comment": "EXAMPLE ONLY: the shape of the config used in the original proof of concept, with its project, workstream, and topic replaced by placeholders. Replace every <placeholder> with your own values. The Figma file key is deliberately left as a placeholder.",
+  "topic": "<short-kebab-case-name>",
+  "baseUrl": "http://localhost:3000",
+  "projectName": "<project/site name as the editor header shows it>",
+  "workstream": "<workstream name as the editor's selector lists it>",
+  "pagePath": "/",
+  "blockType": "P1PullQuote",
+  "chrome": {
+    "profileDir": "~/.cache/p1-editor-screenshots/chrome-profile",
+    "cdpPort": 9222
+  },
+  "figma": {
+    "fileKey": "<your Figma design file key>"
+  },
+  "docs": {
+    "handoffDir": "~/p1-handoff-notes",
+    "format": "markdown"
+  }
+}

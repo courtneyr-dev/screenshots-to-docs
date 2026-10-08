@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Capture output and generated Figma files (screenshots show a signed-in editor; urls.json holds upload URLs)
+screenshots/
+capture-report.json
+figma-plan.json
+figma-page.js
+figma-manifest.json
+inventory-brief.json
+urls.json
+
+# Browser profiles, sessions, and credentials: never commit
+chrome-profile/
+**/chrome-profile/
+*.cookies.json
+*storage-state*.json
+*storageState*.json
+.env
+.env.*
+
+# Local
+.DS_Store
+tmp/
+
+# Per-run settings (project, workstream, paths, Figma file key): local to each person
+p1-editor.config.json
+*.config.local.json
+
+# Apps Script project written by npm run setup (holds a script ID, never the token)
+build/

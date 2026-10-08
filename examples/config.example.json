@@ -1,0 +1,22 @@
+{
+  "$comment": "EXAMPLE. Copy to p1-editor.config.json, replace every <placeholder>, and run: node scripts/preflight.mjs --config p1-editor.config.json. Never put credentials, cookies, tokens, or storage state in this file. See references/configuration.md for every key.",
+  "topic": "<short-kebab-case-name, for example my-p1-editor>",
+  "baseUrl": "<P1 site origin, for example http://localhost:3000>",
+  "projectName": "<project/site name as the editor header shows it>",
+  "workstream": "<workstream name as the editor's selector lists it>",
+  "pagePath": "<page being edited, for example />",
+  "blockType": "<optional: a block type that selects reliably, or delete this line>",
+  "chrome": {
+    "profileDir": "<a dedicated directory outside any repository, for example ~/.cache/p1-screenshots-profile>",
+    "cdpPort": "<a free local port, for example 9222>"
+  },
+  "figma": {
+    "fileKey": "<destination design file key from figma.com/design/<fileKey>/...>",
+    "pageNamePattern": "{topic} · {datetime} · {runId}",
+    "runIdPattern": "{topic}-{yyyymmdd}-{hhmm}"
+  },
+  "docs": {
+    "handoffDir": "<directory for handoff notes>",
+    "format": "markdown"
+  }
+}

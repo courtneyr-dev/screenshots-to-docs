@@ -1,0 +1,23 @@
+{
+  "topic": "example-shots",
+  "site": "http://localhost:3000",
+  "baseline": "https://old-wordpress-site.example",
+  "description": "Example brief. Public pages by default; loggedIn shots use the auth block. With a baseline set, each shot is also captured on the old site at the same path. Copy to <topic>.json and edit.",
+  "dpr": 2,
+  "auth": {
+    "cookiesFile": "example.cookies.json",
+    "login": {
+      "url": "/login",
+      "fields": { "input[name=email]": "SITE_LOGIN_EMAIL", "input[name=password]": "SITE_LOGIN_PASS" },
+      "submit": "button[type=submit]",
+      "success": "/account"
+    }
+  },
+  "shots": [
+    { "slug": "01-home", "label": "Homepage", "url": "/", "fullPage": true, "section": "marketing" },
+    { "slug": "02-home-mobile", "label": "Homepage (mobile)", "url": "/", "viewport": [390, 844], "fullPage": true, "section": "marketing" },
+    { "slug": "03-blog-post", "label": "Blog post", "url": "/blog/hello-world", "baselineUrl": "/2024/05/hello-world/", "fullPage": true, "section": "blog" },
+    { "slug": "04-home-dark", "label": "Homepage (dark)", "url": "/", "colorScheme": "dark", "compare": false, "section": "marketing" },
+    { "slug": "05-account", "label": "Account page", "url": "/account", "loggedIn": true, "compare": false, "hide": [".user-email"], "section": "account" }
+  ]
+}

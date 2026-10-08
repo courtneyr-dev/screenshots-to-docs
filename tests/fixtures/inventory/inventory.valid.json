@@ -1,0 +1,269 @@
+{
+  "version": 1,
+  "records": [
+    {
+      "screenshot_id": "p1.editor.shell",
+      "title": "Editor shell",
+      "status": "verified",
+      "release_status": "unchanged",
+      "priority": "required",
+      "owner": "docs-team",
+      "reviewer": "devrel-team",
+      "source": {
+        "type": "docs",
+        "docs_url": "https://docs.example.com/guides/editor-tour",
+        "docs_document_id": "doc-fixture-0001",
+        "docs_heading": "Tour the editor",
+        "reason": "The tour names the header, Blocks panel, canvas, and properties panel, so readers need to see them together."
+      },
+      "capture": {
+        "project": "Fixture Project",
+        "workstream": "qa-workstream",
+        "page": "/about",
+        "release": "2026.09",
+        "state": "Editor open on the About page with the Blocks panel expanded and no block selected.",
+        "actions": [],
+        "checks": [
+          {
+            "selector": "[data-testid=p1-editor-header]"
+          }
+        ],
+        "constraints": [
+          "Use a project with no unpublished banner."
+        ]
+      },
+      "content": {
+        "caption": "The P1 editor showing the About page with the Blocks panel, canvas, and properties panel.",
+        "alt_text": "P1 editor with the header across the top, the Blocks panel on the left, the About page preview in the center, and page properties on the right.",
+        "annotations": [
+          "Header",
+          "Blocks panel",
+          "Canvas",
+          "Properties"
+        ]
+      },
+      "figma": {
+        "evidence": "verified",
+        "file_url": "https://www.figma.com/design/FxFxFxFxFxFxFxFxFxFxFx/Fixture",
+        "page_name": "RUN-2026-09-14",
+        "node_id": "12:34",
+        "annotated_node_id": "12:35",
+        "version_name": "Approved 2026.09",
+        "branch_url": "https://www.figma.com/design/FxFxFxFxFxFxFxFxFxFxFx/Fixture?branch-id=fixture",
+        "dev_resource_urls": [
+          "https://docs.example.com/guides/editor-tour"
+        ],
+        "manifest_commit": "abcdef1234567",
+        "annotation_status": "complete",
+        "frame_name": "[p1.editor.shell] — Editor shell — 2026.09 — clean",
+        "annotated_frame_name": "[p1.editor.shell] — Editor shell — 2026.09 — annotated"
+      },
+      "asset": {
+        "path": "screenshots/p1.editor.shell/2026.09.png",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "width": 2880,
+        "height": 1800,
+        "captured_at": "2026-09-14T10:30:00Z",
+        "source": "capture"
+      },
+      "publication": {
+        "docs_image_slot": "Tour the editor #1",
+        "published_url": "https://cdn.example.com/images/editor-shell-2026.09.png",
+        "inserted_at": "2026-09-15T09:00:00Z",
+        "verified_at": "2026-09-15T09:30:00Z",
+        "verified_release": "2026.09",
+        "verified_asset_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "published_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "verification_notes": "Checked the live article: image and alt text match.",
+        "alt_text_fingerprint": "d913ce91972745a9"
+      }
+    },
+    {
+      "screenshot_id": "p1.editor.blocks-browser",
+      "title": "Blocks browser",
+      "status": "approved",
+      "release_status": "refresh",
+      "priority": "required",
+      "owner": "docs-team",
+      "reviewer": "devrel-team",
+      "source": {
+        "type": "release",
+        "request_url": "https://github.com/example-org/example-repo/releases/tag/v2026.10",
+        "docs_url": "https://docs.example.com/guides/blocks",
+        "docs_document_id": "doc-fixture-0002",
+        "docs_heading": "Browse blocks",
+        "reason": "The 2026.10 release regroups block categories, so the old image shows the wrong list."
+      },
+      "capture": {
+        "project": "Fixture Project",
+        "workstream": "qa-workstream",
+        "page": "/about",
+        "release": "2026.10",
+        "state": "Blocks panel with every category expanded and the P1 Layout group visible.",
+        "actions": [
+          "expandAllBlockCategories",
+          {
+            "expandBlockCategory": {
+              "name": "P1 Layout"
+            }
+          }
+        ],
+        "checks": [
+          {
+            "selector": "#preview-frame"
+          }
+        ],
+        "constraints": []
+      },
+      "content": {
+        "caption": "The Blocks panel with all categories expanded.",
+        "alt_text": "Blocks panel listing block categories, with the P1 Layout group open and its blocks shown.",
+        "annotations": []
+      },
+      "history": [
+        {
+          "release": "2026.09",
+          "asset": {
+            "path": "screenshots/p1.editor.blocks-browser/2026.09.png",
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          },
+          "figma": {
+            "file_url": "https://www.figma.com/design/FxFxFxFxFxFxFxFxFxFxFx/Fixture",
+            "node_id": "12:40",
+            "version_name": "Approved 2026.09"
+          },
+          "published_url": "https://cdn.example.com/images/blocks-browser-2026.09.png",
+          "verified_at": "2026-09-15T09:40:00Z"
+        }
+      ],
+      "publication": {
+        "docs_image_slot": "Browse blocks #1"
+      }
+    },
+    {
+      "screenshot_id": "p1.editor.workstream-selector",
+      "title": "Workstream selector",
+      "status": "approved",
+      "release_status": "new",
+      "priority": "recommended",
+      "owner": "docs-team",
+      "reviewer": "devrel-team",
+      "source": {
+        "type": "issue",
+        "request_url": "https://github.com/example-org/example-repo/issues/101",
+        "docs_url": "https://docs.example.com/guides/workstreams",
+        "docs_document_id": "doc-fixture-0003",
+        "docs_heading": "Switch workstreams",
+        "reason": "A new section explains switching workstreams and has no image yet."
+      },
+      "capture": {
+        "project": "Fixture Project",
+        "workstream": "qa-workstream",
+        "page": "/about",
+        "release": "2026.10",
+        "state": "Workstream selector open and listing the available workstreams.",
+        "actions": [
+          "openWorkstreamMenu"
+        ],
+        "checks": [
+          {
+            "selector": "[data-testid=workstream-list]",
+            "text": "qa-workstream"
+          }
+        ],
+        "constraints": []
+      },
+      "content": {
+        "caption": "Choosing a workstream.",
+        "alt_text": "The workstream selector open, listing the available workstreams, with a search field above the list.",
+        "annotations": []
+      },
+      "publication": {
+        "docs_image_slot": "Switch workstreams #1"
+      }
+    },
+    {
+      "screenshot_id": "p1.editor.publish-menu",
+      "title": "Publish menu",
+      "status": "captured",
+      "release_status": "refresh",
+      "priority": "optional",
+      "owner": "docs-team",
+      "reviewer": "devrel-team",
+      "source": {
+        "type": "docs",
+        "docs_url": "https://docs.example.com/guides/publishing",
+        "docs_document_id": "doc-fixture-0004",
+        "docs_heading": "Publish a page",
+        "reason": "The publishing steps point to the More actions menu."
+      },
+      "capture": {
+        "project": "Fixture Project",
+        "workstream": "qa-workstream",
+        "page": "/about",
+        "release": "2026.10",
+        "state": "More actions menu open under the primary button.",
+        "actions": [
+          {
+            "openPublishMenu": {
+              "label": "Publish this page to"
+            }
+          }
+        ],
+        "checks": [
+          {
+            "selector": "[role=menu]"
+          }
+        ],
+        "constraints": []
+      },
+      "content": {
+        "caption": "The More actions menu, including the publish option.",
+        "alt_text": "The More actions menu open under the primary button, listing the publish option and other page actions.",
+        "annotations": []
+      },
+      "asset": {
+        "path": "screenshots/p1.editor.publish-menu/2026.10.png",
+        "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "width": 2880,
+        "height": 1800,
+        "captured_at": "2026-10-01T08:00:00Z",
+        "source": "capture"
+      },
+      "publication": {
+        "docs_image_slot": "Publish a page #1"
+      }
+    },
+    {
+      "screenshot_id": "p1.editor.legacy-banner",
+      "title": "Legacy banner",
+      "status": "retired",
+      "release_status": "retire",
+      "priority": "optional",
+      "owner": "docs-team",
+      "reviewer": "devrel-team",
+      "source": {
+        "type": "docs",
+        "docs_url": "https://docs.example.com/guides/editor-tour",
+        "docs_document_id": "doc-fixture-0001",
+        "docs_heading": "Tour the editor",
+        "reason": "Showed the legacy banner that the 2026.10 release removed."
+      },
+      "capture": {
+        "project": "Fixture Project",
+        "workstream": "qa-workstream",
+        "page": "/about",
+        "release": "2026.10",
+        "state": "Legacy banner visible above the header.",
+        "actions": [],
+        "checks": [],
+        "constraints": []
+      },
+      "retired_at": "2026-10-01",
+      "retired_reason": "The banner was removed in 2026.10, so the docs no longer show it.",
+      "publication": {
+        "docs_image_slot": "Tour the editor #2"
+      }
+    }
+  ]
+}

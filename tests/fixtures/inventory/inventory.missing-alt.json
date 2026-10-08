@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "records": [
+    {
+      "screenshot_id": "p1.editor.no-alt",
+      "title": "Publish menu",
+      "status": "handed_off",
+      "release_status": "refresh",
+      "priority": "optional",
+      "owner": "docs-team",
+      "reviewer": "devrel-team",
+      "source": {
+        "type": "docs",
+        "docs_url": "https://docs.example.com/guides/publishing",
+        "docs_document_id": "doc-fixture-0004",
+        "docs_heading": "Publish a page",
+        "reason": "The publishing steps point to the More actions menu."
+      },
+      "capture": {
+        "project": "Fixture Project",
+        "workstream": "qa-workstream",
+        "page": "/about",
+        "release": "2026.10",
+        "state": "More actions menu open under the primary button.",
+        "actions": [
+          {
+            "openPublishMenu": {
+              "label": "Publish this page to"
+            }
+          }
+        ],
+        "checks": [
+          {
+            "selector": "[role=menu]"
+          }
+        ],
+        "constraints": []
+      },
+      "content": {
+        "caption": "The More actions menu, including the publish option.",
+        "annotations": []
+      },
+      "asset": {
+        "path": "screenshots/p1.editor.no-alt/2026.10.png",
+        "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "width": 2880,
+        "height": 1800,
+        "captured_at": "2026-10-01T08:00:00Z",
+        "source": "capture"
+      },
+      "publication": {
+        "docs_image_slot": "Publish a page #1"
+      },
+      "figma": {
+        "evidence": "uploaded",
+        "file_url": "https://www.figma.com/design/FxFxFxFxFxFxFxFxFxFxFx/Fixture",
+        "node_id": "1:2",
+        "annotation_status": "complete",
+        "page_name": "RUN-2026-10-01",
+        "frame_name": "[p1.editor.no-alt] — Publish menu — 2026.10 — clean"
+      }
+    }
+  ]
+}

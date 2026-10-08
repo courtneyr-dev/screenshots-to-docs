@@ -1,0 +1,26 @@
+{
+  "topic": "fixture-parity",
+  "site": "http://localhost:4201",
+  "baseline": "http://localhost:4202",
+  "dpr": 1,
+  "shots": [
+    {
+      "slug": "01-home",
+      "label": "Home",
+      "url": "/",
+      "section": "marketing"
+    },
+    {
+      "slug": "02-pricing",
+      "label": "Pricing",
+      "url": "/pricing",
+      "section": "marketing"
+    },
+    {
+      "slug": "03-legacy",
+      "label": "Legacy",
+      "url": "/legacy",
+      "section": "other"
+    }
+  ]
+}

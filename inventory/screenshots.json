@@ -1,0 +1,5 @@
+{
+  "$comment": "Canonical screenshot inventory for the P1 docs. Add one record per screenshot the docs need, with a documented reason; the capture harness only runs approved records. Records are never deleted: retire them. See references/screenshot-inventory.md and examples/inventory.example.json.",
+  "version": 1,
+  "records": []
+}

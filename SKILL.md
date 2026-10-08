@@ -1,0 +1,177 @@
+---
+name: p1-screenshots-to-docs
+description: "Use when creating or refreshing screenshots of the signed-in P1 editor for P1 docs, a release, or a UI review. You supply the P1 base URL, project, workstream, page, Chrome profile and port, Figma destination, and handoff location in a per-run config. The tool captures a fixed six-shot set through a dedicated Chrome that the person signs in to, fails closed on sign-in, loading, challenge, public-site, wrong-workstream, and missing-editor states, pushes each run to Figma as its own review page, and writes a manual handoff note for the docs author. Not for the published site, and it does not export to Google Docs."
+---
+
+# P1 editor screenshots to docs
+
+Capture trustworthy screenshots of the signed-in P1 **editor** (the `/p1` route by default), put each run in Figma for manual annotation, and hand the docs author a note they can act on without having run the capture.
+
+Nothing here is tied to one person or project. Each run takes its settings from a config file: the P1 base URL, project name, workstream, page, Chrome profile and debugging port, Figma destination and naming, and where the handoff note goes (`references/configuration.md`). The workflow was proven end to end once, on a demo project; the record is in `references/poc-results.md`, and the shape of its config is in `examples/proof-of-concept/`, with placeholders, as an example only.
+
+## What this skill does not do
+
+- It doesn't capture the published site. The page path shown in the editor header is the page being edited, not a route to visit.
+- It doesn't sign in for anyone. A person completes Google sign-in in a browser window; the harness never sees credentials.
+- It doesn't publish to the P1 docs. A release can swap images and alt text into Google Docs from a commit-pinned manifest with an Apps Script, and a person still clicks Publish in Content Publisher (`references/release-swap.md`, built and tested against mocks; the live run is pending). Otherwise the handoff is manual (`references/docs-handoff.md`).
+- It doesn't create true Figma version-history entries. One page per run is the convention; a person saves a Figma version by hand if the history must show it.
+
+## Safety rules
+
+1. Every screenshot comes through the signed-in editor route. Fail closed on a sign-in screen, "Loading/Authenticating", a bot-challenge page, public-site content, missing editor chrome, the wrong project, or the wrong workstream.
+2. A person completes Google sign-in interactively in the dedicated Chrome window. Never ask for, print, store, or automate Google credentials, MFA codes, cookies, tokens, or recovery codes. Never put them in the config, a brief, or a chat.
+3. Never use the regular Chrome profile. Chrome refuses a debugging port on it, and it holds the person's real sessions. Use a separate `chrome.profileDir`.
+4. Never commit or upload a browser profile, storage state, cookies, upload URLs, or scratch output. Validation refuses a profile directory inside a git repository or this tool's folder. Check `git status` before any commit.
+5. Never click an item in an editor menu. The More actions menu contains a delete action. Open menus only to look at them.
+6. Don't bypass bot protection (no user-agent spoofing, challenge solving, or stealth tooling). Capture from an unchallenged origin instead.
+7. Don't push to Figma until a validation screenshot has been inspected and shows the signed-in editor.
+
+Details and reasons are in `references/safety.md`.
+
+## Terms
+
+- **Workstream:** an isolated line of work on a P1 site. Every site has a default workstream, and the editor's selector lists the rest. No workstream is assumed: the person names the one to show, for each run.
+- **Button wording differs by workstream.** The editor shows a **Publish** button on some workstreams and **Review** on others. Read what your editor shows; don't assume.
+- **Run:** one capture of the full brief. Its run ID comes from `figma.runIdPattern` (default `<topic>-<YYYYMMDD>-<HHmm>`), from the report's `capturedAt`.
+
+## Prerequisites
+
+- Node 18 or later (CI uses 20), npm, and Google Chrome. `bash scripts/setup.sh` checks them and runs `npm ci`. First time here? `references/contributor-setup.md`.
+- A P1 site running at an origin you can reach. A local production build (`next build && next start`) is best for final shots. A hosted origin behind a bot challenge won't work.
+- The P1 MCP, to look up projects, workstreams, pages, and block types.
+- For Figma: the Figma MCP (`use_figma`, `upload_assets`, `get_screenshot`), edit access to a design file, and its file key. Load the `figma:figma-use` skill before the first `use_figma` call. A run uses at least three Figma calls.
+
+## Workflow
+
+### Coverage comes from the inventory
+
+Which screenshots to capture is decided by `inventory/screenshots.json`, not by this skill or by routes. Add a record for each documented need, approve it, then generate the brief from the approved records (`node scripts/inventory.mjs brief`). Every report, gallery, Figma plan, and handoff then carries the record's stable `screenshot_id`, caption, and alt text unchanged. The stock six-shot brief below still works for a quick editor tour without an inventory. Full guide: `references/screenshot-inventory.md`.
+
+### 1. Choose the values and write the config
+
+Ask, then confirm with the P1 MCP (`list_sites`, `list_branches`, `list_documents`, `get_document`):
+
+1. Which P1 base URL? If it isn't running, the person starts it in their own terminal.
+2. Which project and workstream should the screenshots show? Choose them for this run.
+3. Which page is being edited? Each shot deep-links to it (`<baseUrl>/p1<pagePath>`); the editor's page selector must show it.
+4. Which block should shots 3 and 4 select? (Optional; without one, those shots are skipped and reported.)
+5. Which Chrome profile directory and debugging port? (Outside every repository; a free port.)
+6. Which Figma file, and how should run IDs and page names look?
+7. Where does the handoff note go, and in which format?
+8. Which release or change is this for? (It goes in the handoff note.)
+
+Copy `examples/config.example.json` to `p1-editor.config.json`, fill it in, and check it without opening a browser:
+
+```bash
+node scripts/preflight.mjs --config p1-editor.config.json --need capture,figma,handoff --brief briefs/p1-editor.json
+```
+
+Fix every line it reports. `--dry-run` on `capture.mjs` also prints the resolved shots.
+
+### 2. Start the dedicated Chrome
+
+```bash
+bash scripts/setup.sh
+node scripts/chrome.mjs --config p1-editor.config.json      # prints the launch command; run it yourself
+node scripts/chrome.mjs --config p1-editor.config.json --check
+```
+
+The printed command starts a separate Chrome instance with your profile directory and debugging port. The regular Chrome is left alone. While it runs, any local process can drive it through the port; close the window when you're done.
+
+### 3. The person signs in
+
+Ask the person to complete the Google sign-in in that window, choose the workstream in the editor's selector, and tell you when the Blocks panel, canvas, and properties panel are on screen. A page that says "Loading Authenticating…" or asks the person to log in isn't signed in. Stop and ask again.
+
+### 4. Validation shot
+
+```bash
+node scripts/capture.mjs --brief briefs/p1-editor.json --config p1-editor.config.json \
+  --only editor-shell --out-dir <out>/validate
+```
+
+Open the PNG. It must show the editor header, the project, the requested workstream, the page, the Blocks panel, the canvas, and the properties panel. If it doesn't, don't continue.
+
+### 5. Capture the six shots
+
+```bash
+node scripts/capture.mjs --brief briefs/p1-editor.json --config p1-editor.config.json --out-dir <out>/run1
+```
+
+The capture attaches to `http://127.0.0.1:<chrome.cdpPort>`. Open every PNG from this exact run. Check that each is distinct and legible, with no stray tooltip, stale menu, or loading state. `references/six-shot-workflow.md` lists the shots, their actions, and what each check proves.
+
+| #   | Slug                            | State                                                                |
+| --- | ------------------------------- | -------------------------------------------------------------------- |
+| 1   | `editor-shell`                  | Full editor, Blocks panel open, the configured page                  |
+| 2   | `blocks-browser`                | All block categories expanded, `blockCategory` visible               |
+| 3   | `block-selected-properties`     | The configured block selected, its properties open                   |
+| 4   | `block-selected-canvas-context` | Same block selected, Blocks panel collapsed, canvas wider            |
+| 5   | `workstream-selector-open`      | Selector open, the configured workstream listed                      |
+| 6   | `publish-menu-open`             | More actions menu open on the workstream, the publish option visible |
+
+### 6. Push to Figma
+
+```bash
+node scripts/figma-plan.mjs --dir <out>/run1 --config p1-editor.config.json
+```
+
+Then follow `references/figma-review.md`: run `figma-page.js` with `use_figma`, request upload URLs with `upload_assets` (`scaleMode: "FIT"`, the returned `nodeIds`), upload with `scripts/figma-upload.mjs`, and verify the page. The page name comes from `figma.pageNamePattern`.
+
+For a first delivery or a release-critical refresh, capture a second time (wait for the next minute so the run ID changes) and push it as its own page. Then re-run the first page's unmodified generated code. It must be rejected with `Page already exists`, and the page list must show one page per run ID.
+
+### 7. Annotate and hand off
+
+A person annotates in Figma. Then generate the handoff note and fill in its `TO FILL` lines:
+
+```bash
+node scripts/handoff.mjs --config p1-editor.config.json --dir <out>/run1 --release "<release or change>"
+```
+
+It writes the note to `docs.handoffDir`. For a refresh, add `--previous <earlier run>` to list what changed (`references/release-refresh.md`). Don't say screenshots reached the P1 docs unless that export was verified (`references/docs-handoff.md`): the Google Docs swap in `references/release-swap.md` replaces images already in a doc; the first insertion and every publish are still manual.
+
+### 8. Clean up
+
+Close the debugging Chrome, then remove the profile and capture folders with `node scripts/cleanup.mjs --config p1-editor.config.json --profile --out-dir <out>/run1` (lists only) and `--yes` (removes). See `references/contributor-setup.md`.
+
+## Validation and duplicate protection
+
+- Missing or invalid configuration is reported before any browser opens (`preflight.mjs`, and the start of every script).
+- Unknown actions, missing action parameters, and unset `{{placeholders}}` fail before a browser opens.
+- Each action carries checks; a failed check saves no PNG and exits 1. Every shot checks the project name, page, and workstream.
+- A challenged or HTTP 403 shot fails and saves no PNG.
+- The planner refuses a report whose "captured" shots have a missing or corrupt PNG, or no usable shots.
+- The generated Figma code throws `Page already exists: <name>` before creating anything when the run ID is already in the file.
+- Inventory records are validated for source, destination, capture state, alt text, and secrets; a missing alt text or an uncovered shot stops the handoff.
+- Block shots prove the block instance (selected overlay matches the block, panel names its type) and fail on a neighbor.
+- `compare-runs.mjs` compares two runs and ignores isolated pixel noise; `cleanup.mjs` and the `--out-dir` guard keep captures and profiles out of commits.
+- `npm test` runs the regression and portability suite against local fixtures, with mutation checks. It needs Chrome but no P1, Figma, or Google access. `node scripts/validate-skill.mjs` checks this file; `node scripts/check-identity.mjs` checks commit and file emails. CI runs all three on changes to this folder.
+
+## Completion checklist
+
+- [ ] Inventory: every screenshot has an approved record with a documented reason; `node scripts/inventory.mjs validate` passes.
+- [ ] Config filled in by the person running it; `preflight.mjs` passes.
+- [ ] Signed-in editor, not the public site; the person completed Google sign-in interactively.
+- [ ] The requested project, workstream, and page shown in the editor.
+- [ ] Validation shot inspected before the full run.
+- [ ] Six distinct, inspected PNGs from the delivered run (or the skipped ones reported); report shows all captured.
+- [ ] Figma page has one image-filled rectangle per shot, unique names, transparent wrappers.
+- [ ] Duplicate-run re-run rejected; one page per run ID.
+- [ ] Handoff note written; no claim of automated Google Docs export.
+- [ ] Known limitations recorded.
+- [ ] No credentials, profile, storage state, upload URLs, or scratch output in any repository (`git status`, `gitleaks`).
+
+## References
+
+- `references/configuration.md`: every setting, and how to choose the values per run.
+- `references/safety.md`: credentials, browser profile, storage state, menus, challenges.
+- `references/six-shot-workflow.md`: the shots, actions, and checks.
+- `references/figma-review.md`: pushing runs, naming, verifying, annotating, retrying.
+- `references/screenshot-inventory.md`: the inventory schema, lifecycle, Figma conventions, docs mapping, verification, and a worked example.
+- `references/release-refresh.md`: refreshing screenshots when a release changes the UI, comparing runs, versioning, rollback.
+- `references/contributor-setup.md`: setup, tests, cleanup, and contributing for someone new to the tool.
+- `references/second-user-smoke-test.md`: the second-user and second-project test; the live run is pending.
+- `references/docs-handoff.md`: the handoff note, and the unclear Google Docs connection.
+- `references/walkthrough.md`: the whole release process step by step, who does what, and problems seen in the rehearsal.
+- `references/release-swap.md`: alt text drafted from the marks, Figma REST export, and the commit-pinned Google Docs swap (Apps Script).
+- `references/known-limitations.md`: what doesn't work or isn't proven.
+- `references/poc-results.md`: what the proof of concept verified.
+- `references/nextjs-screenshots-harness.md`: the harness reference (brief schema, steps, checks, failure modes).

@@ -1,0 +1,23 @@
+{
+  "$comment": "EXAMPLE for a second contributor and a second project. These values are made up and contain no secrets: a different project, workstream, page, block, Chrome profile and port, Figma file key, naming, and handoff location from examples/config.example.json. Copy it, replace every value with your own, and follow references/second-user-smoke-test.md. The Figma file key is a made-up placeholder, not a real file.",
+  "topic": "second-project-editor",
+  "baseUrl": "http://localhost:3000",
+  "projectName": "Second Project",
+  "workstream": "second-workstream",
+  "pagePath": "/docs/guide",
+  "blockType": "Cta",
+  "blockCategory": "Layout",
+  "chrome": {
+    "profileDir": "~/.cache/second-contributor-p1-profile",
+    "cdpPort": 9333
+  },
+  "figma": {
+    "fileKey": "ZxZxZxZxZxZxZxZxZxZxZx",
+    "pageNamePattern": "{project} \u00b7 {workstream} \u00b7 {datetime} \u00b7 {runId}",
+    "runIdPattern": "{topic}-{hhmm}-{yyyymmdd}"
+  },
+  "docs": {
+    "handoffDir": "~/p1-handoff-second-project",
+    "format": "json"
+  }
+}

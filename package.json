@@ -1,0 +1,33 @@
+{
+  "name": "p1-screenshots-to-docs",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Capture authenticated P1 editor screenshots through a user-signed-in Chrome, validate them, and push each run to Figma for manual annotation.",
+  "scripts": {
+    "setup": "node scripts/setup.mjs",
+    "preflight": "node scripts/preflight.mjs",
+    "chrome": "node scripts/chrome.mjs",
+    "capture": "node scripts/capture.mjs",
+    "figma-plan": "node scripts/figma-plan.mjs",
+    "figma-upload": "node scripts/figma-upload.mjs",
+    "handoff": "node scripts/handoff.mjs",
+    "inventory": "node scripts/inventory.mjs",
+    "test": "bash tests/run-tests.sh",
+    "routes": "node scripts/routes.mjs",
+    "verify": "node scripts/verify-site.mjs",
+    "gallery": "node scripts/make-gallery.mjs",
+    "build:figma-plugin": "node scripts/build-figma-plugin.mjs",
+    "lint": "eslint . && prettier \"**/*.md\" --check"
+  },
+  "dependencies": {
+    "puppeteer-core": "^24.0.0"
+  },
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@eslint/js": "9.39.4",
+    "eslint": "9.39.4",
+    "globals": "16.4.0",
+    "prettier": "3.2.5"
+  }
+}

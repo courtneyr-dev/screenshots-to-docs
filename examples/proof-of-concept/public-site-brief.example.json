@@ -1,0 +1,22 @@
+{
+  "topic": "public-site-example",
+  "site": "https://p1-demo.example.com",
+  "dpr": 2,
+  "description": "EXAMPLE ONLY (kept from the proof of concept): a target-only capture of a public P1 site, to show what a bot-challenged site looks like. Behind a browser challenge every shot fails closed and saves no PNG. Replace the host with your own, or ignore this file: the signed-in editor workflow uses briefs/p1-editor.json and your config. The P1 docs site that requires sign-in, and any private docs repository, are gated: they are never captured.",
+  "shots": [
+    {
+      "slug": "home",
+      "label": "Home",
+      "url": "/",
+      "fullPage": true,
+      "section": "public"
+    },
+    {
+      "slug": "about",
+      "label": "About",
+      "url": "/about",
+      "fullPage": true,
+      "section": "public"
+    }
+  ]
+}

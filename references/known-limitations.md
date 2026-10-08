@@ -1,0 +1,54 @@
+# Known limitations
+
+## Capture
+
+- **Page switching is a deep link, not a click, and isn't verified live.** The editor derives the page from the URL (`/p1` is `/`, `/p1/about` is `/about`, in the SDK's `editorPagePathFromUrlPath`), so each shot opens `<baseUrl>/p1<pagePath>`. The page selector must show `pageLabel` (default `pagePath`) or the shot fails. That is deterministic if the URL scheme holds, and fails closed if it doesn't. It was derived from the editor SDK source and tested against a fixture. Only `/` has been captured against a live editor. If your editor doesn't deep-link, set `pageNavigation: manual` and open the page yourself before each run. The tool doesn't click through the page navigator dialog.
+- **Some canvas blocks select a neighbor.** On the demo project's home page, clicking three block types (`P1Stats`, `P1Features`, `P1Cta`) selected the block below, while `P1Hero` and `P1PullQuote` selected correctly. The cause isn't known. Every block shot now proves the selection by instance: the block's `data-puck-component` ID, exactly one selected overlay, that overlay's box matching the block's, and the properties panel naming the type (`six-shot-workflow.md`). A wrong selection fails the shot instead of shipping. Choose a `blockType` that works on your page.
+- **The block proof depends on Puck's markup.** It reads the overlay's `--isSelected` class from Puck 0.21.x. It was tested against a fixture that follows that markup, with a mutation test, and not yet against the live editor after this change. A Puck upgrade that renames the class makes block shots fail closed.
+- **Zoom didn't work as a state change.** A zoom action showed the zoom toolbar but didn't visibly change the canvas scale, so it was removed. Shot 4 collapses the left panel instead.
+- **Workstream can't be pre-seeded.** The editor keeps the chosen workstream per tab in `sessionStorage` and opens every new tab on the site's default workstream. Writing that value before the page loads had no effect, so shots pick the workstream through the selector.
+- **Only the left panel is restored between shots.** The editor keeps other panel state across loads. If you add a shot that changes the right panel, add a matching restore.
+- **Hosted dev sites may be challenged.** A hosted P1 dev site served a Cloudflare challenge to headless Chrome on the day of the proof of concept. The harness fails those shots. Use a local production build.
+- **Selectors track the current editor.** Checks rely on `data-testid` values, ARIA labels, Puck's `data-puck-component`, and menu wording. Re-check them after an editor upgrade.
+- **Screenshot comparison ignores isolated noise.** `compare-runs.mjs` treats fewer than 8 differing pixels in a 16 by 16 square as noise, because headless Chrome varies by about 10 pixels in 5 million. A change smaller than that threshold, such as one changed dot, goes unreported. Use `--exact` to see every difference.
+- **Text checks are case-insensitive substrings.** A short workstream or project name also matches longer text in the same element.
+- **The block category and publish text are defaults.** `blockCategory` defaults to `P1 Layout` and `publishMenuLabel` to `Publish this page to`. Both must match what your editor shows, or shots 2 and 6 fail closed.
+- **Screenshots contain account details.** The avatar and real page content appear in every frame.
+- **The debugging port is open.** While the dedicated Chrome runs, any local process can drive it.
+
+## Figma
+
+- **No true version history.** One page per run is a convention. A person saves a Figma version by hand when the history must show it.
+- **Images go through upload URLs.** `createImageAsync` is blocked in `use_figma`. URLs are single-use, expire in 10 minutes, and accept up to 10 MB per asset and 60 per call.
+- **Minute-resolution run IDs.** Two captures in one minute collide; the second push is rejected as a duplicate.
+- **Seat quota.** A View seat exhausted its MCP tool-call limit during the proof of concept. Each run needs at least three calls.
+- **Annotation is manual.** Nothing annotates or exports for you.
+
+## Screenshot inventory
+
+- **Only the capture path has run live, and only on one account.** On 2026-10-02 the author ran brief, capture, `record-capture`, gallery, Figma plan, and handoff against a signed-in local P1 editor, using a temporary inventory outside the repository. Nothing has run against Figma, Google Docs, or Content Publisher, and no second person has run it. Everything else in the inventory workflow is tested with fixtures and mocks. Frame names, Dev Resource links, and version names are planned and recorded, not created in Figma.
+- **The uploader only sends to Figma hosts, including after a redirect.** `figma-upload.mjs` refuses, before sending anything, a URL that isn't https on `figma.com` or a subdomain. Figma's real upload host is `https://mcp.figma.com` (seen on the first live push, 2026-10-06), which passes. Redirects aren't followed automatically: only 307 and 308 (which keep the POST and its body) are followed, each target must pass the same check before anything is sent to it, and the uploader stops after 3 hops. `P1_UPLOAD_ALLOW_LOOPBACK=1` allows loopback hosts for local tests only. Whether Figma's upload URLs ever redirect hasn't been observed.
+- **Figma evidence is whatever a person recorded.** Nothing reads Figma back to check a file URL, node ID, or version name.
+- **Publication is verified by a person.** The tool compares alt text fingerprints and records the result; it doesn't fetch the published page. Content Publisher may re-encode images, so the published file's checksum can differ from the asset's.
+- **A new version is detected automatically, but capture isn't unattended.** `release-check` finds the screenshots a new SDK version puts in question and reopens them. The capture itself needs a person's signed-in Chrome. It also can't tell whether the app you capture runs the new version unless you pass `--app`.
+- **Publishing to the docs is manual, and automating it is deferred.** Revisit after the docs destination is settled (Google Docs and Content Publisher, P1 pages, or GitHub). Alt text flows from a Google Doc into the published page, per the team.
+- **One capture run covers one project, workstream, and page.** Records for other targets need their own run.
+- **The inventory is empty until someone adds records.** The shipped file holds none, and the tool invents none.
+
+## Docs handoff
+
+- **Figma to Google Docs is unverified, and nothing in the repository connects them.** The docs site's content comes from Pantheon Content Publisher (Google Docs); the repository has no Figma reference. `docs-handoff.md` lists what was inspected. The handoff is a written note and a manual export.
+- **No documented destination for the final images.** The tool doesn't know where the docs author stores them; the note has a `TO FILL` line for it.
+
+## Not tested
+
+- Operating systems other than macOS; Chrome versions other than the two used in the proof of concept.
+- Sign-in by someone other than the author, or on another machine. The live second-user smoke test is **pending** (`second-user-smoke-test.md`); only the offline second-project test has run.
+- Projects, workstreams, and pages other than the demo project's, on a live editor.
+- A release-time refresh against a real release. The release rehearsal runs against two fixture editors (`release-refresh.md`), not P1.
+- The live signed-in capture and the Figma push after this portability work. `npm test` covers them with a fixture editor, a Figma API mock, and an upload mock. Those follow the documented contracts but aren't P1 or Figma, so a live run can still find a mismatch.
+
+## Repository
+
+- The tool inherits the p1-docs repository license (GNU GPL v3, `LICENSE.md`) and adds no license of its own.
+- The imported history keeps the six proof-of-concept commits, whose subjects use the Emoji-Log style rather than the conventional-commit style p1-docs uses, and whose hashes differ from the originals (`poc-results.md`). p1-docs squash-merges pull requests, and a squash merge collapses the imported history into one commit. Merge this branch with a merge commit (not a squash) if the proof-of-concept history should be kept.

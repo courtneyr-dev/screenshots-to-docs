@@ -1,0 +1,239 @@
+{
+  "topic": "{{topic}}",
+  "site": "{{baseUrl}}",
+  "description": "Generic authenticated P1 editor brief. Every project-specific value is a double-brace placeholder, filled from the per-run config file (see examples/config.example.json); run it with --config. Every shot opens the P1 editor route, and the page shown in the editor header is the page being edited. The editor opens each new tab on its default workstream, so each shot picks the configured workstream with selectWorkstream. Shots that select a block need blockType or blockSelector and are skipped and reported without one. Actions come from scripts/presets/p1-editor.json.",
+  "dpr": 2,
+  "presets": [
+    "p1-editor"
+  ],
+  "shots": [
+    {
+      "slug": "editor-shell",
+      "label": "1. Editor shell, workstream {{workstream}}, editing page {{pagePath}}",
+      "url": "{{editorUrl}}",
+      "delay": 1500,
+      "section": "editor",
+      "actions": [
+        {
+          "editorReady": {
+            "projectName": "{{projectName}}",
+            "pageLabel": "{{pageLabel}}"
+          }
+        },
+        {
+          "selectWorkstream": {
+            "name": "{{workstream}}"
+          }
+        },
+        "workstreamMenuClosed"
+      ]
+    },
+    {
+      "slug": "blocks-browser",
+      "label": "2. Blocks browser expanded, {{blockCategory}} visible",
+      "url": "{{editorUrl}}",
+      "delay": 1500,
+      "section": "editor",
+      "actions": [
+        {
+          "editorReady": {
+            "projectName": "{{projectName}}",
+            "pageLabel": "{{pageLabel}}"
+          }
+        },
+        {
+          "selectWorkstream": {
+            "name": "{{workstream}}"
+          }
+        },
+        "expandAllBlockCategories",
+        {
+          "expandBlockCategory": {
+            "name": "{{blockCategory}}"
+          }
+        },
+        "workstreamMenuClosed"
+      ]
+    },
+    {
+      "slug": "block-selected-properties",
+      "label": "3. {{blockType}} selected, properties panel open",
+      "url": "{{editorUrl}}",
+      "delay": 1500,
+      "section": "editor",
+      "actions": [
+        {
+          "editorReady": {
+            "projectName": "{{projectName}}",
+            "pageLabel": "{{pageLabel}}"
+          }
+        },
+        {
+          "selectWorkstream": {
+            "name": "{{workstream}}"
+          }
+        },
+        {
+          "selectBlockByType": {
+            "type": "{{blockType}}"
+          }
+        },
+        "workstreamMenuClosed"
+      ],
+      "requires": [
+        "blockType"
+      ]
+    },
+    {
+      "slug": "block-selected-canvas-context",
+      "label": "4. {{blockType}} still selected, Blocks panel collapsed so the canvas widens",
+      "url": "{{editorUrl}}",
+      "delay": 1500,
+      "section": "editor",
+      "actions": [
+        {
+          "editorReady": {
+            "projectName": "{{projectName}}",
+            "pageLabel": "{{pageLabel}}"
+          }
+        },
+        {
+          "selectWorkstream": {
+            "name": "{{workstream}}"
+          }
+        },
+        {
+          "selectBlockByType": {
+            "type": "{{blockType}}"
+          }
+        },
+        "collapseLeftPanel",
+        {
+          "centerBlockByType": {
+            "type": "{{blockType}}"
+          }
+        },
+        "workstreamMenuClosed"
+      ],
+      "requires": [
+        "blockType"
+      ]
+    },
+    {
+      "slug": "block-selected-properties",
+      "label": "3. the chosen block selected, properties panel open",
+      "url": "{{editorUrl}}",
+      "delay": 1500,
+      "section": "editor",
+      "actions": [
+        {
+          "editorReady": {
+            "projectName": "{{projectName}}",
+            "pageLabel": "{{pageLabel}}"
+          }
+        },
+        {
+          "selectWorkstream": {
+            "name": "{{workstream}}"
+          }
+        },
+        {
+          "selectBlockBySelector": {
+            "selector": "{{blockSelector}}"
+          }
+        },
+        "workstreamMenuClosed"
+      ],
+      "requires": [
+        "blockSelector"
+      ]
+    },
+    {
+      "slug": "block-selected-canvas-context",
+      "label": "4. the chosen block still selected, Blocks panel collapsed so the canvas widens",
+      "url": "{{editorUrl}}",
+      "delay": 1500,
+      "section": "editor",
+      "actions": [
+        {
+          "editorReady": {
+            "projectName": "{{projectName}}",
+            "pageLabel": "{{pageLabel}}"
+          }
+        },
+        {
+          "selectWorkstream": {
+            "name": "{{workstream}}"
+          }
+        },
+        {
+          "selectBlockBySelector": {
+            "selector": "{{blockSelector}}"
+          }
+        },
+        "collapseLeftPanel",
+        {
+          "centerBlockBySelector": {
+            "selector": "{{blockSelector}}"
+          }
+        },
+        "workstreamMenuClosed"
+      ],
+      "requires": [
+        "blockSelector"
+      ]
+    },
+    {
+      "slug": "workstream-selector-open",
+      "label": "5. Workstream selector open, {{workstream}} listed",
+      "url": "{{editorUrl}}",
+      "delay": 1500,
+      "section": "editor",
+      "actions": [
+        {
+          "editorReady": {
+            "projectName": "{{projectName}}",
+            "pageLabel": "{{pageLabel}}"
+          }
+        },
+        {
+          "selectWorkstream": {
+            "name": "{{workstream}}"
+          }
+        },
+        "openWorkstreamMenu"
+      ],
+      "expectAfter": [
+        {
+          "selector": "[data-testid=workstream-list]",
+          "text": "{{workstream}}"
+        }
+      ]
+    },
+    {
+      "slug": "publish-menu-open",
+      "label": "6. {{workstream}} editor, publish menu open",
+      "url": "{{editorUrl}}",
+      "delay": 1500,
+      "section": "editor",
+      "actions": [
+        {
+          "editorReady": {
+            "projectName": "{{projectName}}",
+            "pageLabel": "{{pageLabel}}"
+          }
+        },
+        {
+          "selectWorkstream": {
+            "name": "{{workstream}}"
+          }
+        },
+        {
+          "openPublishMenu": {
+            "label": "{{publishMenuLabel}}"
+          }
+        }
+      ]
+    }
+  ]
+}

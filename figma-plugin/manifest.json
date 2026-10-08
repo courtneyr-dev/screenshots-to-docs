@@ -1,0 +1,9 @@
+{
+  "name": "P1 screenshot annotation kit",
+  "id": "p1-screenshot-annotation-kit",
+  "api": "1.0.0",
+  "main": "code.js",
+  "editorType": ["figma"],
+  "documentAccess": "dynamic-page",
+  "networkAccess": { "allowedDomains": ["none"] }
+}

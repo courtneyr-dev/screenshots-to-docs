@@ -1,0 +1,297 @@
+{
+  "description": "Actions for the P1 editor (the /p1 route by default). Selectors come from the editor's data-testid attributes and from Puck's data-puck-component attribute on canvas blocks, which holds the same props.id the P1 MCP returns from get_document. Values such as the project, page, workstream, and block type are parameters: the brief passes them in, and they come from the per-run config file. Re-check the selectors after a P1 editor upgrade. editorReady also restores the left panel, because the editor keeps panel state across page loads in the same browser. The block-selection actions end with a selectedBlock check: exactly one selected overlay, matching the intended block's box, and the properties panel naming its type. A neighboring block fails it.",
+  "actions": {
+    "editorReady": {
+      "params": [
+        "projectName",
+        "pageLabel"
+      ],
+      "steps": [
+        {
+          "click": "[aria-label=\"Toggle left panel\"]",
+          "skipIf": "[aria-pressed=true]"
+        },
+        {
+          "wait": 600
+        }
+      ],
+      "expect": [
+        "[data-testid=p1-editor-header]",
+        {
+          "selector": "[data-testid=site-label]",
+          "text": "{projectName}"
+        },
+        {
+          "selector": "[data-testid=page-selector]",
+          "text": "{pageLabel}"
+        },
+        "[data-testid=workstream-trigger]",
+        "#preview-frame",
+        "[data-testid=inspector-collapse-button]"
+      ],
+      "expectAfter": []
+    },
+    "selectWorkstream": {
+      "params": [
+        "name"
+      ],
+      "steps": [
+        {
+          "click": "[data-testid=workstream-trigger]"
+        },
+        {
+          "click": "[data-testid=workstream-list] button",
+          "text": "{name}"
+        },
+        {
+          "click": "[data-testid=workstream-close]",
+          "optional": true
+        },
+        {
+          "wait": 1500
+        }
+      ],
+      "expectAfter": [
+        {
+          "selector": "[data-testid=workstream-trigger]",
+          "text": "{name}"
+        },
+        {
+          "frame": "#preview-frame",
+          "selector": "h1"
+        }
+      ]
+    },
+    "openWorkstreamMenu": {
+      "steps": [
+        {
+          "click": "[data-testid=workstream-trigger]"
+        },
+        {
+          "wait": "[data-testid=workstream-list]"
+        }
+      ],
+      "expectAfter": [
+        "[data-testid=workstream-dropdown]",
+        "[data-testid=workstream-list]"
+      ]
+    },
+    "closeMenu": {
+      "steps": [
+        {
+          "key": "Escape"
+        },
+        {
+          "wait": 500
+        }
+      ]
+    },
+    "expandAllBlockCategories": {
+      "steps": [
+        {
+          "click": "button",
+          "text": "Expand all",
+          "optional": true
+        },
+        {
+          "wait": 500
+        }
+      ]
+    },
+    "expandBlockCategory": {
+      "params": [
+        "name"
+      ],
+      "steps": [
+        {
+          "click": "button[id^=p1-cat-btn-]",
+          "text": "{name}",
+          "skipIf": "[aria-expanded=true]"
+        },
+        {
+          "wait": 500
+        }
+      ]
+    },
+    "selectBlockByType": {
+      "params": [
+        "type"
+      ],
+      "steps": [
+        {
+          "scroll": "[data-puck-component^={type}-]",
+          "frame": "#preview-frame"
+        },
+        {
+          "wait": 600
+        },
+        {
+          "click": "[data-puck-component^={type}-]",
+          "frame": "#preview-frame",
+          "offset": {
+            "x": 20,
+            "y": 20
+          }
+        },
+        {
+          "wait": 1000
+        }
+      ],
+      "expectAfter": [
+        {
+          "selectedBlock": {
+            "target": "[data-puck-component^={type}-]"
+          }
+        }
+      ]
+    },
+    "selectBlock": {
+      "params": [
+        "id"
+      ],
+      "steps": [
+        {
+          "scroll": "[data-puck-component={id}]",
+          "frame": "#preview-frame"
+        },
+        {
+          "wait": 600
+        },
+        {
+          "click": "[data-puck-component={id}]",
+          "frame": "#preview-frame",
+          "offset": {
+            "x": 20,
+            "y": 20
+          }
+        },
+        {
+          "wait": 1000
+        }
+      ],
+      "expectAfter": [
+        {
+          "selectedBlock": {
+            "target": "[data-puck-component=\"{id}\"]"
+          }
+        }
+      ]
+    },
+    "centerBlockByType": {
+      "params": [
+        "type"
+      ],
+      "steps": [
+        {
+          "scroll": "[data-puck-component^={type}-]",
+          "frame": "#preview-frame"
+        },
+        {
+          "wait": 800
+        }
+      ]
+    },
+    "workstreamMenuClosed": {
+      "expectAfter": [
+        {
+          "selector": "[data-testid=workstream-dropdown]",
+          "absent": true
+        }
+      ]
+    },
+    "collapseLeftPanel": {
+      "steps": [
+        {
+          "click": "[aria-label=\"Toggle left panel\"]",
+          "skipIf": "[aria-pressed=false]"
+        },
+        {
+          "moveMouse": {
+            "x": 900,
+            "y": 40
+          }
+        },
+        {
+          "wait": 1000
+        }
+      ],
+      "expectAfter": [
+        "[aria-label=\"Toggle left panel\"][aria-pressed=false]",
+        {
+          "selector": "#p1-cat-btn-p1Layout",
+          "absent": true
+        }
+      ]
+    },
+    "openPublishMenu": {
+      "steps": [
+        {
+          "click": "#publish-split-button button[aria-label=\"More actions\"]"
+        },
+        {
+          "wait": "[role=menu]"
+        },
+        {
+          "wait": 600
+        }
+      ],
+      "expectAfter": [
+        {
+          "selector": "[role=menu]",
+          "text": "{label}"
+        }
+      ],
+      "description": "Opens the Review/Publish split button's More actions menu and stops. The menu also contains Delete page, so never add a step that clicks a menu item.",
+      "params": [
+        "label"
+      ]
+    },
+    "selectBlockBySelector": {
+      "description": "Select a canvas block by CSS selector, evaluated inside the preview iframe. The selector must resolve to a canvas block or an element inside one. The selection is proven the same way as selectBlockByType: the selected overlay must match the block's box and the properties panel must name its type.",
+      "params": [
+        "selector"
+      ],
+      "steps": [
+        {
+          "scroll": "{selector}",
+          "frame": "#preview-frame"
+        },
+        {
+          "wait": 600
+        },
+        {
+          "click": "{selector}",
+          "frame": "#preview-frame",
+          "offset": {
+            "x": 20,
+            "y": 20
+          }
+        },
+        {
+          "wait": 1000
+        }
+      ],
+      "expectAfter": [
+        {
+          "selectedBlock": {
+            "target": "{selector}"
+          }
+        }
+      ]
+    },
+    "centerBlockBySelector": {
+      "params": [
+        "selector"
+      ],
+      "steps": [
+        {
+          "scroll": "{selector}",
+          "frame": "#preview-frame"
+        },
+        {
+          "wait": 800
+        }
+      ]
+    }
+  }
+}
