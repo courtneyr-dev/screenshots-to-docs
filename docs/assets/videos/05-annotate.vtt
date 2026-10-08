@@ -1,0 +1,16 @@
+WEBVTT
+
+00:00.000 --> 00:12.375
+The kit's components live in the Assets panel. Their colors alias the PDS library: purple for the main mark, gold on dark UI, plus success, critical, warning, and info tones.
+
+00:12.355 --> 00:18.055
+Drag a Highlight box over the area you're pointing at, then size it with the corner handle.
+
+00:18.035 --> 00:25.610
+Add a numbered Step badge next to it. The number matches the alt text, so screen reader users get the same order.
+
+00:25.590 --> 00:31.590
+Redact covers names and avatars. Place it on anything personal before you export.
+
+00:31.570 --> 00:36.945
+Every mark carries a white halo, so it stays readable on light and dark UI.

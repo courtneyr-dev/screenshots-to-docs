@@ -1,0 +1,13 @@
+WEBVTT
+
+00:00.000 --> 00:06.975
+Figma plan prints what the run page needs: one clean frame and one annotated frame per screenshot.
+
+00:06.955 --> 00:13.080
+The agent creates this page through the Figma connector. The clean frame keeps the raw capture.
+
+00:13.060 --> 00:19.560
+The annotated frame holds a copy of the image plus the marks. This is the frame the docs embed.
+
+00:19.540 --> 00:24.690
+Every mark sits inside the annotated frame, so it exports with the image.

@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "records": [
+    {
+      "screenshot_id": "p1.tutorial.editor",
+      "title": "Editor tour",
+      "status": "handed_off",
+      "release_status": "refresh",
+      "priority": "required",
+      "owner": "docs-team",
+      "reviewer": "devrel-team",
+      "source": {
+        "type": "docs",
+        "docs_document_id": "1TutorialSampleDocIdXXXXXXXXXXXXXX",
+        "docs_heading": "Tour the editor",
+        "reason": "The tour names the Blocks panel, the page canvas, and page settings, so readers need to see them together."
+      },
+      "capture": {
+        "project": "Sample Project",
+        "workstream": "sample-workstream",
+        "page": "/",
+        "release": "2.0.0",
+        "state": "Editor open on the home page with the Blocks panel expanded and no block selected.",
+        "actions": [],
+        "checks": [
+          {
+            "selector": "#preview-frame"
+          }
+        ]
+      },
+      "content": {
+        "caption": "The P1 editor with the Blocks panel, page canvas, and page settings.",
+        "alt_text": "P1 editor with panels on the left, center, and right.",
+        "annotations": []
+      },
+      "figma": {
+        "evidence": "uploaded",
+        "file_url": "https://www.figma.com/design/SampleSampleSampleSample/Tutorial",
+        "page_name": "RUN-2026-10-07 \u00b7 sample-run",
+        "node_id": "1:2",
+        "annotated_node_id": "1:3",
+        "annotation_status": "complete",
+        "frame_name": "[p1.tutorial.editor] \u2014 Editor tour \u2014 2.0.0 \u2014 clean",
+        "annotated_frame_name": "[p1.tutorial.editor] \u2014 Editor tour \u2014 2.0.0 \u2014 annotated"
+      },
+      "asset": {
+        "path": "screenshots/p1.tutorial.editor/2.0.0.png",
+        "sha256": "764d9079fa4001e84927ea4c23471f260a3ff0172864428df28fff29432b1857",
+        "width": 1440,
+        "height": 900,
+        "captured_at": "2026-10-07T12:00:00Z",
+        "source": "figma_export"
+      },
+      "publication": {
+        "docs_image_slot": "Tour the editor #1"
+      },
+      "history": []
+    }
+  ]
+}

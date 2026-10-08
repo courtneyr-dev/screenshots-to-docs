@@ -1,0 +1,16 @@
+WEBVTT
+
+00:00.000 --> 00:08.200
+The swap runs as a Google Apps Script. Create a project, name it, and paste in the swap script from the tool's templates folder.
+
+00:08.180 --> 00:19.855
+Script properties tell it where the swap list lives: the repository, the file, and the exact commit. A read-only GitHub token goes in a fourth property, entered by a person.
+
+00:19.835 --> 00:37.685
+Dry run first. It downloads each image from the private repository, checks its checksum, finds the matching image in the doc by its alt text, and changes nothing. The editor shell would be replaced. The workstream selector isn't in this doc, so it's reported as not found.
+
+00:37.665 --> 00:40.965
+Then run the swap. The log says replaced.
+
+00:40.945 --> 00:51.745
+In the doc, the new 0.20.0 image sits where the old one was, at the same width, with the alt text written from the inventory. No one inserted it by hand.

@@ -1,0 +1,15 @@
+title: P1 screenshots to docs
+description: Keep P1 docs screenshots current across releases, from capture to annotated Figma frames to every doc.
+remote_theme: just-the-docs/just-the-docs@v0.12.0
+plugins:
+  - jekyll-remote-theme
+  - jekyll-github-metadata
+color_scheme: light
+search_enabled: true
+heading_anchors: true
+mermaid:
+  version: "12.1.0"
+back_to_top: true
+nav_external_links: []
+exclude:
+  - "*.vtt.srt"

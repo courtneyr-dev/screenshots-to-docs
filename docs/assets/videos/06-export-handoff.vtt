@@ -1,0 +1,16 @@
+WEBVTT
+
+00:00.000 --> 00:10.650
+Select the annotated frame and add an export: PNG at 2x. A 1440 by 900 frame becomes 2880 by 1800.
+
+00:10.630 --> 00:15.105
+Once a reviewer approves the marks, move the record to annotated.
+
+00:15.085 --> 00:23.435
+Record asset stores the exported file's checksum. That checksum is what later proves the docs serve this exact image.
+
+00:23.415 --> 00:27.265
+Handed off means the image is ready for the docs owner.
+
+00:27.245 --> 00:33.570
+Handoff prints each image with its docs slot, caption, and alt text, ready to paste or publish.

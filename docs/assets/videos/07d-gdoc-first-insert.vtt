@@ -1,0 +1,16 @@
+WEBVTT
+
+00:00.000 --> 00:09.825
+The first time a screenshot goes into a Google Doc, a person adds it once. Start with a heading that names the docs slot: Live test, tour the editor.
+
+00:09.805 --> 00:16.830
+Then Insert, Image, Upload from computer, and pick the annotated PNG exported from Figma.
+
+00:16.810 --> 00:19.935
+The annotated frame lands under the heading.
+
+00:19.915 --> 00:27.265
+Open the image's Alt text field and paste the inventory's alt text. Its numbers match the marks in the image.
+
+00:27.245 --> 00:41.520
+The Pantheon add-on publishes the doc. This scratch doc is connected to a public site, so the test stops here and nothing is published. From now on, the swap script replaces this image without anyone inserting it again.

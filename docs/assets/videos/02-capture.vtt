@@ -1,0 +1,13 @@
+WEBVTT
+
+00:00.000 --> 00:14.800
+The 0.20.0 capture starts with a brief: the approved records, plus the project, workstream, and page to shoot. This is a simulated release, so the sandbox still runs 0.16.0 and the screens look the same.
+
+00:14.780 --> 00:26.505
+Capture drives a dedicated Chrome that you sign in to yourself. Before it saves a shot, it checks for the signed-in editor and the right workstream, and refuses sign-in or loading screens.
+
+00:26.485 --> 00:34.560
+Both shots passed. Record capture stores each image's checksum, size, and release, and moves the records to captured.
+
+00:34.540 --> 00:41.215
+The inventory now holds both 0.20.0 captures, ready for the Figma run in the next step.

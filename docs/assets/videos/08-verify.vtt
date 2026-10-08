@@ -1,0 +1,13 @@
+WEBVTT
+
+00:00.000 --> 00:10.725
+Trace follows each image from release to checksum, to its Figma frames, to the docs slot that embeds it, and checks the file on disk. No problems in either image.
+
+00:10.705 --> 00:14.730
+The inventory records the exported image's checksum.
+
+00:14.710 --> 00:21.310
+The docs branch serves the same bytes: the checksum of the image in the swap commit matches exactly.
+
+00:21.290 --> 00:38.065
+Lookup lists what is still unverified. Here, nothing is published, so there's no published URL or published checksum yet. After a real publish, record publication downloads the served image and records its checksum, and the record moves to verified.

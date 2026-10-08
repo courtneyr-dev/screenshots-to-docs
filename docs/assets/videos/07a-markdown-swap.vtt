@@ -1,0 +1,13 @@
+WEBVTT
+
+00:00.000 --> 00:06.750
+A Markdown docs repo keeps a map from each screenshot ID to the image file its pages embed.
+
+00:06.730 --> 00:13.680
+A dry run lists what would change for the release: both images swap, and the alt text already matches.
+
+00:13.660 --> 00:24.510
+With a branch name, it copies the 0.20.0 images over the old files and commits only those files. It pushes nothing; a person reviews and pushes.
+
+00:24.490 --> 00:31.340
+The commit changes two image files and nothing else, so the pull request is a clean before and after.

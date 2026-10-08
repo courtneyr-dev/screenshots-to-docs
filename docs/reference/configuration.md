@@ -1,0 +1,77 @@
+---
+title: Configuration
+parent: Reference
+nav_order: 2
+---
+
+# Configuration
+
+Everything that differs between people and projects lives in one per-run config file. Nothing in the scripts, the generic brief, or the preset has a project-specific default. Copy `examples/config.example.json` to `p1-editor.config.json` (keep it outside any shared repository, or rely on the ignore rules), fill in every `<placeholder>`, and check it:
+
+```bash
+node scripts/preflight.mjs --config p1-editor.config.json --need capture,figma,handoff --brief briefs/p1-editor.json
+```
+
+Preflight reports every missing or invalid value at once and opens no browser. `capture.mjs`, `figma-plan.mjs`, `handoff.mjs`, and `chrome.mjs` run the same checks for their part of the workflow before they do anything else.
+
+**Never put credentials, cookies, tokens, session data, or storage state in this file.** Validation rejects keys that look like them. Sign-in is always interactive, in the dedicated Chrome window.
+
+## Settings
+
+| Key                     | Needed for | Meaning                                                                                                                                                                                                                                                                     |
+| ----------------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `topic`                 | capture    | Short kebab-case name for this set of screenshots. Used in run IDs and Figma page names.                                                                                                                                                                                    |
+| `baseUrl`               | capture    | P1 site origin, for example `http://localhost:3000`. No credentials, query string, or fragment.                                                                                                                                                                             |
+| `editorRoute`           | (optional) | The P1 editor route. Default `/p1`.                                                                                                                                                                                                                                         |
+| `projectName`           | capture    | The project or site name as the editor header shows it. Checked on every shot. Find it with the P1 MCP (`list_sites`) or in the editor.                                                                                                                                     |
+| `workstream`            | capture    | The workstream to show, as the editor's workstream selector lists it. **Choose it for each run** (P1 MCP `list_branches`). There's no default, and no workstream is special: a site's default workstream is just one you can name.                                          |
+| `pagePath`              | capture    | The page being edited, for example `/` or `/about` (P1 MCP `list_documents`).                                                                                                                                                                                               |
+| `pageNavigation`        | (optional) | `url` (default): each shot opens the editor URL for `pagePath` (`/p1` for `/`, `/p1/about` for `/about`). `manual`: each shot opens `<editorRoute>` and you open the page in the signed-in window first. Either way the page selector must show the page or the shot fails. |
+| `pageLabel`             | (optional) | The text the editor's page selector shows for that page, when it isn't the same as `pagePath`. Default: `pagePath`.                                                                                                                                                         |
+| `blockType`             | (optional) | A block type that selects reliably in the canvas (P1 MCP `get_document`). Shots 3 and 4 need this or `blockSelector`; without either they are skipped and reported. Set one, not both.                                                                                      |
+| `blockSelector`         | (optional) | A CSS selector for a block, evaluated inside the preview iframe. Weaker than `blockType`: it can't check the block's name.                                                                                                                                                  |
+| `blockCategory`         | (optional) | The Blocks-panel category to expand in shot 2. Default `P1 Layout`.                                                                                                                                                                                                         |
+| `publishMenuLabel`      | (optional) | Text that must appear in the More actions menu in shot 6. Default `Publish this page to`. Match the wording your editor shows.                                                                                                                                              |
+| `chrome.profileDir`     | capture    | A dedicated directory for the signed-in Chrome profile. Must be outside every git repository and this tool's folder, and not the regular Chrome profile.                                                                                                                    |
+| `chrome.cdpPort`        | capture    | A free local port (1024 to 65535) for the Chrome debugging endpoint. The harness attaches to `http://127.0.0.1:<port>`.                                                                                                                                                     |
+| `figma.fileKey`         | figma      | Destination design file key, the `:fileKey` in `figma.com/design/:fileKey/…`.                                                                                                                                                                                               |
+| `figma.pageNamePattern` | (optional) | Figma page name. Tokens: `{topic} {date} {time} {datetime} {runId} {project} {workstream} {release}`. Must include `{runId}`. `{release}` needs `--release "<name>"` on `figma-plan.mjs`. Default `{topic} · {datetime} · {runId}`.                                         |
+| `figma.runIdPattern`    | (optional) | Run ID. Tokens: `{topic} {yyyymmdd} {hhmm}`. Must include `{yyyymmdd}` and `{hhmm}`. Default `{topic}-{yyyymmdd}-{hhmm}`.                                                                                                                                                   |
+| `docs.handoffDir`       | handoff    | Directory where handoff notes are written, for example where the docs author collects them. Not inside this tool's folder, checked after resolving symlinks. A relative path is resolved against the directory you run the command from.                                    |
+| `docs.format`           | (optional) | `markdown` (default) or `json`.                                                                                                                                                                                                                                             |
+
+A `$comment` key is allowed. Unknown keys are errors, so typos are caught.
+
+## Choosing the values per run
+
+- **Project, workstream, page, block:** ask, then confirm with the P1 MCP. `list_sites` gives project names; `list_branches` gives workstream names; `list_documents` and `get_document` give pages and block types. The MCP can't see your browser session or pick the workstream in the editor, so the harness checks them in the editor itself and fails the shot if they differ.
+- **Page:** with `pageNavigation: url` (the default) each shot opens `<baseUrl>/p1<pagePath>`, which is how the editor mounts a page (`/p1` is the home page, `/p1/about` is `/about`). The page selector must then show `pageLabel` (default `pagePath`) or the shot fails closed. A page the editor can't load, or one that shows a different path, fails instead of being captured. Set `pageNavigation: manual` if your editor doesn't deep-link, and open the page in the signed-in window first. The deep link is derived from the editor's source and tested against a fixture. It hasn't been run live on a page other than `/` ([known limitations]({{ site.github.repository_url }}/blob/main/references/known-limitations.md)).
+- **Workstream wording:** a site's default workstream may be called something like "Live". Treat that as a name you can put in `workstream`, nothing more. The editor shows a **Publish** button on some workstreams and **Review** on others; don't assume which.
+
+## Overrides
+
+`--set key=value` overrides one value for a single command, using dotted keys:
+
+```bash
+node scripts/capture.mjs --brief briefs/p1-editor.json --config p1-editor.config.json \
+  --set workstream=my-other-workstream --set chrome.cdpPort=9333
+```
+
+## Commands that read the config
+
+| Command                                                                                 | Uses                                                                                                                     |
+| --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `node scripts/preflight.mjs --config …`                                                 | Validates; `--need capture,figma,handoff`, `--brief`, `--check-chrome`                                                   |
+| `node scripts/chrome.mjs --config …`                                                    | Prints the Chrome launch command for your profile and port; `--check` tests the port                                     |
+| `node scripts/capture.mjs --brief briefs/p1-editor.json --config …`                     | Capture. `--dry-run` prints the resolved shots and opens no browser                                                      |
+| `node scripts/figma-plan.mjs --dir … --config … [--release "<name>"]`                   | Run ID, page name, and destination                                                                                       |
+| `node scripts/handoff.mjs --config … --dir … --release "<name>" [--previous <run dir>]` | Writes the handoff note to `docs.handoffDir`; `--previous` fills the "What changed" table                                |
+| `node scripts/inventory.mjs brief --config …`                                           | Capture brief from approved inventory records for the config's project, workstream, and page (`screenshot-inventory.md`) |
+| `node scripts/compare-runs.mjs --old … --new …`                                         | Compares two runs shot by shot (`release-refresh.md`)                                                                    |
+| `node scripts/cleanup.mjs --config … --profile --out-dir …`                             | Lists, or with `--yes` removes, the Chrome profile and capture folders                                                   |
+
+## Examples
+
+- `examples/config.example.json`: a blank, placeholder-filled template.
+- `examples/second-project.config.example.json`: a made-up second project, workstream, page, block, port, and Figma naming, used by the offline second-project test and the live smoke test (`second-user-smoke-test.md`).
+- `examples/proof-of-concept/config.example.json`: the proof of concept's config, with its project, workstream, and topic replaced by placeholders. Example only; replace every value.

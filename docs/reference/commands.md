@@ -1,0 +1,78 @@
+---
+title: Commands
+parent: Reference
+nav_order: 1
+---
+
+# Commands
+
+Every command a person runs, with its flags and what it refuses to do. Run them from the repository root.
+`inv` below is short for `node scripts/inventory.mjs --inventory <inventory file>` (the default inventory is
+`inventory/screenshots.json`).
+
+{: .note }
+Every command that writes to the inventory validates the result first and writes nothing if a record would
+become invalid.
+
+## Setup
+
+| Command                          | What it does                                                                       |
+| -------------------------------- | ---------------------------------------------------------------------------------- |
+| `npm run setup`                  | Walks through every setup step; each can be skipped and each is safe to rerun.     |
+| `npm run setup -- --status`      | Shows which steps are done. Changes nothing.                                       |
+| `npm run setup -- --only <step>` | Runs one step: `tools`, `config`, `kit`, `markdown`, or `gdocs`.                   |
+| `npm run build:figma-plugin`     | Rebuilds `figma-plugin/code.js` from `kit.json`. `-- --check` fails if it's stale. |
+| `npm test`                       | Runs the full test suite. No browser sign-in, Figma, Google, or GitHub access.     |
+
+Setup never asks for, prints, or stores a password or token. See [Set up the tool](../how-to/set-up.html).
+
+## Capture
+
+| Command                                                                                                          | What it does                                                                              | Refuses when                                                                                                                                            |
+| ---------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `node scripts/preflight.mjs --config <config> [--need capture,figma,handoff] [--brief <brief>] [--check-chrome]` | Reports every missing or invalid config value at once.                                    | — (exits 1 if anything required is missing)                                                                                                             |
+| `node scripts/chrome.mjs --config <config> [--check]`                                                            | Prints the command that starts the dedicated Chrome; `--check` asks whether it's running. | It never starts Chrome itself.                                                                                                                          |
+| `node scripts/capture.mjs --brief <brief> --config <config> --out-dir <dir> [--only <id>,<id>]`                  | Captures each shot in the brief from the signed-in editor.                                | The page shows sign-in, loading, a bot challenge, the public site, the wrong project or workstream, or no editor. That shot fails and nothing is saved. |
+| `node scripts/make-gallery.mjs --dir <run> [--title "…"]`                                                        | Writes `index.html` showing every shot in a run side by side.                             | —                                                                                                                                                       |
+| `node scripts/compare-runs.mjs --old <run> --new <run> [--json <file>] [--fail-on-change]`                       | Lists each shot as `identical`, `changed`, `resized`, `new`, `removed`, or `failed`.      | —                                                                                                                                                       |
+| `node scripts/cleanup.mjs --config <config> --profile [--out-dir <dir>] [--yes]`                                 | Lists, then with `--yes` removes, the Chrome profile and capture folders.                 | The Chrome is still running, the folder isn't a Chrome profile or capture run, or it's tracked by git. Handoff notes are never removed.                 |
+
+## Figma
+
+| Command                                                                                                                                                 | What it does                                                                                 | Refuses when                                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `node scripts/figma-plan.mjs --dir <run> --inventory <file> --config <config> [--release <r>]`                                                          | Writes `figma-plan.json` and `figma-page.js` for the run's Figma page. Uploads nothing.      | A captured shot's PNG is missing or corrupt.                                                                                                          |
+| `node scripts/figma-upload.mjs --dir <run> --urls urls.json [--only <key>]`                                                                             | Sends each PNG to the single-use URL Figma returned.                                         | Any URL isn't https on `figma.com`, or a redirect isn't a 307/308 to an allowed host. Nothing is sent.                                                |
+| `FIGMA_TOKEN=… node scripts/figma-export.mjs --inventory <file> (--id a,b \| --status annotated) --out <dir> [--scale 2] [--record --assets-dir <dir>]` | Exports each record's annotated frame through the Figma API. `--record` runs `record-asset`. | A record has no annotated frame node (the clean frame is never exported), an image host isn't allowed, a download redirects, or the file isn't a PNG. |
+
+## Inventory
+
+| Command                                                                                                                                                            | What it does                                                                                                        |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
+| `inv validate [--against <file\|git:REF>]`                                                                                                                         | Checks every record; `--against` also checks status changes.                                                        |
+| `inv list [--status s] [--release r] [--owner o] [--workstream w]`                                                                                                 | Lists records.                                                                                                      |
+| `inv prereqs [--id id]`                                                                                                                                            | Shows what each record still needs for its next status.                                                             |
+| `inv brief --config <config> [--release r] --out <brief>`                                                                                                          | Writes a capture brief from approved records.                                                                       |
+| `inv release-check --version <v>` \| `--app <app folder>` \| `--registry`                                                                                          | Lists screenshots captured for an older version, and the command that retargets each. `--reopen` reopens them.      |
+| `inv transition --id <id> --to <status> [--release r] [--reason "…"]`                                                                                              | Moves a record one step; `--to approved --release r` reopens it for a new release; `--to retired` needs `--reason`. |
+| `inv record-capture --run <run> --assets-dir <dir>`                                                                                                                | Stores each captured PNG's checksum and size; approved records become `captured`.                                   |
+| `inv record-figma --id <id> --evidence uploaded --file-url <u> --page-name "<p>" --node-id <clean> --annotated-node-id <annotated> [--annotation-status complete]` | Records where the record lives in Figma. Writes only what you pass.                                                 |
+| `inv record-asset --id <id> --file <png> [--assets-dir <dir>]`                                                                                                     | Stores the exported annotated PNG and its checksum.                                                                 |
+| `inv set-alt --id <id> --text "<alt text>" [--verified-at <time>]`                                                                                                 | Replaces a record's alt text. A verified record also needs `--verified-at`.                                         |
+| `inv check-alt --id <id> --notes "<alt text from the page>"`                                                                                                       | Compares published alt text with the record, ignoring case and spacing.                                             |
+| `inv handoff [--id id] [--out <file>]`                                                                                                                             | Writes the docs handoff: slot, caption, alt text, checksum, and the annotated frame to export.                      |
+| `inv record-publication --id <id> --published-url <u> (--published-file <png> \| --published-sha256 <hex>) --verified-at <time>`                                   | Records what the published page serves.                                                                             |
+| `inv lookup --id <id>` / `--doc <doc>` / `--unverified` / `--stale`                                                                                                | Reverse lookups.                                                                                                    |
+| `inv trace [--assets-dir <dir>]`                                                                                                                                   | Read-only audit of every image's chain, from release to verification. Exits 1 on any missing link.                  |
+
+Statuses and fields: [Inventory](inventory.html).
+
+## Docs
+
+| Command                                                                                                                      | What it does                                                                                                                       | Refuses when                                                                                          |
+| ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `node scripts/draft-alt.mjs --marks <marks.json> [--subject "…"] [--id <id> --inventory <file> --apply]`                     | Drafts alt text from the frame's `Step N: …` layers; `--apply` saves it through `set-alt`.                                         | Steps aren't numbered 1 to N with no gaps or repeats.                                                 |
+| `node scripts/publish-markdown.mjs --inventory <file> --assets-dir <dir> --repo <docs repo> [--branch <name>] [--dry-run]`   | Copies each release image over its mapped file and updates Markdown alt text; `--branch` commits only changed files. Never pushes. | A map path leaves the repo or isn't a PNG, an asset's checksum doesn't match, or alt text is missing. |
+| `node scripts/gdocs-manifest.mjs --inventory <file> --repo <owner/name> --ref <commit> [--assets-root <dir>] [--out <file>]` | Writes the swap list the Apps Script reads, pinned to a commit.                                                                    | `--ref` isn't a full 40-character SHA, or the repo name is malformed.                                 |
+
+The Apps Script functions are in [Google Docs swap](google-docs-swap.html).

@@ -1,0 +1,9 @@
+{%- comment -%} Usage: {% include video.html name="01-detect-release" title="A release is detected" %} {%- endcomment -%}
+<figure class="video">
+  <video controls preload="metadata" width="100%" aria-label="{{ include.title }}">
+    <source src="{{ '/assets/videos/' | append: include.name | append: '.mp4' | relative_url }}" type="video/mp4">
+    <track kind="captions" srclang="en" label="English" default src="{{ '/assets/videos/' | append: include.name | append: '.vtt' | relative_url }}">
+    Your browser can't play this video. <a href="{{ '/assets/videos/' | append: include.name | append: '.mp4' | relative_url }}">Download it</a>.
+  </video>
+  <figcaption>Video: {{ include.title }} (captions on; <a href="{{ '/assets/videos/' | append: include.name | append: '.vtt' | relative_url }}">transcript</a>)</figcaption>
+</figure>
