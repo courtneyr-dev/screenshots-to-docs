@@ -1,0 +1,33 @@
+{
+  "topic": "{{topic}}",
+  "site": "{{baseUrl}}",
+  "description": "Starter brief for a public website: no sign-in. Run with a config whose preset is public-site (examples/public-site.config.example.json), or generate shots from a sitemap with scripts/routes.mjs.",
+  "dpr": 2,
+  "presets": [
+    "public-site"
+  ],
+  "shots": [
+    {
+      "slug": "home",
+      "label": "Home page",
+      "url": "/",
+      "delay": 1000,
+      "section": "public",
+      "actions": [
+        {
+          "visible": {
+            "selector": "body"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "home-full",
+      "label": "Home page, full length",
+      "url": "/",
+      "fullPage": true,
+      "delay": 1000,
+      "section": "public"
+    }
+  ]
+}

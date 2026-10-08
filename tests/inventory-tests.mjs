@@ -648,19 +648,22 @@ test('a prerelease version is refused, and the version can come from the app loc
   assert.equal(pre.status, 1); assert.match(pre.stderr, /prerelease/);
   const app = join(TMP, 'app'); mkdirSync(app, { recursive: true });
   writeFileSync(join(app, 'package-lock.json'), JSON.stringify({ packages: { 'node_modules/@pantheon-systems/p1-next-sdk': { version: '0.20.0' } } }));
-  const fromApp = cli(['release-check', '--inventory', f, '--app', app]);
+  const fromApp = cli(['release-check', '--inventory', f, '--app', app, '--package', '@pantheon-systems/p1-next-sdk']);
   assert.equal(fromApp.status, 3); assert.match(fromApp.stdout, /p1-next-sdk 0\.20\.0 \(installed in the app\)/);
-  assert.equal(cli(['release-check', '--inventory', f, '--app', join(TMP, 'no-such-app')]).status, 1);
+  assert.equal(cli(['release-check', '--inventory', f, '--app', join(TMP, 'no-such-app'), '--package', '@pantheon-systems/p1-next-sdk']).status, 1);
+  // No product default: without a source, --app and --registry say where a source comes from.
+  const nosrc = cli(['release-check', '--inventory', f, '--app', app]);
+  assert.equal(nosrc.status, 1); assert.match(nosrc.stderr, /--source npm:<package>/);
   // npm is stubbed, so the test needs no network: the registry says 0.21.0, the app runs 0.20.0.
   const bin = join(TMP, 'bin'); mkdirSync(bin, { recursive: true });
   writeFileSync(join(bin, 'npm'), '#!/bin/sh\necho 0.21.0\n', { mode: 0o755 });
-  const both = cli(['release-check', '--inventory', f, '--app', app, '--registry'], { env: { ...process.env, PATH: bin + delimiter + process.env.PATH } });
+  const both = cli(['release-check', '--inventory', f, '--app', app, '--registry', '--source', 'npm:@pantheon-systems/p1-next-sdk'], { env: { ...process.env, PATH: bin + delimiter + process.env.PATH } });
   assert.match(both.stdout, /latest published 0\.21\.0/); assert.match(both.stdout, /WARN: the app you would capture runs .* 0\.20\.0, but 0\.21\.0 is the latest/);
-  const reg = cli(['release-check', '--inventory', f, '--registry', '--json'], { env: { ...process.env, PATH: bin + delimiter + process.env.PATH } });
+  const reg = cli(['release-check', '--inventory', f, '--registry', '--json', '--package', '@pantheon-systems/p1-next-sdk'], { env: { ...process.env, PATH: bin + delimiter + process.env.PATH } });
   assert.equal(JSON.parse(reg.stdout).version, '0.21.0');
   const broken = join(TMP, 'bin2'); mkdirSync(broken, { recursive: true });
   writeFileSync(join(broken, 'npm'), '#!/bin/sh\necho "E404 not found" >&2\nexit 1\n', { mode: 0o755 });
-  const bad = cli(['release-check', '--inventory', f, '--registry'], { env: { ...process.env, PATH: broken + delimiter + process.env.PATH } });
+  const bad = cli(['release-check', '--inventory', f, '--registry', '--package', '@pantheon-systems/p1-next-sdk'], { env: { ...process.env, PATH: broken + delimiter + process.env.PATH } });
   assert.equal(bad.status, 1); assert.match(bad.stderr, /npm view .* failed/);
 });
 

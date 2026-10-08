@@ -1,0 +1,75 @@
+{
+  "description": "WordPress admin (wp-admin), the block editor, and the Site Editor. Signs in at /wp-login.php with WP_USER and WP_PASSWORD from the environment, for a local or test site; for a production site with SSO or two-factor, set \"signIn\": \"chrome\" in the config and sign in yourself in the dedicated Chrome. Hides admin notices, update counts, and the editor's welcome guide, so shots don't depend on what a plugin printed that day. Adapted from the wp-screenshots skill. Selectors checked against WordPress 6.8 on 2026-10-08.",
+  "signIn": {
+    "mode": "form",
+    "login": {
+      "url": "/wp-login.php",
+      "fields": {
+        "#user_login": "WP_USER",
+        "#user_pass": "WP_PASSWORD"
+      },
+      "form": "#loginform",
+      "success": "/wp-admin"
+    }
+  },
+  "css": ".notice, .updated, .update-nag, .error, .notice-error, .notice-warning, .notice-info, .notice-success, #wp-admin-bar-updates, .update-plugins, .menu-counter, .components-modal__screen-overlay { display: none !important; }\n.components-modal__screen-overlay:has(.editor-start-page-options) { display: flex !important; }",
+  "release": {
+    "source": "wordpress"
+  },
+  "params": {},
+  "actions": {
+    "adminReady": {
+      "expect": [
+        "#wpadminbar",
+        "#adminmenu",
+        "#wpbody-content"
+      ]
+    },
+    "adminPage": {
+      "params": [
+        "title"
+      ],
+      "expect": [
+        "#wpadminbar",
+        "#adminmenu",
+        {
+          "selector": ".wrap h1",
+          "text": "{title}"
+        }
+      ]
+    },
+    "blockEditorReady": {
+      "steps": [
+        {
+          "wait": "iframe[name=\"editor-canvas\"]"
+        },
+        {
+          "wait": 800
+        }
+      ],
+      "expect": [
+        ".editor-editor-interface",
+        ".editor-header"
+      ],
+      "expectAfter": [
+        "iframe[name=\"editor-canvas\"]"
+      ]
+    },
+    "siteEditorReady": {
+      "steps": [
+        {
+          "wait": "iframe[name=\"editor-canvas\"]"
+        },
+        {
+          "wait": 800
+        }
+      ],
+      "expect": [
+        ".edit-site-layout"
+      ],
+      "expectAfter": [
+        "iframe[name=\"editor-canvas\"]"
+      ]
+    }
+  }
+}

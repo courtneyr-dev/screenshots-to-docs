@@ -1,0 +1,29 @@
+{
+  "description": "Any public website: no sign-in. Hides the cookie and consent banners of common consent platforms (OneTrust, Cookiebot, CookieYes, Osano, Usercentrics, Cookie Notice, Cookie Consent), so shots don't depend on a stored consent choice. A site behind a bot challenge fails closed: no PNG is saved.",
+  "signIn": {
+    "mode": "none"
+  },
+  "css": "#onetrust-banner-sdk, #onetrust-consent-sdk, #CybotCookiebotDialog, .cky-consent-container, .cky-overlay, .osano-cm-window, #usercentrics-root, #cookie-notice, .cc-window, .cc-banner { display: none !important; }",
+  "params": {},
+  "actions": {
+    "visible": {
+      "params": [
+        "selector"
+      ],
+      "expect": [
+        "{selector}"
+      ]
+    },
+    "heading": {
+      "params": [
+        "text"
+      ],
+      "expect": [
+        {
+          "selector": "h1",
+          "text": "{text}"
+        }
+      ]
+    }
+  }
+}

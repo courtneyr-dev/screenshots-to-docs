@@ -13,7 +13,7 @@
 
 import { parseArgs } from 'node:util';
 import { resolve } from 'node:path';
-import { loadConfig, applyOverrides, validateConfig, formatValidation, expandHome, DEFAULTS } from './lib/config.mjs';
+import { loadConfig, applyOverrides, validateConfig, formatValidation, expandHome, presetNameOf, signInModeOf, targetParams } from './lib/config.mjs';
 
 const { values } = parseArgs({
   options: {
@@ -36,6 +36,10 @@ try {
   console.error(`FAIL: ${e.message}`);
   process.exit(1);
 }
+if (signInModeOf(cfg) !== 'chrome') {
+  console.log(`The "${presetNameOf(cfg)}" preset signs in with mode "${signInModeOf(cfg)}": capture starts its own headless browser, so there is no dedicated Chrome to open.`);
+  process.exit(0);
+}
 const check = validateConfig(cfg, ['capture']);
 const chromeProblems = check.errors.filter(e => e.key.startsWith('chrome.') || e.key === 'baseUrl');
 if (chromeProblems.length) {
@@ -45,7 +49,7 @@ if (chromeProblems.length) {
 
 const port = cfg.chrome.cdpPort;
 const profile = resolve(expandHome(cfg.chrome.profileDir));
-const start = `${cfg.baseUrl.replace(/\/+$/, '')}${cfg.editorRoute || DEFAULTS.editorRoute}`;
+const start = `${cfg.baseUrl.replace(/\/+$/, '')}${presetNameOf(cfg) === 'p1-editor' ? targetParams(cfg).editorRoute : '/'}`;
 const q = s => `"${s.replace(/(["\\$`])/g, '\\$1')}"`;
 
 if (values.check) {

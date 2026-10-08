@@ -1,9 +1,10 @@
 /**
- * Shared configuration for the P1 editor screenshot tool.
+ * Shared configuration for the screenshot tool.
  *
- * One JSON file holds every per-run input: the P1 base URL, project and workstream names, the page
- * being edited, the Chrome profile and debugging port, the Figma destination and naming, and where
- * the docs handoff note goes. Nothing here has a project-specific default.
+ * One JSON file holds every per-run input: the target preset and its values (for the P1 editor: project,
+ * workstream, and page), the base URL, how you sign in, the Chrome profile and debugging port, the Figma
+ * destination and naming, and where the docs handoff note goes. What each target needs is declared by
+ * its preset in scripts/presets/, so this file knows no product.
  *
  * validateConfig() reports every problem at once, before any browser opens. The config file must
  * never hold credentials, cookies, tokens, or storage state, and validation rejects keys that look
@@ -15,13 +16,13 @@ import { resolve, dirname } from 'node:path';
 import { homedir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { canonicalPath, isInside } from './paths.mjs';
+import { loadPreset, withDefaults, signInEnvVars, DEFAULT_PRESET, SIGN_IN_MODES } from './presets.mjs';
 
 export const TOOL_DIR = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
-const KNOWN_KEYS = new Set([
-  '$comment', 'topic', 'baseUrl', 'editorRoute', 'projectName', 'workstream', 'pagePath',
-  'pageNavigation', 'pageLabel', 'blockCategory', 'blockType', 'blockSelector', 'publishMenuLabel', 'chrome', 'figma', 'docs',
-]);
+const KNOWN_KEYS = new Set(['$comment', 'topic', 'preset', 'baseUrl', 'signIn', 'params', 'chrome', 'figma', 'docs']);
+// Configs written before presets existed keep the P1 editor's values at the top level.
+const LEGACY_P1_KEYS = ['editorRoute', 'projectName', 'workstream', 'pagePath', 'pageNavigation', 'pageLabel', 'blockCategory', 'blockType', 'blockSelector', 'publishMenuLabel'];
 const KNOWN_CHROME = new Set(['profileDir', 'cdpPort']);
 const KNOWN_FIGMA = new Set(['fileKey', 'pageNamePattern', 'runIdPattern']);
 const KNOWN_DOCS = new Set(['handoffDir', 'format']);
@@ -44,6 +45,22 @@ export const RUN_ID_TOKENS = ['topic', 'yyyymmdd', 'hhmm'];
 export function expandHome(p) {
   if (typeof p !== 'string') return p;
   return p === '~' ? homedir() : p.startsWith('~/') ? resolve(homedir(), p.slice(2)) : p;
+}
+
+export function presetNameOf(cfg) {
+  return (cfg && typeof cfg.preset === 'string' && cfg.preset) || DEFAULT_PRESET;
+}
+
+// The preset's values for this config: legacy top-level P1 keys, then config.params, then the preset's defaults.
+export function targetParams(cfg, preset = loadPreset(presetNameOf(cfg))) {
+  const given = {};
+  for (const k of LEGACY_P1_KEYS) if (cfg?.[k] !== undefined) given[k] = cfg[k];
+  Object.assign(given, cfg?.params && typeof cfg.params === 'object' ? cfg.params : {});
+  return withDefaults(preset, given);
+}
+
+export function signInModeOf(cfg, preset = loadPreset(presetNameOf(cfg))) {
+  return cfg?.signIn || preset.signIn.mode;
 }
 
 export function loadConfig(file) {
@@ -116,7 +133,7 @@ export function validateConfig(cfg, stages = ['capture']) {
     }
   };
   walk(cfg, '');
-  for (const k of Object.keys(cfg)) if (!KNOWN_KEYS.has(k)) err(k, 'unknown key (check the spelling against examples/config.example.json)');
+  for (const k of Object.keys(cfg)) if (!KNOWN_KEYS.has(k) && !LEGACY_P1_KEYS.includes(k)) err(k, 'unknown key (check the spelling against examples/config.example.json)');
   for (const [sect, known] of [['chrome', KNOWN_CHROME], ['figma', KNOWN_FIGMA], ['docs', KNOWN_DOCS]]) {
     if (cfg[sect] === undefined) continue;
     if (!cfg[sect] || typeof cfg[sect] !== 'object' || Array.isArray(cfg[sect])) {
@@ -140,7 +157,7 @@ export function validateConfig(cfg, stages = ['capture']) {
 
   if (need('capture')) {
     str('topic', cfg.topic, { required: true, pattern: /^[a-z0-9][a-z0-9-]*$/, what: 'A short kebab-case name for this set of screenshots, used in run IDs and Figma page names.' });
-    if (str('baseUrl', cfg.baseUrl, { required: true, what: 'The P1 site origin, for example http://localhost:3000.' })) {
+    if (str('baseUrl', cfg.baseUrl, { required: true, what: 'The origin of the app or site to capture, for example http://localhost:3000.' })) {
       try {
         const u = new URL(cfg.baseUrl);
         if (!/^https?:$/.test(u.protocol)) err('baseUrl', 'must start with http:// or https://');
@@ -148,42 +165,58 @@ export function validateConfig(cfg, stages = ['capture']) {
         if (u.search || u.hash) err('baseUrl', 'must be an origin (no query string or fragment)');
       } catch { err('baseUrl', `not a valid URL: ${cfg.baseUrl}`); }
     }
-    str('projectName', cfg.projectName, { required: true, what: 'The project or site name as the editor header shows it. Find it with the P1 MCP (list_sites) or in the editor.' });
-    str('workstream', cfg.workstream, { required: true, what: 'The workstream to show, as the editor\'s workstream selector lists it. Choose it for each run (P1 MCP list_branches); there is no default.' });
-    if (str('pagePath', cfg.pagePath, { required: true, what: 'The page being edited, for example "/" or "/about" (P1 MCP list_documents).' }) && !/^\/\S*$/.test(cfg.pagePath)) {
-      err('pagePath', 'must start with "/" and contain no spaces');
-    }
-    if (cfg.pageNavigation !== undefined && !['url', 'manual'].includes(cfg.pageNavigation)) err('pageNavigation', `must be "url" (open the page through the editor URL) or "manual" (open the editor route only; you select the page) (got ${JSON.stringify(cfg.pageNavigation)})`);
-    if (cfg.pageLabel !== undefined) str('pageLabel', cfg.pageLabel);
-    if (cfg.blockCategory !== undefined) str('blockCategory', cfg.blockCategory);
-    if (cfg.editorRoute !== undefined && !(typeof cfg.editorRoute === 'string' && /^\/\S*$/.test(cfg.editorRoute))) err('editorRoute', 'must start with "/" (default "/p1")');
-    if (cfg.blockType !== undefined) str('blockType', cfg.blockType, { pattern: /^[A-Za-z][A-Za-z0-9_]*$/ });
-    if (cfg.blockSelector !== undefined) str('blockSelector', cfg.blockSelector);
-    if (cfg.blockType && cfg.blockSelector) err('blockType', 'set blockType or blockSelector, not both');
-    if (!cfg.blockType && !cfg.blockSelector) warnings.push('No blockType or blockSelector: the shots that select a block will be skipped and reported as skipped.');
-    if (cfg.publishMenuLabel !== undefined) str('publishMenuLabel', cfg.publishMenuLabel);
-
-    const ch = cfg.chrome;
-    if (!ch || typeof ch !== 'object') {
-      err('chrome.profileDir', 'missing. Choose a dedicated, empty directory outside any repository for the sign-in profile.');
-      err('chrome.cdpPort', 'missing. Choose a free local port for the Chrome debugging endpoint.');
-    } else {
-      if (str('chrome.profileDir', ch.profileDir, { required: true, what: 'A dedicated directory outside any repository. Never the regular Chrome profile.' })) {
-        const p = resolve(expandHome(ch.profileDir));
-        if (!/^\//.test(p)) err('chrome.profileDir', 'must be an absolute path (or start with ~/)');
-        if (/Google\/Chrome(\/Default|\/Profile \d+)?\/?$/i.test(p) || /Library\/Application Support\/Google\/Chrome/i.test(p) || /\.config\/google-chrome/i.test(p)) {
-          err('chrome.profileDir', 'is (or is inside) the regular Chrome profile. Use a separate directory: Chrome refuses a debugging port on the default profile, and it holds real sessions.');
-        }
-        const real = realPathOrError('chrome.profileDir', p);
-        if (real) {
-          if (isInside(real, canonicalPath(TOOL_DIR))) err('chrome.profileDir', 'is inside this tool\'s directory (checked after resolving symlinks). A browser profile must never sit where it could be committed.');
-          const repo = insideGitWorktree(real);
-          if (repo) err('chrome.profileDir', `is inside a git repository (${repo}). A browser profile holds a login and must stay outside every repository.`);
+    let preset = null;
+    try { preset = loadPreset(presetNameOf(cfg)); } catch (e) { err('preset', e.message); }
+    if (preset) {
+      if (cfg.params !== undefined && (!cfg.params || typeof cfg.params !== 'object' || Array.isArray(cfg.params))) err('params', 'must be an object');
+      const legacy = LEGACY_P1_KEYS.filter(k => cfg[k] !== undefined);
+      if (legacy.length && preset.name !== DEFAULT_PRESET) for (const k of legacy) err(k, `belongs to the p1-editor preset. For "${preset.name}", put the values this preset needs under "params".`);
+      for (const k of Object.keys(cfg.params || {})) if (!(k in preset.params)) err(`params.${k}`, `unknown for the "${preset.name}" preset. Known: ${Object.keys(preset.params).join(', ') || '(none)'}`);
+      const values = targetParams(cfg, preset);
+      const where = k => (LEGACY_P1_KEYS.includes(k) && cfg[k] !== undefined ? k : `params.${k}`);
+      for (const [k, spec] of Object.entries(preset.params)) {
+        const v = values[k];
+        if (str(where(k), v, { required: spec.required, what: spec.what }) ) {
+          if (spec.pattern && !new RegExp(spec.pattern).test(v)) err(where(k), `invalid value "${v}". ${spec.what || ''}`.trim());
+          if (spec.enum && !spec.enum.includes(v)) err(where(k), `must be one of ${spec.enum.map(x => JSON.stringify(x)).join(', ')} (got ${JSON.stringify(v)})`);
         }
       }
-      const port = ch.cdpPort;
-      if (port === undefined || port === null || port === '') err('chrome.cdpPort', 'missing. Choose a free local port for the Chrome debugging endpoint.');
-      else if (!Number.isInteger(port) || port < 1024 || port > 65535) err('chrome.cdpPort', `must be an integer from 1024 to 65535 (got ${JSON.stringify(port)})`);
+      for (const group of preset.atMostOne) {
+        const set = group.filter(k => values[k] !== undefined && values[k] !== '');
+        if (set.length > 1) err(where(set[0]), `set ${group.join(' or ')}, not both`);
+      }
+      for (const w of preset.warnUnlessAny) if (!w.keys.some(k => values[k] !== undefined && values[k] !== '')) warnings.push(w.message);
+      if (cfg.signIn !== undefined && !SIGN_IN_MODES.includes(cfg.signIn)) err('signIn', `must be one of ${SIGN_IN_MODES.join(', ')} (got ${JSON.stringify(cfg.signIn)})`);
+      if (cfg.signIn === 'form' && preset.signIn.mode !== 'form') err('signIn', `the "${preset.name}" preset has no sign-in form. Use "chrome" (you sign in in the dedicated Chrome) or "none".`);
+      if (signInModeOf(cfg, preset) === 'form') {
+        for (const v of signInEnvVars(preset.signIn)) if (!process.env[v]) err('signIn', `the sign-in form reads ${v} from the environment, and it is not set. Export it in your shell (never in a file in a repository).`);
+      }
+    }
+    if (preset && signInModeOf(cfg, preset) !== 'chrome') {
+      if (cfg.chrome !== undefined) warnings.push(`chrome settings are ignored: sign-in mode is "${signInModeOf(cfg, preset)}", so the tool starts its own headless browser.`);
+    } else {
+      const ch = cfg.chrome;
+      if (!ch || typeof ch !== 'object') {
+        err('chrome.profileDir', 'missing. Choose a dedicated, empty directory outside any repository for the sign-in profile (sign-in mode "chrome").');
+        err('chrome.cdpPort', 'missing. Choose a free local port for the Chrome debugging endpoint.');
+      } else {
+        if (str('chrome.profileDir', ch.profileDir, { required: true, what: 'A dedicated directory outside any repository. Never the regular Chrome profile.' })) {
+          const p = resolve(expandHome(ch.profileDir));
+          if (!/^\//.test(p)) err('chrome.profileDir', 'must be an absolute path (or start with ~/)');
+          if (/Google\/Chrome(\/Default|\/Profile \d+)?\/?$/i.test(p) || /Library\/Application Support\/Google\/Chrome/i.test(p) || /\.config\/google-chrome/i.test(p)) {
+            err('chrome.profileDir', 'is (or is inside) the regular Chrome profile. Use a separate directory: Chrome refuses a debugging port on the default profile, and it holds real sessions.');
+          }
+          const real = realPathOrError('chrome.profileDir', p);
+          if (real) {
+            if (isInside(real, canonicalPath(TOOL_DIR))) err('chrome.profileDir', 'is inside this tool\'s directory (checked after resolving symlinks). A browser profile must never sit where it could be committed.');
+            const repo = insideGitWorktree(real);
+            if (repo) err('chrome.profileDir', `is inside a git repository (${repo}). A browser profile holds a login and must stay outside every repository.`);
+          }
+        }
+        const port = ch.cdpPort;
+        if (port === undefined || port === null || port === '') err('chrome.cdpPort', 'missing. Choose a free local port for the Chrome debugging endpoint.');
+        else if (!Number.isInteger(port) || port < 1024 || port > 65535) err('chrome.cdpPort', `must be an integer from 1024 to 65535 (got ${JSON.stringify(port)})`);
+      }
     }
   }
 
@@ -230,31 +263,28 @@ export function formatValidation({ errors, warnings }, label = 'Configuration') 
   return lines.join('\n');
 }
 
-// The editor mounts pages under its route: /p1 edits "/", and /p1/about edits "/about" (read from the
+// The P1 editor mounts pages under its route: /p1 edits "/", and /p1/about edits "/about" (read from the
 // p1-next-sdk path mapping). "manual" opens the route only and leaves page selection to the person.
-export function editorUrlFor(cfg) {
-  const route = (cfg.editorRoute || DEFAULTS.editorRoute).replace(/\/+$/, '');
-  if (cfg.pageNavigation === 'manual' || !cfg.pagePath || cfg.pagePath === '/') return route;
-  return `${route}${cfg.pagePath.replace(/\/+$/, '')}`;
+export function editorUrlFor(values) {
+  const route = (values.editorRoute || DEFAULTS.editorRoute).replace(/\/+$/, '');
+  if (values.pageNavigation === 'manual' || !values.pagePath || values.pagePath === '/') return route;
+  return `${route}${values.pagePath.replace(/\/+$/, '')}`;
 }
 
-// Flat values for {{placeholders}} in briefs and templates.
+// Flat values for {{placeholders}} in briefs and templates: the topic and base URL, every preset value,
+// and the Chrome debugging URL when you sign in through the dedicated Chrome.
 export function deriveParams(cfg) {
+  const preset = loadPreset(presetNameOf(cfg));
+  const values = targetParams(cfg, preset);
+  const chrome = signInModeOf(cfg, preset) === 'chrome';
   const p = {
     topic: cfg.topic,
     baseUrl: cfg.baseUrl,
-    editorRoute: cfg.editorRoute || DEFAULTS.editorRoute,
-    projectName: cfg.projectName,
-    workstream: cfg.workstream,
-    pagePath: cfg.pagePath,
-    editorUrl: editorUrlFor(cfg),
-    pageLabel: cfg.pageLabel || cfg.pagePath,
-    blockCategory: cfg.blockCategory || DEFAULTS.blockCategory,
-    blockType: cfg.blockType,
-    blockSelector: cfg.blockSelector,
-    publishMenuLabel: cfg.publishMenuLabel || DEFAULTS.publishMenuLabel,
-    cdpPort: cfg.chrome?.cdpPort,
-    connectUrl: cfg.chrome?.cdpPort ? `http://127.0.0.1:${cfg.chrome.cdpPort}` : undefined,
+    preset: preset.name,
+    ...values,
+    ...(preset.name === DEFAULT_PRESET && { editorUrl: editorUrlFor(values) }),
+    cdpPort: chrome ? cfg.chrome?.cdpPort : undefined,
+    connectUrl: chrome && cfg.chrome?.cdpPort ? `http://127.0.0.1:${cfg.chrome.cdpPort}` : undefined,
   };
   return Object.fromEntries(Object.entries(p).filter(([, v]) => v !== undefined && v !== ''));
 }

@@ -38,7 +38,7 @@ cd "$SKILL" || exit 1
 
 echo "== static"
 for f in capture preflight chrome handoff compare-runs cleanup validate-skill check-identity figma-plan figma-upload make-gallery routes verify-site inventory publish-markdown draft-alt figma-export gdocs-manifest setup build-figma-plugin; do t "node --check scripts/$f.mjs" node --check "scripts/$f.mjs"; done
-t "node --check scripts/lib/config.mjs" node --check scripts/lib/config.mjs
+for f in config presets release-sources; do t "node --check scripts/lib/$f.mjs" node --check "scripts/lib/$f.mjs"; done
 t "JSON files parse" python3 -c "
 import json,glob
 for p in glob.glob('briefs/*.json')+glob.glob('scripts/presets/*.json')+glob.glob('templates/*.json')+glob.glob('examples/**/*.json',recursive=True)+glob.glob('$FX/*.json')+['package.json']: json.load(open(p))"
@@ -333,6 +333,14 @@ rs_pass=$(grep -c '^PASS  ' "$TMP/release-swap-tests.log"); rs_fail=$(grep -c '^
 echo "      release-swap tests: $rs_pass passed, $rs_fail failed (names: node tests/release-swap-tests.mjs)"
 pass=$((pass + rs_pass)); fail=$((fail + rs_fail))
 [ "$rs_pass" -gt 0 ] || { echo "FAIL  the release-swap tests did not run"; fail=$((fail + 1)); }
+
+echo "== Target presets: WordPress, Drupal, public sites, Content Publisher, P1; release sources"
+node tests/presets-tests.mjs >"$TMP/presets-tests.log" 2>&1
+grep -E '^(FAIL)  |^        ' "$TMP/presets-tests.log" | head -40
+pr_pass=$(grep -c '^PASS  ' "$TMP/presets-tests.log"); pr_fail=$(grep -c '^FAIL  ' "$TMP/presets-tests.log")
+echo "      preset tests: $pr_pass passed, $pr_fail failed (names: node tests/presets-tests.mjs)"
+pass=$((pass + pr_pass)); fail=$((fail + pr_fail))
+[ "$pr_pass" -gt 0 ] || { echo "FAIL  the preset tests did not run"; fail=$((fail + 1)); }
 
 echo "== project skill: .claude/skills/p1-screenshot-inventory"
 REPO_ROOT=$(cd "$ROOT/../.." && pwd)

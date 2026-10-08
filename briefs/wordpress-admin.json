@@ -1,0 +1,63 @@
+{
+  "topic": "{{topic}}",
+  "site": "{{baseUrl}}",
+  "description": "Starter brief for WordPress admin screens. Run with a config whose preset is wordpress-admin (examples/wordpress-admin.config.example.json). Every shot is signed in unless it sets loggedOut: true. Copy it and replace the shots with the screens your docs show.",
+  "dpr": 2,
+  "presets": [
+    "wordpress-admin"
+  ],
+  "shots": [
+    {
+      "slug": "dashboard",
+      "label": "Dashboard",
+      "url": "/wp-admin/",
+      "delay": 1000,
+      "section": "admin",
+      "actions": [
+        "adminReady"
+      ]
+    },
+    {
+      "slug": "plugins",
+      "label": "Plugins",
+      "url": "/wp-admin/plugins.php",
+      "delay": 1000,
+      "section": "admin",
+      "actions": [
+        {
+          "adminPage": {
+            "title": "Plugins"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "block-editor",
+      "label": "Block editor, new post",
+      "url": "/wp-admin/post-new.php",
+      "delay": 1500,
+      "section": "editor",
+      "actions": [
+        "blockEditorReady"
+      ]
+    },
+    {
+      "slug": "site-editor",
+      "label": "Site Editor",
+      "url": "/wp-admin/site-editor.php",
+      "delay": 2000,
+      "section": "editor",
+      "actions": [
+        "siteEditorReady"
+      ]
+    },
+    {
+      "slug": "front-page",
+      "label": "Front page, signed out",
+      "url": "/",
+      "loggedOut": true,
+      "delay": 1000,
+      "section": "front-end"
+    }
+  ]
+}
