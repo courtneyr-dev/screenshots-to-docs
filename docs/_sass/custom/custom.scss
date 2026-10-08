@@ -63,7 +63,7 @@ div.highlighter-rouge, figure.highlight {
   background: var(--pds-color-code-block-background, #3b3b3b) !important;
   border-radius: var(--pds-border-radius-card, 0.5rem);
   margin: var(--pds-spacing-m, 1rem) 0 var(--pds-spacing-l, 1.25rem);
-  box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
   overflow: hidden;
 }
 div.highlighter-rouge div.highlight, div.highlighter-rouge pre.highlight, figure.highlight pre {
@@ -78,7 +78,10 @@ div.highlighter-rouge code, figure.highlight code { color: var(--pds-color-code-
 div.highlighter-rouge[class*='language-']::before {
   display: block;
   padding: 0.45rem var(--pds-spacing-l, 1.25rem) 0;
-  font: 600 0.7rem/1 var(--pds-typography-ff-default, 'Inter', sans-serif);
+  font-family: var(--pds-typography-ff-default, 'Inter', sans-serif);
+  font-weight: 600;
+  font-size: 0.7rem;
+  line-height: 1;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--pds-color-code-block-line-prefix, #9699a1);
@@ -118,7 +121,7 @@ div.language-text, div.language-console {
   border-radius: var(--pds-border-radius-default, 0.25rem);
   opacity: 0.8;
 }
-.highlighter-rouge button:hover { opacity: 1; background: rgb(255 255 255 / 0.08); }
+.highlighter-rouge button:hover { opacity: 1; background: rgba(255, 255, 255, 0.08); }
 .highlighter-rouge button svg { fill: currentColor; }
 
 // ---------- Tables ----------
@@ -150,7 +153,7 @@ figure.shot, figure.video {
   border: 1px solid var(--pds-color-border-default, #e6e6e6);
   border-radius: var(--pds-border-radius-card, 0.5rem);
   overflow: hidden;
-  box-shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 8px 24px -12px rgb(0 0 0 / 0.18);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px -12px rgba(0, 0, 0, 0.18);
 }
 figure.shot img { display: block; width: 100%; height: auto; }
 figure.shot a { display: block; }
@@ -190,7 +193,7 @@ figure.video .video-label {
 @media (min-width: 1000px) { .hero { grid-template-columns: 1.05fr 1fr; align-items: center; } }
 .hero h1 { color: var(--pds-color-foreground-reverse, #fff) !important; margin-top: 0; font-size: 2.4rem !important; }
 .hero p { color: var(--pds-color-foreground-reverse-secondary, #d4d4d4) !important; font-size: var(--pds-typography-size-l, 1.125rem) !important; }
-.hero img { width: 100%; border-radius: var(--pds-border-radius-container, 0.375rem); box-shadow: 0 12px 32px -10px rgb(0 0 0 / 0.6); }
+.hero img { width: 100%; border-radius: var(--pds-border-radius-container, 0.375rem); box-shadow: 0 12px 32px -10px rgba(0, 0, 0, 0.6); }
 .hero .eyebrow { color: var(--pds-color-brand-default, #ffdc28); font-weight: 700; font-size: var(--pds-typography-size-s, 0.875rem); letter-spacing: 0.08em; text-transform: uppercase; }
 .hero .btn {
   background: var(--pds-color-brand-default, #ffdc28);
@@ -218,7 +221,7 @@ figure.video .video-label {
   color: inherit !important;
   transition: var(--pds-animation-transition-default, all 200ms);
 }
-.card:hover { border-color: var(--pds-color-border-default-secondary, #cfcfcf); box-shadow: 0 8px 20px -12px rgb(0 0 0 / 0.25); }
+.card:hover { border-color: var(--pds-color-border-default-secondary, #cfcfcf); box-shadow: 0 8px 20px -12px rgba(0, 0, 0, 0.25); }
 .card .card-kicker { font-size: var(--pds-typography-size-xs, 0.75rem); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--pds-color-status-discovery-foreground, #5b3a87); }
 .card h3 { margin: 0.35rem 0 0.25rem !important; font-size: var(--pds-typography-size-l, 1.125rem) !important; }
 .card p { margin: 0; color: var(--pds-color-foreground-default-secondary, #5f6168); font-size: var(--pds-typography-size-s, 0.875rem); }

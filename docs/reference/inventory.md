@@ -57,7 +57,7 @@ A record moves one step at a time. It can return to `approved` to be re-captured
 
 ## Text rules
 
-Caption and alt text are written once, in the record, and copied unchanged into the brief, the capture report, the gallery, the Figma manifest, and the docs handoff. Validation rejects text that is missing, has placeholder wording (`TO FILL`, `TODO`, `{{...}}`, `<...>`), is generic ("Screenshot", fewer than four words), contains filler or test data, contains a URL, host, or local path, contains an inventory ID, spans lines, or contains `|` (so tables can show it verbatim). A leading "screenshot of" or an alt text over 250 characters is a warning. There is no fallback text: a missing alt text stops the handoff.
+Caption and alt text are written once, in the record, and copied unchanged into the brief, the capture report, the gallery, the Figma manifest, and the docs handoff. Validation rejects text that is missing, has placeholder wording (`TO FILL`, `TODO`, {% raw %}`{{...}}`{% endraw %}, `<...>`), is generic ("Screenshot", fewer than four words), contains filler or test data, contains a URL, host, or local path, contains an inventory ID, spans lines, or contains `|` (so tables can show it verbatim). A leading "screenshot of" or an alt text over 250 characters is a warning. There is no fallback text: a missing alt text stops the handoff.
 
 ## Secrets and customer data
 
