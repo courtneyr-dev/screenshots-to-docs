@@ -69,6 +69,9 @@ Sets up the Apps Script that replaces images in Google Docs.
    token and copy it.
 5. It opens the Apps Script project. In **Project Settings > Script properties**, add `GITHUB_TOKEN` with the
    token as its value, and click **Save script properties**.
+
+   {% include figure.html src="apps-script-properties.jpg" alt="Apps Script Script Properties with the manifest settings filled in and an empty row for a new property." caption="Project Settings > Script properties. Add GITHUB_TOKEN here." %}
+
 6. In the editor, run `dryRunSwap` and approve the two permissions Google asks for: Docs, and connecting to
    an external service.
 

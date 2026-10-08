@@ -3,31 +3,46 @@ title: Home
 nav_order: 1
 ---
 
-# P1 screenshots to docs
+<div class="hero" markdown="0">
+  <div>
+    <div class="eyebrow">Screenshots to docs</div>
+    <h1>Keep every docs screenshot current, release after release</h1>
+    <p>Capture the signed-in app, annotate in Figma with a shared kit, draft alt text from the marks, and swap the new images into Markdown and Google Docs from one reviewed commit.</p>
+    <a class="btn" href="{{ '/tutorial/first-swap.html' | relative_url }}">Try the tutorial</a>
+    <a class="btn btn-outline" href="{{ '/how-to/set-up.html' | relative_url }}">Set up</a>
+  </div>
+  <img src="{{ '/assets/images/annotated-example.jpg' | relative_url }}" alt="An annotated screenshot of the P1 editor: four numbered areas, the Blocks panel, the page canvas, page settings, and the Review button, each outlined in purple with a numbered badge.">
+</div>
 
-When P1 ships a new version, the screenshots in its docs go stale. This tool turns a release into a reviewed
-batch of screenshot changes: it captures the signed-in editor, puts each run on a Figma page for annotation,
-drafts alt text from the annotation marks, and swaps the new images into Markdown docs and Google Docs without
-anyone inserting images by hand. People still decide what to reshoot, review the marks, and click Publish.
+When an app ships a new version, the screenshots in its docs go stale. This tool turns a release into a reviewed
+batch of screenshot changes. People still decide what to reshoot, review the marks, and click Publish.
 
 ```mermaid
 flowchart LR
-  A["New P1 release"] --> B["Capture"] --> C["Annotate in Figma"] --> D["Pinned in git"]
+  A["New release"] --> B["Capture"] --> C["Annotate in Figma"] --> D["Pinned in git"]
   D --> E["Markdown docs"]
   D --> F["Google Docs"]
 ```
 
-## Start here
-
-- **New to the tool?** [Your first release swap](tutorial/first-swap.html) runs end to end on sample data in
-  about ten minutes, with no accounts.
-- **Setting up?** [Set up the tool](how-to/set-up.html): one command installs the capture tools, the Figma
-  annotation kit, and both docs targets.
-- **Running a release?** Follow the [how-to guides](how-to/) in order, from
-  [Detect a release](how-to/detect-a-release.html) to [Verify and trace](how-to/verify.html). Each step has
-  a short narrated video.
-- **Looking something up?** [Commands](reference/commands.html), [Configuration](reference/configuration.html),
-  [Inventory](reference/inventory.html), [Google Docs swap](reference/google-docs-swap.html),
-  [Annotation kit](reference/annotation-kit.html).
-- **Want the reasons?** [How it works](explanation/how-it-works.html), [Accessibility](explanation/accessibility.html),
-  [Safety](explanation/safety.html).
+<div class="cards" markdown="0">
+  <a class="card" href="{{ '/tutorial/first-swap.html' | relative_url }}">
+    <span class="card-kicker">Tutorial · 10 minutes</span>
+    <h3>Your first release swap</h3>
+    <p>Run the whole swap on sample data. No accounts needed.</p>
+  </a>
+  <a class="card" href="{{ '/how-to/' | relative_url }}">
+    <span class="card-kicker">How-to guides · with videos</span>
+    <h3>Run a release, step by step</h3>
+    <p>From detecting a release to verifying every published image.</p>
+  </a>
+  <a class="card" href="{{ '/reference/' | relative_url }}">
+    <span class="card-kicker">Reference</span>
+    <h3>Commands, config, inventory, kit</h3>
+    <p>Every flag, field, status, and annotation component.</p>
+  </a>
+  <a class="card" href="{{ '/explanation/how-it-works.html' | relative_url }}">
+    <span class="card-kicker">Explanation</span>
+    <h3>How it works</h3>
+    <p>Why images are pinned to commits, and how alt text stays in step with the marks.</p>
+  </a>
+</div>

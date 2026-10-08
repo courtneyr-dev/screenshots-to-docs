@@ -8,7 +8,7 @@ nav_order: 7
 
 Export each annotated frame as a 2x PNG, record its checksum, and hand it to the docs owner.
 
-{% include video.html name="06-export-handoff" title="Export and hand off" %}
+{% include video.html name="06-export-handoff" title="Export and hand off" poster="figma-export-2x.jpg" %}
 
 ## Steps
 
@@ -30,6 +30,8 @@ Export each annotated frame as a 2x PNG, record its checksum, and hand it to the
      ```
 
    A 1440 by 900 frame exports at 2880 by 1800.
+
+   {% include figure.html src="figma-export-2x.jpg" alt="Figma's Export section for the annotated frame, set to 2x PNG." caption="The export setting: PNG at 2x." %}
 
 2. Mark it handed off and write the handoff:
 

@@ -1,0 +1,3 @@
+{%- comment -%} Usage: {% include figure.html src="figma-run-page.jpg" alt="…" caption="…" %}. Images live in assets/images/ and link to the full-size file. Output stays on one line so it can sit inside a list item. {%- endcomment -%}
+{%- assign url = '/assets/images/' | append: include.src | relative_url -%}
+<figure class="shot"><a href="{{ url }}"><img src="{{ url }}" alt="{{ include.alt }}" loading="lazy" decoding="async"></a>{% if include.caption %}<figcaption>{{ include.caption }}</figcaption>{% endif %}</figure>

@@ -8,18 +8,33 @@ nav_order: 5
 
 Add numbered marks, highlights, and redactions to each screenshot in an annotated frame the docs embed.
 
-{% include video.html name="05-annotate" title="Annotating with the kit" %}
+{% include video.html name="05-annotate" title="Annotating with the kit" poster="kit-assets-panel.jpg" %}
 
 ## Steps
 
 1. Make the annotated frame beside the clean one: a frame the size of the image, holding a copy of the image
    only. Name it `[<id>] — <title> — <release> — annotated`. The clean frame stays untouched.
 2. Open the Assets panel (**Option+2**) and drag marks onto the image:
+
    - **Highlight box** over the area the step is about. Resize it with the corner handles; never fill it.
    - **Step badge** next to each area, numbered in reading order.
    - **Callout label** when the UI element needs its name on the image.
    - **Redact** over names, emails, avatars, and IDs. Use **Solid** when blur might still leak text.
+
+   {% include figure.html src="kit-assets-panel.jpg" alt="Figma's Assets panel listing the kit components: Arrow, Callout label, Click indicator, Cursor, Dim overlay, Highlight box, and more." caption="The kit in the Assets panel. Drag a component onto the image." %}
+
+   <div class="shot-pair" markdown="1">
+
+   {% include figure.html src="kit-highlight-box.jpg" alt="A purple Highlight box resized to fit the Blocks panel." caption="Highlight box, resized to the Blocks panel." %}
+
+   {% include figure.html src="kit-step-badge.jpg" alt="A purple numbered Step badge placed beside the highlighted Blocks panel." caption="Step badge 1 beside it." %}
+
+   </div>
+
 3. Keep every mark inside the annotated frame, so it exports with the image. Check the Layers panel.
+
+   {% include figure.html src="figma-annotated-layers.jpg" alt="Figma's Layers panel for an annotated frame: Step 1 to 4, Highlight 1 to 4, two Redact layers, and the screenshot, all nested in the frame." caption="Every mark nested inside the annotated frame. Step layers are named the way the alt text should read." %}
+
 4. **Name each step layer the way it should be read**, for example `Step 4: the Review button`. The alt text
    is drafted from these names.
 5. When the UI didn't change since the last release, copy last release's annotated frame and swap in the new

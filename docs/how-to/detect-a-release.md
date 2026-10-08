@@ -25,12 +25,23 @@ When P1 ships a new version, find the screenshots that show the old UI and appro
    node scripts/inventory.mjs release-check --app <capture app folder> --inventory <inventory>
    ```
 
+   ```text
+   @pantheon-systems/p1-next-sdk 0.16.0 (installed in the app), latest published 0.20.0
+     WARN: the app you would capture runs @pantheon-systems/p1-next-sdk 0.16.0, but 0.20.0 is the latest published.
+   ```
+
    If the app still runs the old version, update it first: screenshots show the installed UI.
 
 3. Check the inventory against the new version:
 
    ```bash
    node scripts/inventory.mjs release-check --version <new version> --inventory <inventory>
+   ```
+
+   ```text
+   @pantheon-systems/p1-next-sdk 0.20.0
+     0 screenshot(s) already captured for 0.20.0
+     BEHIND  p1.live.editor-shell  (captured, still targets 0.16.0); finish or retarget it with: transition --id p1.live.editor-shell --to approved --release 0.20.0
    ```
 
    Each screenshot captured for an older version is listed as `BEHIND`, with the exact command that

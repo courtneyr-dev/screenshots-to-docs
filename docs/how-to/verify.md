@@ -18,6 +18,18 @@ Confirm each published image is the one you recorded, and audit every image's ch
    node scripts/inventory.mjs trace --inventory <inventory> --assets-dir <assets>
    ```
 
+   ```text
+   Images checked: 2. With problems: 0. Inventory gaps: 0. Records not captured yet: 0.
+
+   p1.live.editor-shell
+     → release 0.20.0
+     → screenshots/p1.live.editor-shell/0.20.0.png  sha256 88ed609b652aded5…  2880x1800  (file checked)
+     → Figma uploaded: page RUN-2026-10-07 · p1-live-20261007-1423 / clean node 63:8 / annotated node 63:38
+     → docs <doc ID> / "Live test: tour the editor" / Live test: tour the editor #1 (annotated frame)
+     → published (not known)
+     → verification unverified
+   ```
+
    It exits 1 on any missing link.
 
 2. List what isn't verified yet:

@@ -8,7 +8,7 @@ nav_order: 3
 
 Capture the approved screenshots from the signed-in P1 editor.
 
-{% include video.html name="02-capture" title="Capture the new release" %}
+{% include video.html name="02-capture" title="Capture the new release" poster="capture-results.jpg" %}
 
 ## Steps
 
@@ -41,6 +41,13 @@ Capture the approved screenshots from the signed-in P1 editor.
    ```
 
    `record-capture` stores each image's checksum, size, and release, and moves the records to `captured`.
+
+   ```text
+   p1.live.editor-shell                         captured   refresh   0.20.0       docs-team
+   p1.live.workstream-selector                  captured   refresh   0.20.0       docs-team
+   ```
+
+   {% include figure.html src="capture-results.jpg" alt="Two captures side by side: the P1 editor shell and the editor with the workstream selector open." caption="The two 0.20.0 captures from one run. Each passed the signed-in, project, and workstream checks before it was saved." %}
 
 ## If a shot fails
 

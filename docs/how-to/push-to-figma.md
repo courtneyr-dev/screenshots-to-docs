@@ -8,7 +8,7 @@ nav_order: 4
 
 Put a capture run on its own Figma page, one clean frame per screenshot, ready to annotate.
 
-{% include video.html name="03-capture-to-figma" title="Capture run to Figma" %}
+{% include video.html name="03-capture-to-figma" title="Capture run to Figma" poster="run-gallery.jpg" %}
 
 ## Steps
 
@@ -17,6 +17,8 @@ Put a capture run on its own Figma page, one clean frame per screenshot, ready t
    ```bash
    node scripts/make-gallery.mjs --dir <out>/run1
    ```
+
+   {% include figure.html src="run-gallery.jpg" alt="The run gallery: a dark page titled with the run ID, showing two screenshot cards with their IDs and HTTP 200 badges." caption="The gallery for one run. Reject a bad shot here, before it reaches Figma." %}
 
 2. Plan the Figma page:
 
@@ -40,12 +42,14 @@ Put a capture run on its own Figma page, one clean frame per screenshot, ready t
 
       It refuses any URL that isn't https on `figma.com`, before sending anything.
 
+   {% include figure.html src="figma-run-page.jpg" alt="A Figma run page with the run header and one clean frame per screenshot." caption="One Figma page per run, named RUN-date · run ID, with one clean frame per screenshot." %}
+
 4. Record where each screenshot lives:
 
    ```bash
    node scripts/inventory.mjs record-figma --id <id> --evidence uploaded --file-url <file url> --page-name "<run page>" --node-id <clean frame node> --inventory <inventory>
    ```
 
-{% include video.html name="04-figma-run" title="The run in Figma" %}
+{% include video.html name="04-figma-run" title="The run in Figma" poster="figma-run-page.jpg" %}
 
 Next: [Annotate with the kit](annotate.html).
