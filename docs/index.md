@@ -15,7 +15,8 @@ nav_order: 1
 </div>
 
 When an app ships a new version, the screenshots in its docs go stale. This tool turns a release into a reviewed
-batch of screenshot changes. People still decide what to reshoot, review the marks, and click Publish.
+batch of screenshot changes, for the P1 editor, WordPress and Drupal admin screens, Content Publisher, public
+websites, or any web app you add a [preset](reference/presets.html) for. People still decide what to reshoot, review the marks, and click Publish.
 
 ```mermaid
 flowchart LR

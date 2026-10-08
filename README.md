@@ -1,6 +1,6 @@
-# p1-screenshots-to-docs
+# screenshots-to-docs
 
-Keeps P1 docs screenshots current across releases. When P1 ships a new version, the tool captures the signed-in editor, puts each run on a Figma page for annotation with a shared kit, drafts alt text from the annotation marks, and swaps the new images into Markdown docs and Google Docs from a list pinned to a git commit. People decide what to reshoot, review the marks, and click Publish.
+Keeps docs screenshots current across releases, for any web app. When the app ships a new version, the tool captures it through a target preset (the P1 editor, WordPress admin, Drupal admin, Content Publisher, public sites, or your own), puts each run on a Figma page for annotation with a shared kit, drafts alt text from the annotation marks, and swaps the new images into Markdown docs and Google Docs from a list pinned to a git commit. People decide what to reshoot, review the marks, and click Publish.
 
 ## Documentation
 

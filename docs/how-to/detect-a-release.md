@@ -6,7 +6,8 @@ nav_order: 2
 
 # Detect a release
 
-When P1 ships a new version, find the screenshots that show the old UI and approve them for a reshoot.
+When the app you document ships a new version, find the screenshots that show the old UI and approve them for
+a reshoot.
 
 {% include video.html name="01-detect-release" title="A release is detected" %}
 
@@ -18,11 +19,13 @@ When P1 ships a new version, find the screenshots that show the old UI and appro
    node scripts/inventory.mjs list --inventory <inventory>
    ```
 
-2. Compare the SDK the capture app runs with the latest published version:
+2. Compare the version the capture app runs with the latest published one. `--config` uses your preset's
+   release source: the P1 SDK on npm for `p1-editor`, WordPress core for `wordpress-admin`, Drupal core for
+   `drupal-admin`:
 
    ```bash
-   node scripts/inventory.mjs release-check --registry --inventory <inventory>
-   node scripts/inventory.mjs release-check --app <capture app folder> --inventory <inventory>
+   node scripts/inventory.mjs release-check --registry --config p1-editor.config.json --inventory <inventory>
+   node scripts/inventory.mjs release-check --app <capture app folder> --config p1-editor.config.json --inventory <inventory>
    ```
 
    ```text
@@ -31,6 +34,18 @@ When P1 ships a new version, find the screenshots that show the old UI and appro
    ```
 
    If the app still runs the old version, update it first: screenshots show the installed UI.
+
+   For any other product, name the source: `--source github:<owner>/<repo>`, `--source npm:<package>`, or
+   `--source page:<url> --pattern '<regex>'` for a version printed on a page.
+   [Release sources](../reference/commands.html#release-sources) lists them all.
+
+   ```bash
+   node scripts/inventory.mjs release-check --registry --source wordpress --inventory <inventory>
+   ```
+
+   ```text
+   wordpress 7.1.3, latest published 7.1.3
+   ```
 
 3. Check the inventory against the new version:
 

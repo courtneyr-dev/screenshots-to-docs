@@ -6,7 +6,8 @@ nav_order: 3
 
 # Capture the editor
 
-Capture the approved screenshots from the signed-in P1 editor.
+Capture the approved screenshots from the signed-in P1 editor. For WordPress, Drupal, Content Publisher, or a
+public site, the steps are the same with that app's preset: [Capture WordPress, Drupal, and other apps](capture-other-apps.html).
 
 {% include video.html name="02-capture" title="Capture the new release" poster="capture-results.jpg" %}
 

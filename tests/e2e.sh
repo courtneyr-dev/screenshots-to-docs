@@ -382,12 +382,12 @@ t "one failed upload exits 1, names the file, and prints a --only retry for just
 
 echo "== skill validator"
 t "the in-repo skill validator passes on this tool" node scripts/validate-skill.mjs
-rm -rf "$TMP/skillcopy" && mkdir -p "$TMP/skillcopy/p1-screenshots-to-docs" && cp -R SKILL.md references scripts templates examples briefs tests "$TMP/skillcopy/p1-screenshots-to-docs/" 2>/dev/null
-SC="$TMP/skillcopy/p1-screenshots-to-docs"
+rm -rf "$TMP/skillcopy" && mkdir -p "$TMP/skillcopy/screenshots-to-docs" && cp -R SKILL.md references scripts templates examples briefs tests "$TMP/skillcopy/screenshots-to-docs/" 2>/dev/null
+SC="$TMP/skillcopy/screenshots-to-docs"
 t "the validator accepts an intact copy" node scripts/validate-skill.mjs "$SC"
-sed -i.bak 's/^name: p1-screenshots-to-docs/name: some-other-name/' "$SC/SKILL.md" && rm -f "$SC/SKILL.md.bak"
+sed -i.bak 's/^name: screenshots-to-docs/name: some-other-name/' "$SC/SKILL.md" && rm -f "$SC/SKILL.md.bak"
 t "the validator rejects a name that doesn't match the folder" bash -c "node scripts/validate-skill.mjs '$SC' >/dev/null 2>&1; [ \$? -eq 1 ]"
-sed -i.bak 's/^name: some-other-name/name: p1-screenshots-to-docs/' "$SC/SKILL.md" && rm -f "$SC/SKILL.md.bak"
+sed -i.bak 's/^name: some-other-name/name: screenshots-to-docs/' "$SC/SKILL.md" && rm -f "$SC/SKILL.md.bak"
 echo 'See `references/does-not-exist.md`.' >> "$SC/SKILL.md"
 t "the validator rejects a link to a file that doesn't exist" bash -c "node scripts/validate-skill.mjs '$SC' >'$TMP/v.log' 2>&1; [ \$? -eq 1 ] && grep -q 'does-not-exist' '$TMP/v.log'"
 sed -i.bak '/does-not-exist/d' "$SC/SKILL.md" && rm -f "$SC/SKILL.md.bak"

@@ -1,13 +1,15 @@
 ---
-name: p1-screenshots-to-docs
-description: "Use when creating or refreshing screenshots of the signed-in P1 editor for P1 docs, a release, or a UI review. You supply the P1 base URL, project, workstream, page, Chrome profile and port, Figma destination, and handoff location in a per-run config. The tool captures a fixed six-shot set through a dedicated Chrome that the person signs in to, fails closed on sign-in, loading, challenge, public-site, wrong-workstream, and missing-editor states, pushes each run to Figma as its own review page, and writes a manual handoff note for the docs author. Not for the published site, and it does not export to Google Docs."
+name: screenshots-to-docs
+description: "Use when creating or refreshing docs screenshots of a web app for a release or a UI review: the P1 editor, WordPress admin, Drupal admin, Pantheon Content Publisher, a public website, or any app with its own preset. A per-run config names the preset, the base URL, how the person signs in (their signed-in dedicated Chrome, a local login form read from environment variables, or none), the Figma destination, and the handoff location. Captures fail closed on sign-in, loading, challenge, and wrong-page states; each run goes to Figma for annotation; alt text is drafted from the marks; and a release swaps images and alt text into Markdown docs and Google Docs from a commit-pinned manifest. It never signs in for the person or publishes.""
 ---
 
-# P1 editor screenshots to docs
+# Screenshots to docs
 
-Capture trustworthy screenshots of the signed-in P1 **editor** (the `/p1` route by default), put each run in Figma for manual annotation, and hand the docs author a note they can act on without having run the capture.
+Capture trustworthy screenshots of a web app, put each run in Figma for manual annotation, and hand the docs author a note they can act on without having run the capture.
 
-Nothing here is tied to one person or project. Each run takes its settings from a config file: the P1 base URL, project name, workstream, page, Chrome profile and debugging port, Figma destination and naming, and where the handoff note goes (`references/configuration.md`). The workflow was proven end to end once, on a demo project; the record is in `references/poc-results.md`, and the shape of its config is in `examples/proof-of-concept/`, with placeholders, as an example only.
+**Targets.** The config's `preset` picks the app: `p1-editor` (the default; the workflow below describes it), `wordpress-admin`, `drupal-admin`, `content-publisher`, or `public-site`. Each preset in `scripts/presets/` declares the settings it needs, how the person signs in, CSS that hides notices and banners, and named checks; each has a starter brief in `briefs/` and an example config in `examples/`. A form sign-in reads the username and password from environment variables the person exports; never ask for, print, or write those values. Release detection takes `--source` (`npm:`, `github:`, `wordpress`, `drupal`, `page:`) or the preset's default. Details: `docs/reference/presets.md` and `docs/how-to/capture-other-apps.md`.
+
+Nothing here is tied to one person or project. Each run takes its settings from a config file: for the P1 editor, the P1 base URL, project name, workstream, page, Chrome profile and debugging port, Figma destination and naming, and where the handoff note goes (`references/configuration.md`). The workflow was proven end to end once, on a demo project; the record is in `references/poc-results.md`, and the shape of its config is in `examples/proof-of-concept/`, with placeholders, as an example only.
 
 ## What this skill does not do
 
