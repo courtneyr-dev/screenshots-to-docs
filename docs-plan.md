@@ -73,8 +73,8 @@ Grouped in navigation as Set up · Each release (detect → verify, 9 pages in o
 
 ## Tutorial verification status
 
-| Tutorial        | Status                                                                         |
-| --------------- | ------------------------------------------------------------------------------ |
+| Tutorial        | Status                                                                                                                                                                      |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `first-swap.md` | verified 2026-10-07: every command run in a disposable copy of `examples/tutorial/`; outputs on the page are the captured outputs, with commit IDs normalized to `<commit>` |
 
 ---
