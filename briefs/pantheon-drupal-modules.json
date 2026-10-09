@@ -1,0 +1,109 @@
+{
+  "topic": "{{topic}}",
+  "site": "{{baseUrl}}",
+  "description": "Admin screens of Pantheon's Drupal modules that render on any Drupal site. Install and enable the modules first (see docs/how-to/capture-pantheon-products.md). Pantheon Advanced Page Cache has no admin screen.",
+  "dpr": 2,
+  "presets": [
+    "drupal-admin"
+  ],
+  "shots": [
+    {
+      "slug": "content-publisher-collections",
+      "label": "Content Publisher collections",
+      "url": "/admin/structure/pantheon-content-publisher-collection",
+      "delay": 1000,
+      "section": "content-publisher",
+      "actions": [
+        {
+          "adminPage": {
+            "title": "Pantheon Content Publisher collections"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "content-publisher-documents",
+      "label": "Content Publisher documents",
+      "url": "/admin/content/pantheon-content-publisher",
+      "delay": 1000,
+      "section": "content-publisher",
+      "actions": [
+        {
+          "adminPage": {
+            "title": "Pantheon Documents"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "content-publisher-smart-components",
+      "label": "Content Publisher smart components",
+      "url": "/admin/structure/pantheon-smart-component",
+      "delay": 1000,
+      "section": "content-publisher",
+      "actions": [
+        {
+          "adminPage": {
+            "title": "Pantheon smart component configuration"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "pantheon-secrets-sync",
+      "label": "Pantheon Secrets: sync keys",
+      "url": "/admin/config/system/keys/pantheon",
+      "delay": 1000,
+      "section": "secrets",
+      "actions": [
+        {
+          "adminPage": {
+            "title": "Sync all Pantheon Secrets"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "search-api",
+      "label": "Search API servers and indexes (Search API Pantheon)",
+      "url": "/admin/config/search/search-api",
+      "delay": 1000,
+      "section": "search",
+      "actions": [
+        {
+          "adminPage": {
+            "title": "Search API"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "domain-masking",
+      "label": "Pantheon Domain Masking options",
+      "url": "/admin/config/pantheon-domain-masking",
+      "delay": 1000,
+      "section": "domain-masking",
+      "actions": [
+        {
+          "adminPage": {
+            "title": "Pantheon Domain Masking Options"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "tls-checker",
+      "label": "TLS Compatibility Checker",
+      "url": "/admin/config/development/tls-checker",
+      "delay": 1000,
+      "section": "tls",
+      "actions": [
+        {
+          "adminPage": {
+            "title": "TLS Compatibility Checker"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -14,7 +14,7 @@ a reshoot.
 ## Watch everything Pantheon ships
 
 One command checks every product in a watchlist, plus the release notes, and says which screenshots each
-change can affect. `watchlists/pantheon.json` covers 23 products: the P1 and Content Publisher SDKs, Terminus,
+change can affect. `watchlists/pantheon.json` covers 35 products: the P1 and Content Publisher SDKs, Terminus,
 WordPress and Drupal core, the upstreams, and Pantheon's WordPress plugins and Drupal modules. It also reads
 the [release notes feed](https://docs.pantheon.io/release-notes) for changes with no version, such as the
 dashboard.

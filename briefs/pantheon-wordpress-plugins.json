@@ -1,0 +1,84 @@
+{
+  "topic": "{{topic}}",
+  "site": "{{baseUrl}}",
+  "description": "Admin screens of Pantheon's WordPress plugins that render on any WordPress site. Install and activate the plugins first (see docs/how-to/capture-pantheon-products.md). Screens that need a Pantheon environment, such as Settings > Pantheon Page Cache (from the Pantheon MU plugin) and Solr Power (needs a Solr index), are listed there, captured from a Pantheon dev environment with signIn \"chrome\".",
+  "dpr": 2,
+  "presets": [
+    "wordpress-admin"
+  ],
+  "shots": [
+    {
+      "slug": "content-publisher",
+      "label": "Pantheon Content Publisher: connect a collection",
+      "url": "/wp-admin/admin.php?page=pantheon-content-publisher",
+      "delay": 2000,
+      "section": "content-publisher",
+      "actions": [
+        {
+          "adminPage": {
+            "title": "Content Publisher"
+          }
+        }
+      ],
+      "expectAfter": [
+        "#content-pub-root"
+      ]
+    },
+    {
+      "slug": "wp-saml-auth",
+      "label": "Settings > WP SAML Auth",
+      "url": "/wp-admin/options-general.php?page=wp-saml-auth-settings",
+      "delay": 1000,
+      "section": "sso",
+      "actions": [
+        {
+          "adminPage": {
+            "title": "WP SAML Auth Settings"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "native-php-sessions",
+      "label": "Tools > Pantheon Sessions",
+      "url": "/wp-admin/tools.php?page=pantheon-sessions",
+      "delay": 1000,
+      "section": "sessions",
+      "actions": [
+        {
+          "adminPage": {
+            "title": "Pantheon Sessions"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "tls-compatibility-checker",
+      "label": "Tools > TLS Compatibility Checker",
+      "url": "/wp-admin/tools.php?page=tls-compatibility-checker",
+      "delay": 1000,
+      "section": "tls",
+      "actions": [
+        {
+          "adminPage": {
+            "title": "TLS Compatibility Checker"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "pantheon-hud",
+      "label": "Pantheon HUD in the admin bar, open",
+      "url": "/wp-admin/",
+      "delay": 800,
+      "section": "hud",
+      "actions": [
+        "adminReady"
+      ],
+      "expect": [
+        "#wp-admin-bar-pantheon-hud"
+      ],
+      "hover": "#wp-admin-bar-pantheon-hud"
+    }
+  ]
+}

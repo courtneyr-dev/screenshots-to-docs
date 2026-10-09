@@ -6,7 +6,7 @@
  */
 
 import assert from 'node:assert/strict';
-import { readFileSync, writeFileSync, mkdtempSync, rmSync, realpathSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdtempSync, rmSync, realpathSync, mkdirSync, readdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -39,6 +39,17 @@ await test('every built-in preset loads, names a valid sign-in mode, and has a s
     for (const s of brief.shots) for (const a of s.actions || []) {
       const name = typeof a === 'string' ? a : Object.keys(a)[0];
       assert.ok(p.actions[name], `${n}: brief shot ${s.slug} uses unknown action ${name}`);
+    }
+  }
+});
+
+await test('every brief in briefs/ names only presets and actions that exist', () => {
+  for (const file of readdirSync(join(ROOT, 'briefs')).filter(f => f.endsWith('.json'))) {
+    const brief = JSON.parse(readFileSync(join(ROOT, 'briefs', file), 'utf-8'));
+    const actions = Object.assign({}, ...(brief.presets || []).map(n => loadPreset(n).actions));
+    for (const s of brief.shots) for (const a of s.actions || []) {
+      const name = typeof a === 'string' ? a : Object.keys(a)[0];
+      assert.ok(actions[name], `${file}: shot ${s.slug} uses unknown action ${name}`);
     }
   }
 });

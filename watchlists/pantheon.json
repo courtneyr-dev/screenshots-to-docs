@@ -1,5 +1,5 @@
 {
-  "description": "Everything Pantheon ships that its docs can show: SDKs and CLIs, plugins and modules, upstreams, and core versions, each from where it is released; plus the release notes feed for changes with no version, such as the dashboard and the platform. Each product's id is what an inventory record's \"product\" names. Sources checked on 2026-10-09.",
+  "description": "Everything Pantheon ships that its docs can show: SDKs and CLIs, plugins and modules, upstreams, and core versions, each from where it is released; plus the release notes feed for changes with no version, such as the dashboard and the platform. Each product's id is what an inventory record's \"product\" names. Sources checked on 2026-10-09. Not watchable: wp-audit-tool (no releases or tags) and drops-7 (Drupal 7 tags only).",
   "products": [
     {
       "id": "p1-editor",
@@ -115,6 +115,66 @@
       "id": "pds-design-tokens",
       "name": "Pantheon Design System tokens",
       "source": "npm:@pantheon-systems/pds-design-tokens"
+    },
+    {
+      "id": "pantheon-migrations-wp",
+      "name": "Pantheon Migrations (BlogVault)",
+      "source": "wporg-plugin:bv-pantheon-migration"
+    },
+    {
+      "id": "wp-tls-compatibility-checker",
+      "name": "WP TLS Compatibility Checker",
+      "source": "github:pantheon-systems/wp-tls-compatibility-checker"
+    },
+    {
+      "id": "wp-launch-check",
+      "name": "WP Launch Check",
+      "source": "github:pantheon-systems/wp_launch_check"
+    },
+    {
+      "id": "drupal-tls-checker",
+      "name": "TLS Checker (Drupal)",
+      "source": "github:pantheon-systems/drupal_tls_checker"
+    },
+    {
+      "id": "pantheon-domain-masking",
+      "name": "Pantheon Domain Masking (Drupal)",
+      "source": "github:pantheon-systems/pantheon_domain_masking"
+    },
+    {
+      "id": "terminus-github-actions",
+      "name": "Terminus GitHub Action",
+      "source": "github:pantheon-systems/terminus-github-actions"
+    },
+    {
+      "id": "create-p1-starter-kit",
+      "name": "P1 starter kit",
+      "source": "npm:@pantheon-systems/create-p1-starter-kit"
+    },
+    {
+      "id": "content-publisher-browser-sdk",
+      "name": "Content Publisher Browser SDK",
+      "source": "npm:@pantheon-systems/cpub-browser-sdk"
+    },
+    {
+      "id": "content-publisher-php-sdk",
+      "name": "Content Publisher PHP SDK",
+      "source": "github:pantheon-systems/pcc-php-sdk"
+    },
+    {
+      "id": "nextjs-cache-handler",
+      "name": "Next.js Cache Handler",
+      "source": "npm:@pantheon-systems/nextjs-cache-handler"
+    },
+    {
+      "id": "customer-secrets-php-sdk",
+      "name": "Customer Secrets PHP SDK",
+      "source": "github:pantheon-systems/customer-secrets-php-sdk"
+    },
+    {
+      "id": "pantheon-secrets-js",
+      "name": "Pantheon Secrets JS",
+      "source": "npm:@pantheon-systems/pantheon-secrets"
     }
   ],
   "feeds": [
