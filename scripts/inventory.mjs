@@ -50,7 +50,7 @@ const { values, positionals } = parseArgs({
     inventory: { type: 'string' }, against: { type: 'string' }, json: { type: 'boolean' },
     status: { type: 'string' }, release: { type: 'string' }, owner: { type: 'string' }, workstream: { type: 'string' }, 'release-status': { type: 'string' },
     id: { type: 'string' }, config: { type: 'string' }, set: { type: 'string', multiple: true }, target: { type: 'string' }, out: { type: 'string' },
-    run: { type: 'string' }, version: { type: 'string' }, app: { type: 'string' }, package: { type: 'string' }, pattern: { type: 'string' }, registry: { type: 'boolean' }, reopen: { type: 'boolean' }, file: { type: 'string' }, 'assets-dir': { type: 'string' }, source: { type: 'string' },
+    run: { type: 'string' }, version: { type: 'string' }, app: { type: 'string' }, package: { type: 'string' }, pattern: { type: 'string' }, product: { type: 'string' }, registry: { type: 'boolean' }, reopen: { type: 'boolean' }, file: { type: 'string' }, 'assets-dir': { type: 'string' }, source: { type: 'string' },
     evidence: { type: 'string' }, 'file-url': { type: 'string' }, 'page-name': { type: 'string' }, 'node-id': { type: 'string' }, 'annotated-node-id': { type: 'string' }, 'version-name': { type: 'string' },
     'branch-url': { type: 'string' }, 'manifest-commit': { type: 'string' }, 'annotation-status': { type: 'string' }, 'dev-resource': { type: 'string', multiple: true }, 'not-used-reason': { type: 'string' },
     'inserted-at': { type: 'string' }, 'published-url': { type: 'string' }, 'published-file': { type: 'string' }, 'published-sha256': { type: 'string' }, 'verified-at': { type: 'string' }, 'verified-release': { type: 'string' }, notes: { type: 'string' },
@@ -408,7 +408,8 @@ switch (cmd) {
     if (parseVersion(version)?.pre) fail(`${version} is a prerelease; screenshots track shipped versions. Pass a released version.`);
     const warn = [];
     if (appVersion && latest && compareVersions(appVersion, latest) < 0) warn.push(`the app you would capture runs ${pkg} ${appVersion}, but ${latest} is the latest published. Screenshots show the UI of the installed version; update the app first to capture the new release.`);
-    const res = releaseCheck(doc, version);
+    if (values.product !== undefined && !/^[a-z0-9][a-z0-9-]*$/.test(values.product)) fail('--product must be a lowercase ID such as "pantheon-dashboard"');
+    const res = releaseCheck(doc, version, { product: values.product });
     if (res.error) fail(res.error);
     if (values.json) { out({ ...res, source, package: pkg, app_version: appVersion, latest, warnings: warn }); }
     else {
@@ -421,7 +422,7 @@ switch (cmd) {
     }
     if (!res.candidates.length) { if (!values.json) console.log('  Nothing to reopen.'); break; }
     if (!values.reopen) {
-      if (!values.json) console.log(`\n${res.candidates.length} screenshot(s) may have changed. Reopen them for ${version} with: node scripts/inventory.mjs release-check --version ${version} --reopen`);
+      if (!values.json) console.log(`\n${res.candidates.length} screenshot(s) may have changed. Reopen them for ${version} with: node scripts/inventory.mjs release-check --version ${version}${values.product ? ` --product ${values.product}` : ''} --reopen`);
       process.exit(3);
     }
     // Reopen every candidate in one step: all of them become valid, or nothing is written.

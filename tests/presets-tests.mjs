@@ -156,6 +156,7 @@ await test('release sources parse, and anything else is refused', () => {
   assert.deepEqual(parseSource('npm:@pantheon-systems/p1-next-sdk'), { kind: 'npm', name: '@pantheon-systems/p1-next-sdk' });
   assert.deepEqual(parseSource('github:ddev/ddev'), { kind: 'github', repo: 'ddev/ddev' });
   assert.deepEqual(parseSource('wordpress'), { kind: 'wordpress' });
+  assert.equal(sourceUrl(parseSource('drupal')), 'https://updates.drupal.org/release-history/drupal/current');
   assert.equal(parseSource('page:https://example.com/about').url, 'https://example.com/about');
   for (const bad of ['', 'npm:', 'github:ddev', 'page:ftp://x', 'page:https://u:p@example.com/', 'pypi:requests', 'joomla']) assert.throws(() => parseSource(bad));
   assert.equal(sourceUrl(parseSource('npm:@a/b')), 'https://registry.npmjs.org/@a%2Fb/latest');
@@ -165,8 +166,8 @@ await test('each source reads its version from a saved response', () => {
   assert.equal(versionFrom({ kind: 'npm' }, '{"version":"0.20.0"}'), '0.20.0');
   assert.equal(versionFrom({ kind: 'github' }, '{"tag_name":"v1.25.4"}'), '1.25.4');
   assert.equal(versionFrom({ kind: 'wordpress' }, '{"offers":[{"response":"upgrade","current":"7.1.3"},{"response":"autoupdate","current":"7.1.3"}]}'), '7.1.3');
-  const drupal = { packages: { 'drupal/core': [{ version: '12.0.0-beta1' }, { version: '11.4.8' }, { version: '11.10.0' }, { version: '11.4.10' }, { version: '10.5.3' }] } };
-  assert.equal(versionFrom({ kind: 'drupal' }, JSON.stringify(drupal)), '11.10.0');
+  const drupal = ['12.0.0-beta1', '11.4.8', '11.10.0', '11.4.10', '10.5.3'].map(v => `<release><version>${v}</version></release>`).join('');
+  assert.equal(versionFrom({ kind: 'drupal', project: 'drupal' }, `<project><releases>${drupal}</releases></project>`), '11.10.0');
   assert.equal(versionFrom({ kind: 'page', url: 'https://example.com' }, '<footer>Version 3.2.1</footer>', { pattern: 'Version (\\d+\\.\\d+\\.\\d+)' }), '3.2.1');
   assert.throws(() => versionFrom({ kind: 'page', url: 'https://example.com' }, 'x'), /--pattern/);
   assert.throws(() => versionFrom({ kind: 'page', url: 'https://example.com' }, 'nothing', { pattern: 'v(\\d+)' }), /found no version/);

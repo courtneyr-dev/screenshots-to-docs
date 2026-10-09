@@ -117,8 +117,8 @@ fails without it.
 ## 5. Alt text from the marks (video 7b)
 
 ```bash
-node scripts/draft-alt.mjs --marks <marks.json> [--subject "The P1 editor"]
-node scripts/draft-alt.mjs --marks <marks.json> --id <id> --inventory <inventory> --apply
+node scripts/draft-alt.mjs --marks <marks.json> --subject "The P1 editor"
+node scripts/draft-alt.mjs --marks <marks.json> --subject "The P1 editor" --id <id> --inventory <inventory> --apply
 ```
 
 - `marks.json` is the annotated frame's layer names (a list, or the Figma REST nodes response).

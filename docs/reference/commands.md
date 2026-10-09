@@ -73,21 +73,35 @@ Statuses and fields: [Inventory](inventory.html).
 `--package <name>` for an npm package, or pass `--config` to use the default of the config's
 [preset](presets.html). `--app <folder>` reads the version installed in an app, so it needs an npm source.
 
-| Source                  | Reads                                                                                                    | Example                                                                                           |
-| ----------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| `npm:<package>`         | The `latest` dist-tag, through `npm view`, so private registries in `.npmrc` work                        | `npm:@pantheon-systems/p1-next-sdk`                                                               |
-| `github:<owner>/<repo>` | The latest GitHub release (GitHub skips drafts and prereleases)                                          | `github:ddev/ddev`                                                                                |
-| `wordpress`             | WordPress core, from api.wordpress.org                                                                   | `wordpress`                                                                                       |
-| `drupal`                | The newest stable `drupal/core` on Packagist                                                             | `drupal`                                                                                          |
-| `page:<url>`            | A version printed on a public page. `--pattern` is a regular expression whose first group is the version | `page:https://wordpress.org/download/` with `--pattern 'Download WordPress (\d+\.\d+(?:\.\d+)?)'` |
+| Source                  | Reads                                                                                                                                                            | Example                                                                                           |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `npm:<package>`         | The `latest` dist-tag, through `npm view`, so private registries in `.npmrc` work                                                                                | `npm:@pantheon-systems/p1-next-sdk`                                                               |
+| `github:<owner>/<repo>` | The latest GitHub release (GitHub skips drafts and prereleases). A repository that releases several packages tags them `@scope/name@1.2.3`; use `npm:` for those | `github:pantheon-systems/terminus`                                                                |
+| `wordpress`             | WordPress core, from api.wordpress.org                                                                                                                           | `wordpress`                                                                                       |
+| `wporg-plugin:<slug>`   | A plugin in the WordPress.org directory                                                                                                                          | `wporg-plugin:wp-redis`                                                                           |
+| `drupal:<project>`      | A Drupal.org module or theme, its newest stable release                                                                                                          | `drupal:search_api_pantheon`                                                                      |
+| `drupal`                | Drupal core, the newest stable release on Drupal.org                                                                                                             | `drupal`                                                                                          |
+| `page:<url>`            | A version printed on a public page. `--pattern` is a regular expression whose first group is the version                                                         | `page:https://wordpress.org/download/` with `--pattern 'Download WordPress (\d+\.\d+(?:\.\d+)?)'` |
 
 A prerelease version (`0.21.0-canary.1`) is refused: screenshots track shipped versions.
+
+`release-check --product <id>` compares only the records whose `product` is that ID.
+
+### Watch
+
+| Command                                                                                                                     | What it does                                                                                                                                                                                                                                                                                                         |
+| --------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `node scripts/watch.mjs --watchlist <name\|file> --state <file> [--inventory <file>] [--update] [--json] [--since-days 14]` | Checks every product in the watchlist and its release-notes feeds, and lists the screenshots each change can affect, with the `release-check` command for each. Read-only; `--update` saves what was seen. Exits 3 when something is new. [How to](../how-to/detect-a-release.html#watch-everything-pantheon-ships). |
+
+A watchlist (`watchlists/pantheon.json`) lists `products`, each `{ "id", "name", "source" }`, and `feeds`, each
+`{ "id", "name", "url", "tagPattern", "tagProducts" }`. `tagPattern` is a regular expression run on each new
+entry's page, whose first group is a tag; `tagProducts` maps a tag to the product IDs it can change.
 
 ## Docs
 
 | Command                                                                                                                      | What it does                                                                                                                       | Refuses when                                                                                          |
 | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `node scripts/draft-alt.mjs --marks <marks.json> [--subject "…"] [--id <id> --inventory <file> --apply]`                     | Drafts alt text from the frame's `Step N: …` layers; `--apply` saves it through `set-alt`.                                         | Steps aren't numbered 1 to N with no gaps or repeats.                                                 |
+| `node scripts/draft-alt.mjs --marks <marks.json> --subject "…" [--id <id> --inventory <file> --apply]`                       | Drafts alt text from the frame's `Step N: …` layers; `--apply` saves it through `set-alt`.                                         | Steps aren't numbered 1 to N with no gaps or repeats.                                                 |
 | `node scripts/publish-markdown.mjs --inventory <file> --assets-dir <dir> --repo <docs repo> [--branch <name>] [--dry-run]`   | Copies each release image over its mapped file and updates Markdown alt text; `--branch` commits only changed files. Never pushes. | A map path leaves the repo or isn't a PNG, an asset's checksum doesn't match, or alt text is missing. |
 | `node scripts/gdocs-manifest.mjs --inventory <file> --repo <owner/name> --ref <commit> [--assets-root <dir>] [--out <file>]` | Writes the swap list the Apps Script reads, pinned to a commit.                                                                    | `--ref` isn't a full 40-character SHA, or the repo name is malformed.                                 |
 

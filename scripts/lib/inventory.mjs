@@ -32,7 +32,7 @@ const SHA_RE = /^[0-9a-f]{64}$/;
 const COMMIT_RE = /^[0-9a-f]{7,40}$/;
 
 const KEYS = {
-  record: ['screenshot_id', 'title', 'status', 'release_status', 'priority', 'owner', 'reviewer', 'source', 'capture', 'content', 'figma', 'asset', 'publication', 'history', 'retired_at', 'retired_reason', 'notes'],
+  record: ['screenshot_id', 'product', 'title', 'status', 'release_status', 'priority', 'owner', 'reviewer', 'source', 'capture', 'content', 'figma', 'asset', 'publication', 'history', 'retired_at', 'retired_reason', 'notes'],
   source: ['type', 'docs_url', 'docs_document_id', 'docs_heading', 'request_url', 'reason'],
   capture: ['project', 'workstream', 'page', 'release', 'state', 'actions', 'checks', 'constraints'],
   content: ['caption', 'alt_text', 'annotations'],
@@ -326,6 +326,8 @@ export function validateInventory(doc, { previous = null } = {}) {
     if (!RELEASE_STATUSES.includes(r.release_status)) err('release_status', `release_status must be one of ${RELEASE_STATUSES.join('|')}`);
     if (!PRIORITIES.includes(r.priority)) err('priority', `priority must be one of ${PRIORITIES.join('|')}`);
     if (!nonEmpty(r.owner)) err('owner', 'owner is required');
+    // Which product's releases can change this screenshot: a product ID from a watchlist, for example "terminus".
+    if (r.product !== undefined && !(typeof r.product === 'string' && /^[a-z0-9][a-z0-9-]*$/.test(r.product))) err('product', 'product must be a lowercase ID such as "pantheon-dashboard" (letters, digits, "-")');
     if (r.figma?.evidence !== undefined && !FIGMA_EVIDENCE.includes(r.figma.evidence)) err('figma.evidence', `figma.evidence must be one of ${FIGMA_EVIDENCE.join('|')}`);
     if (r.figma?.annotation_status !== undefined && !ANNOTATION_STATUS.includes(r.figma.annotation_status)) err('figma.annotation_status', `figma.annotation_status must be one of ${ANNOTATION_STATUS.join('|')}`);
     // The annotated frame is a separate node; recording the clean frame's ID here would send the docs author to the wrong frame.
@@ -571,11 +573,13 @@ export function compareVersions(a, b) {
  * did is decided by capturing again and comparing pixels (compare-runs), not here. Records whose release
  * isn't a version can't be compared and are listed apart; nothing is guessed.
  */
-export function releaseCheck(doc, version) {
+// With `product`, only that product's records are compared: a Terminus release says nothing about dashboard shots.
+export function releaseCheck(doc, version, { product } = {}) {
   const target = parseVersion(version);
   if (!target) return { error: `"${version}" is not a version like 1.2.3` };
-  const out = { version, candidates: [], current: [], behind: [], unversioned: [] };
+  const out = { version, ...(product && { product }), candidates: [], current: [], behind: [], unversioned: [] };
   for (const r of doc.records) {
+    if (product && r.product !== product) continue;
     if (r.status === 'retired' || r.release_status === 'retire') continue;
     const rel = r.capture?.release;
     const cmp = rel ? compareVersions(rel, version) : null;

@@ -38,8 +38,9 @@ const test = async (name, fn) => {
 // ---------- draft-alt ----------
 const STEPS = ['screenshot', 'Redact: avatar', 'Highlight 1: Blocks panel', 'Step 2: the page canvas', 'Step 1: the Blocks panel', 'Step 4: the Review button', 'Step 3: page settings'];
 await test('draft-alt numbers the areas from the step layers, in order, with the count in words', () => {
-  assert.equal(draftAlt(stepsFrom(STEPS)), 'The P1 editor with four numbered areas: 1 the Blocks panel, 2 the page canvas, 3 page settings, 4 the Review button.');
+  assert.equal(draftAlt(stepsFrom(STEPS), 'The P1 editor'), 'The P1 editor with four numbered areas: 1 the Blocks panel, 2 the page canvas, 3 page settings, 4 the Review button.');
   assert.equal(draftAlt(stepsFrom(['Step 1: the button.']), "The P1 editor's menu"), "The P1 editor's menu with one numbered area: 1 the button.");
+  assert.throws(() => draftAlt(stepsFrom(['Step 1: a'])), /give --subject/);
 });
 await test('draft-alt refuses gaps, repeats, and frames without step layers', () => {
   assert.throws(() => stepsFrom(['Step 1: a', 'Step 3: c']), /no gaps/);
@@ -56,12 +57,12 @@ await test('draft-alt --apply saves the draft through set-alt, and without --app
   const inv = join(TMP, 'alt.json'); writeFileSync(inv, JSON.stringify(valid()));
   const marks = join(TMP, 'marks.json'); writeFileSync(marks, JSON.stringify(STEPS));
   const before = readFileSync(inv, 'utf-8');
-  const dry = spawnSync(process.execPath, [join(ROOT, 'scripts/draft-alt.mjs'), '--marks', marks, '--id', 'p1.editor.blocks-browser', '--inventory', inv], { encoding: 'utf-8' });
+  const dry = spawnSync(process.execPath, [join(ROOT, 'scripts/draft-alt.mjs'), '--marks', marks, '--subject', 'The P1 editor', '--id', 'p1.editor.blocks-browser', '--inventory', inv], { encoding: 'utf-8' });
   assert.equal(dry.status, 0, dry.stderr); assert.match(dry.stdout, /--apply/);
   assert.equal(readFileSync(inv, 'utf-8'), before);
-  const r = spawnSync(process.execPath, [join(ROOT, 'scripts/draft-alt.mjs'), '--marks', marks, '--id', 'p1.editor.blocks-browser', '--inventory', inv, '--apply'], { encoding: 'utf-8' });
+  const r = spawnSync(process.execPath, [join(ROOT, 'scripts/draft-alt.mjs'), '--marks', marks, '--subject', 'The P1 editor', '--id', 'p1.editor.blocks-browser', '--inventory', inv, '--apply'], { encoding: 'utf-8' });
   assert.equal(r.status, 0, r.stdout + r.stderr);
-  assert.equal(rec(JSON.parse(readFileSync(inv, 'utf-8')), 'p1.editor.blocks-browser').content.alt_text, draftAlt(stepsFrom(STEPS)));
+  assert.equal(rec(JSON.parse(readFileSync(inv, 'utf-8')), 'p1.editor.blocks-browser').content.alt_text, draftAlt(stepsFrom(STEPS), 'The P1 editor'));
 });
 
 // ---------- figma-export ----------

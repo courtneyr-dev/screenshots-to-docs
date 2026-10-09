@@ -46,7 +46,7 @@ Builds the plugin and shows you where its manifest is. In the Figma desktop app,
 1. Open any design file. Choose **Plugins > Development > Import plugin from manifest…**
 2. Pick `figma-plugin/manifest.json` from this repository.
 
-In each file that needs the kit, run **Plugins > Development > P1 screenshot annotation kit**. It adds the
+In each file that needs the kit, run **Plugins > Development > Screenshot annotation kit**. It adds the
 **Annotation** variables and an **Annotation kit · Components** page with 13 components. If the Pantheon
 Design System library is enabled for that file, the colors alias it; otherwise the plugin uses the same
 values locally. Running it again reuses the variables and builds the components on a new, dated page.

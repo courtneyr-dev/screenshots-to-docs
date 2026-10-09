@@ -19,15 +19,15 @@ One JSON file, `inventory/screenshots.json` (override with `--inventory <file>`)
 
 A record has these sections. Unknown fields are errors, so a typo can't hide.
 
-| Section       | Fields                                                                                                                                                                                                                  |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| top level     | `screenshot_id`, `title` (optional short title), `status`, `release_status`, `priority`, `owner`, `reviewer`, `history`, `retired_at`, `retired_reason`, `notes`                                                        |
-| `source`      | `type` (docs, issue, pr, release, support, design, other), `docs_url`, `docs_document_id`, `docs_heading`, `request_url`, `reason`                                                                                      |
-| `capture`     | `project`, `workstream`, `page`, `release`, `state`, `actions`, `checks`, `constraints`                                                                                                                                 |
-| `content`     | `caption`, `alt_text`, `annotations`                                                                                                                                                                                    |
-| `figma`       | `evidence`, `not_used_reason`, `file_url`, `page_name`, `frame_name`, `annotated_frame_name`, `node_id`, `annotated_node_id`, `version_name`, `branch_url`, `dev_resource_urls`, `manifest_commit`, `annotation_status` |
-| `asset`       | `path`, `sha256`, `width`, `height`, `captured_at`, `source` (`capture` or `figma_export`)                                                                                                                              |
-| `publication` | `docs_image_slot`, `published_url`, `published_sha256`, `alt_text_fingerprint`, `inserted_at`, `verified_at`, `verified_release`, `verified_asset_sha256`, `verification_notes`                                         |
+| Section       | Fields                                                                                                                                                                                                                                                             |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| top level     | `screenshot_id`, `product` (optional: the watchlist product whose releases can change it, for example `terminus`), `title` (optional short title), `status`, `release_status`, `priority`, `owner`, `reviewer`, `history`, `retired_at`, `retired_reason`, `notes` |
+| `source`      | `type` (docs, issue, pr, release, support, design, other), `docs_url`, `docs_document_id`, `docs_heading`, `request_url`, `reason`                                                                                                                                 |
+| `capture`     | `project`, `workstream`, `page`, `release`, `state`, `actions`, `checks`, `constraints`                                                                                                                                                                            |
+| `content`     | `caption`, `alt_text`, `annotations`                                                                                                                                                                                                                               |
+| `figma`       | `evidence`, `not_used_reason`, `file_url`, `page_name`, `frame_name`, `annotated_frame_name`, `node_id`, `annotated_node_id`, `version_name`, `branch_url`, `dev_resource_urls`, `manifest_commit`, `annotation_status`                                            |
+| `asset`       | `path`, `sha256`, `width`, `height`, `captured_at`, `source` (`capture` or `figma_export`)                                                                                                                                                                         |
+| `publication` | `docs_image_slot`, `published_url`, `published_sha256`, `alt_text_fingerprint`, `inserted_at`, `verified_at`, `verified_release`, `verified_asset_sha256`, `verification_notes`                                                                                    |
 
 ## IDs
 

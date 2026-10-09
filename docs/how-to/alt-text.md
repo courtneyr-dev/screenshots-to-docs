@@ -29,20 +29,20 @@ image.
 2. Draft the alt text:
 
    ```bash
-   node scripts/draft-alt.mjs --marks marks.json
+   node scripts/draft-alt.mjs --marks marks.json --subject "The P1 editor"
    ```
 
    ```text
    The P1 editor with four numbered areas: 1 the Blocks panel, 2 the page canvas, 3 page settings, 4 the Review button.
    ```
 
-   Use `--subject` to change how the sentence starts, for example
-   `--subject "The P1 editor's workstream selector open"`.
+   `--subject` names the screen and opens the sentence, for example `"The WordPress dashboard"`,
+   `"Drupal's Status report"`, or `"The P1 editor's workstream selector open"`.
 
 3. Read the draft. If it's right, save it:
 
    ```bash
-   node scripts/draft-alt.mjs --marks marks.json --id <id> --inventory <inventory> --apply
+   node scripts/draft-alt.mjs --marks marks.json --subject "The P1 editor" --id <id> --inventory <inventory> --apply
    ```
 
    `--apply` saves it through `set-alt`, which refuses generic or placeholder text. When the record already
