@@ -1,0 +1,20 @@
+{
+  "$comment": "EXAMPLE. Copy, replace the values, and run: node scripts/preflight.mjs --config <file> --check-chrome. You sign in to Google yourself in the dedicated Chrome (npm run chrome -- --config <file>); never put credentials in this file. Use a test doc.",
+  "topic": "my-gdocs-addon",
+  "preset": "gdocs-addon",
+  "baseUrl": "https://docs.google.com",
+  "params": {
+    "documentId": "<test doc ID from docs.google.com/document/d/<documentId>/edit>"
+  },
+  "chrome": {
+    "profileDir": "<a dedicated directory outside any repository, for example ~/.cache/screenshots-profile>",
+    "cdpPort": "<a free local port, for example 9222>"
+  },
+  "figma": {
+    "fileKey": "<destination design file key from figma.com/design/<fileKey>/...>"
+  },
+  "docs": {
+    "handoffDir": "<directory for handoff notes>",
+    "format": "markdown"
+  }
+}

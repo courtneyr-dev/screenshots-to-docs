@@ -10,15 +10,15 @@ Screens for each area that Pantheon's docs show: the dashboard, Content Publishe
 plugins and Drupal modules. For how many images each area has and where its releases come from, see
 [Pantheon docs coverage](../reference/pantheon-coverage.html).
 
-| Area                                                     | Preset               | Starter brief                            | Status                                         |
-| -------------------------------------------------------- | -------------------- | ---------------------------------------- | ---------------------------------------------- |
-| Pantheon WordPress plugins                               | `wordpress-admin`    | `briefs/pantheon-wordpress-plugins.json` | Verified: 5 screens on a local site            |
-| Pantheon Drupal modules                                  | `drupal-admin`       | `briefs/pantheon-drupal-modules.json`    | Verified: 7 screens on a local site            |
-| Content Publisher and P1 dashboard (content.pantheon.io) | `content-publisher`  | `briefs/content-publisher.json`          | Verified: 4 screens                            |
-| P1 editor                                                | `p1-editor`          | `briefs/p1-editor.json`                  | Verified                                       |
-| Pantheon dashboard (dashboard.pantheon.io)               | `pantheon-dashboard` | `briefs/pantheon-dashboard.json`         | Verified: 10 screens                           |
-| Google Docs add-on                                       | not built yet        | not built yet                            | The largest Content Publisher area (45 images) |
-| Terminal output                                          | none                 | none                                     | Show it as text, not an image                  |
+| Area                                                     | Preset               | Starter brief                            | Status                              |
+| -------------------------------------------------------- | -------------------- | ---------------------------------------- | ----------------------------------- |
+| Pantheon WordPress plugins                               | `wordpress-admin`    | `briefs/pantheon-wordpress-plugins.json` | Verified: 5 screens on a local site |
+| Pantheon Drupal modules                                  | `drupal-admin`       | `briefs/pantheon-drupal-modules.json`    | Verified: 7 screens on a local site |
+| Content Publisher and P1 dashboard (content.pantheon.io) | `content-publisher`  | `briefs/content-publisher.json`          | Verified: 4 screens                 |
+| P1 editor                                                | `p1-editor`          | `briefs/p1-editor.json`                  | Verified                            |
+| Pantheon dashboard (dashboard.pantheon.io)               | `pantheon-dashboard` | `briefs/pantheon-dashboard.json`         | Verified: 10 screens                |
+| Google Docs add-on                                       | `gdocs-addon`        | `briefs/gdocs-addon.json`                | Verified: the connect screen        |
+| Terminal output                                          | none                 | none                                     | Show it as text, not an image       |
 
 ## Pantheon WordPress plugins
 
@@ -147,6 +147,28 @@ The preset hides the maintenance and warning banners, toast notifications, and t
 the "Upgrade to Next Generation GCDN" callout on site pages, which has no stable selector. The dashboard's
 header offers "Try the new dashboard"; these routes and checks are for the current one, and a switch to the
 new one means checking them again.
+
+## The Google Docs add-on
+
+Content Publisher's Google Docs add-on is in 45 of the 149 images on docs.content.pantheon.io. It's a Google
+Workspace add-on: it opens from its button in the side panel on the right of Docs, labeled "Pantheon", not from
+the Extensions menu, whose Content Publisher entry only has Help.
+
+1. Use a test doc: shots show the doc's content and your Google avatar. For the connect screen, use a doc that
+   isn't connected to a collection.
+2. Copy `examples/gdocs-addon.config.example.json` and set `params.documentId` from the doc's URL
+   (`docs.google.com/document/d/<documentId>/edit`).
+3. Start the dedicated Chrome and sign in to Google.
+4. Capture with `briefs/gdocs-addon.json`.
+
+The `openAddon` action presses the side panel button (or leaves it alone when the panel is already open),
+waits for the panel, and checks the panel's text, for example "Connect this doc to a collection". It clicks
+nothing inside the add-on, so nothing gets connected or published, and the panel closes when capture closes
+its tab. The button is a tab: it reports open with `aria-selected`, not `aria-pressed`.
+
+Screens inside the add-on after connecting (the publish options, metadata, and preview) need a doc connected
+to a test collection, and a step that clicks inside the panel. Add those steps with
+`"frame": ".companion-shell-addon-content-container iframe"`, which reaches the add-on's frame.
 
 ## Terminal output
 

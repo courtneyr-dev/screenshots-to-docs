@@ -18,6 +18,7 @@ alt text, swaps, and verification) is the same for every app.
 | `drupal-admin`       | Drupal administration pages (Claro)                               | Login form, `DRUPAL_USER` and `DRUPAL_PASSWORD` from your shell |
 | `content-publisher`  | Pantheon Content Publisher's dashboard                            | You, in the dedicated Chrome                                    |
 | `pantheon-dashboard` | The Pantheon dashboard: workspace pages and a site's environments | You, in the dedicated Chrome                                    |
+| `gdocs-addon`        | A Google Docs add-on's side panel, such as Content Publisher      | You, in the dedicated Chrome                                    |
 | `public-site`        | Any public website                                                | None                                                            |
 
 Each preset has a starter brief in `briefs/<preset>.json` and an example config in

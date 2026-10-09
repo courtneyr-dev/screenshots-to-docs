@@ -1,0 +1,55 @@
+{
+  "description": "A Google Docs add-on in the Docs side panel, for example Pantheon Content Publisher. You sign in to Google yourself in the dedicated Chrome. openAddon presses the add-on's button in the right-hand side panel (skipped when it's already open), waits for the panel, and checks the panel's text; it clicks nothing inside the add-on, so nothing is connected or published. The panel closes with the tab, so the doc isn't left with it open. Use a test doc: shots show the doc's content and your account's avatar. Selectors checked against Google Docs on 2026-10-09, where Content Publisher's button is labeled \"Pantheon\".",
+  "signIn": {
+    "mode": "chrome"
+  },
+  "css": "#docs-butterbar-container, .docs-gm-companion-butterbar, [role=alert].docs-butterbar { display: none !important; }",
+  "params": {
+    "documentId": {
+      "required": true,
+      "pattern": "^[A-Za-z0-9_-]{25,80}$",
+      "what": "The test doc's ID, from docs.google.com/document/d/<documentId>/edit."
+    },
+    "addonLabel": {
+      "default": "Pantheon",
+      "what": "The add-on's button label in the side panel (its tooltip). Content Publisher's is \"Pantheon\"."
+    }
+  },
+  "actions": {
+    "docReady": {
+      "expect": [
+        "#docs-editor",
+        "#docs-menubar"
+      ]
+    },
+    "openAddon": {
+      "params": [
+        "label",
+        "text"
+      ],
+      "steps": [
+        {
+          "wait": 4000
+        },
+        {
+          "click": ".app-switcher-button[aria-label=\"{label}\"]",
+          "skipIf": "[aria-selected=true]"
+        },
+        {
+          "wait": ".companion-shell-addon-content-container iframe"
+        },
+        {
+          "wait": 8000
+        }
+      ],
+      "expectAfter": [
+        ".app-switcher-button[aria-label=\"{label}\"][aria-selected=true]",
+        {
+          "frame": ".companion-shell-addon-content-container iframe",
+          "selector": "body",
+          "text": "{text}"
+        }
+      ]
+    }
+  }
+}

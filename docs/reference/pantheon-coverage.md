@@ -27,7 +27,7 @@ Counted on 2026-10-09; [how it was counted](#how-this-was-counted).
 | WordPress admin                          |    122 | `wordpress-admin`                             | `wordpress` and each plugin's `wporg-plugin:` or `github:` source      |
 | Drupal admin                             |     78 | `drupal-admin`                                | `drupal` and each module's `drupal:` or `github:` source               |
 | content.pantheon.io dashboard            |     42 | `content-publisher`                           | release notes tagged Content Publisher → `content-publisher-dashboard` |
-| Google Docs add-on                       |     45 | not built yet                                 | release notes tagged Content Publisher                                 |
+| Google Docs add-on                       |     45 | `gdocs-addon`                                 | release notes tagged Content Publisher                                 |
 | Content Publisher preview and publish    |     16 | not built yet                                 | same                                                                   |
 | P1 editor                                |      7 | `p1-editor`                                   | `npm:@pantheon-systems/p1-next-sdk`                                    |
 | Microsoft Word add-in                    |      6 | not built yet                                 | release notes tagged Content Publisher                                 |
