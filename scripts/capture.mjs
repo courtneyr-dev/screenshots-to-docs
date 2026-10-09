@@ -509,9 +509,14 @@ function compileActions(spec, presets) {
 //   { wait: selector | ms, frame? } wait for a selector to be visible, or pause
 //   { key: "Escape" }              press a key
 //   { moveMouse: {x, y} }          move the pointer (clears hover tooltips)
+//   { check: selector | { selector, text?, notText? }, frame?, timeout? }  wait until it's visible, contains
+//       text, and (with notText) no longer shows that text
+// A click can add `opensWindow: "<text in the new window's URL>"`: the click opens a window (an add-on's
+// popup, for example), and the rest of the shot (later steps, expectAfter, the screenshot) uses that window.
+// It's closed after the shot.
 // Add `optional: true` to a click or scroll to skip it quietly when the target isn't there.
 // A target that isn't there fails the shot instead of skipping the step.
-async function runSteps(page, steps) {
+async function runSteps(page, steps, opened = []) {
   for (const step of steps || []) {
     const target = step.click || step.scroll || (typeof step.wait === 'string' ? step.wait : null);
     let scope = page;
@@ -521,7 +526,12 @@ async function runSteps(page, steps) {
       if (!scope) throw await stepFail(page, `${step.frame} has no readable content frame`);
     }
     if (step.click || step.scroll) {
-      const found = await scope.waitForSelector(target, { visible: true, timeout: step.optional ? 2000 : 15000 }).catch(async () => { if (step.optional) return null; throw await stepFail(page, `target not found: ${target}${step.frame ? ` (in ${step.frame})` : ''}`); });
+      // With `text`, wait for any visible match that contains it: the first match of a broad selector can be a
+      // hidden element (a Back button on the first screen), and waiting for that one would time out.
+      const until = step.text
+        ? scope.waitForFunction((sel, text) => [...document.querySelectorAll(sel)].some(e => { const r = e.getBoundingClientRect(); return r.width > 0 && r.height > 0 && (e.innerText || e.textContent || '').toLowerCase().includes(text.toLowerCase()); }), { timeout: step.optional ? 2000 : 15000 }, target, step.text)
+        : scope.waitForSelector(target, { visible: true, timeout: step.optional ? 2000 : 15000 });
+      const found = await until.catch(async () => { if (step.optional) return null; throw await stepFail(page, `target not found: ${target}${step.text ? ` containing "${step.text}"` : ''}${step.frame ? ` (in ${step.frame})` : ''}`); });
       if (!found) continue;
       // Text is matched case-insensitively against the rendered text (CSS can uppercase labels).
       const handle = await scope.evaluateHandle((sel, text) => {
@@ -550,8 +560,30 @@ async function runSteps(page, steps) {
             await new Promise(res => setTimeout(res, 100));
           }
         });
+        const known = step.opensWindow ? new Set(page.browser().targets()) : null;
+        const win = step.opensWindow ? page.browser().waitForTarget(t => t.type() === 'page' && !known.has(t) && t.url().includes(step.opensWindow), { timeout: 30000 }) : null;
         await el.click(step.offset ? { offset: step.offset } : {});
+        if (win) {
+          const target = await win.catch(async () => { throw await stepFail(page, `no window with "${step.opensWindow}" in its URL opened`); });
+          const next = await target.page();
+          opened.push(next);
+          await next.setViewport(page.viewport());
+          await next.waitForNetworkIdle({ idleTime: 1500, timeout: 30000 }).catch(() => {});
+          page = next;
+          await settle(page, {});
+        }
       }
+    } else if (step.check) {
+      // A check partway through the steps: wait (up to `timeout` ms, default 20000) until the selector is
+      // visible and, with `text`, contains it. For screens that load after a click, such as an add-on panel.
+      // `notText` waits until no match contains that text (a "Checking…" message that clears on its own).
+      const { selector, text, notText } = typeof step.check === 'string' ? { selector: step.check } : step.check;
+      await scope.waitForFunction((sel, t, nt) => {
+        const els = [...document.querySelectorAll(sel)].filter(e => { const r = e.getBoundingClientRect(); return r.width > 0 && r.height > 0; });
+        const has = e => (e.innerText || e.textContent || '').toLowerCase();
+        return els.some(e => !t || has(e).includes(t.toLowerCase())) && (!nt || !els.some(e => has(e).includes(nt.toLowerCase())));
+      }, { timeout: step.timeout || 20000 }, selector, text || '', notText || '')
+        .catch(async () => { throw await stepFail(page, `check: ${selector}${text ? ` with "${text}"` : ''}${notText ? ` without "${notText}"` : ''} not met${step.frame ? ` (in ${step.frame})` : ''}`); });
     } else if (typeof step.wait === 'number') {
       await new Promise(r => setTimeout(r, step.wait));
     } else if (step.wait) {
@@ -562,6 +594,7 @@ async function runSteps(page, steps) {
       await page.mouse.move(step.moveMouse.x, step.moveMouse.y);
     }
   }
+  return page;
 }
 
 async function stepFail(page, why) {
@@ -595,8 +628,17 @@ async function captureOne(page, spec, base, file) {
 
   await settle(page, spec);
   await requireSelectors(page, spec.expect, 'expect');
-  await runSteps(page, spec.steps);
+  const opened = [];
+  try {
+    page = await runSteps(page, spec.steps, opened);
+    return await finishShot(page, spec, file, { url, finalUrl, status, devMode, dpr });
+  } finally {
+    for (const w of opened) await w.close().catch(() => {});
+  }
+}
 
+// The rest of a shot, on the page the steps ended on (a window a step opened, or the original page).
+async function finishShot(page, spec, file, info) {
   if (spec.scrollTo) {
     await page.evaluate(sel => document.querySelector(sel)?.scrollIntoView({ block: 'center' }), spec.scrollTo).catch(() => {});
   }
@@ -611,7 +653,7 @@ async function captureOne(page, spec, base, file) {
   await requireSelectors(page, spec.expectAfter, 'expectAfter');
 
   await page.screenshot({ path: file, type: 'png', fullPage: !!spec.fullPage });
-  return { url, finalUrl, status, devMode, dpr };
+  return info;
 }
 
 async function main() {

@@ -108,7 +108,7 @@ Pantheon Content Publisher's dashboard (content.pantheon.io): overview, collecti
 
 ## gdocs-addon
 
-A Google Docs add-on in the Docs side panel, for example Pantheon Content Publisher. You sign in to Google yourself in the dedicated Chrome. openAddon presses the add-on's button in the right-hand side panel (skipped when it's already open), waits for the panel, and checks the panel's text; it clicks nothing inside the add-on, so nothing is connected or published. The panel closes with the tab, so the doc isn't left with it open. Use a test doc: shots show the doc's content and your account's avatar. Selectors checked against Google Docs on 2026-10-09, where Content Publisher's button is labeled "Pantheon".
+A Google Docs add-on in the Docs side panel, for example Pantheon Content Publisher. You sign in to Google yourself in the dedicated Chrome. openAddon presses the add-on's button in the right-hand side panel (skipped when it's already open), waits for the panel, and checks the panel's text; it clicks nothing inside the add-on, so nothing is connected or published. The panel closes with the tab, so the doc isn't left with it open. Use a test doc: shots show the doc's content and your account's avatar. addonClick clicks a button inside the panel by its text and checks the panel's text; addonWindow does the same for a button that opens a window (Preview and publish) and captures that window, which is closed afterward. Neither clicks Publish, Save, or Disconnect. Selectors checked against Google Docs on 2026-10-09, where Content Publisher's button is labeled "Pantheon".
 
 **Settings** (under `params` in the config):
 
@@ -119,10 +119,12 @@ A Google Docs add-on in the Docs side panel, for example Pantheon Content Publis
 
 **Actions:**
 
-| Action      | Parameters      | Checks                                                                                                                                         |
-| ----------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| `docReady`  |                 | `#docs-editor`; `#docs-menubar`                                                                                                                |
-| `openAddon` | `label`, `text` | `.app-switcher-button[aria-label="{label}"][aria-selected=true]`; `in .companion-shell-addon-content-container iframe: body contains “{text}”` |
+| Action        | Parameters                     | What it does                                                                                                                                            |
+| ------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `docReady`    |                                | `#docs-editor`; `#docs-menubar`                                                                                                                         |
+| `openAddon`   | `label`, `text`                | click `.app-switcher-button[aria-label="{label}"]`; check `.app-switcher-button[aria-label="{label}"][aria-selected=true]`; check “{text}” in the panel |
+| `addonClick`  | `text`, `check`                | click `[role=button], button` with “{text}” in the panel; check “{check}” in the panel                                                                  |
+| `addonWindow` | `text`, `url`, `check`, `busy` | click `[role=button], button` with “{text}” in the panel, follow the window with “{url}”; check “{check}”; check no “{busy}”                            |
 
 ## pantheon-dashboard
 

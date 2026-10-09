@@ -1,0 +1,131 @@
+{
+  "topic": "{{topic}}",
+  "site": "{{baseUrl}}",
+  "description": "Content Publisher's add-on screens for a doc that is connected to a collection. Connect a test doc to a test collection first (one whose site publishes nowhere), then run with the gdocs-addon config. Nothing here clicks Publish, Save, or Disconnect. The formatting check's results depend on the doc.",
+  "dpr": 2,
+  "presets": [
+    "gdocs-addon",
+    "content-publisher"
+  ],
+  "shots": [
+    {
+      "slug": "addon-connected",
+      "label": "Add-on, connected: page metadata and actions",
+      "url": "/document/d/{{documentId}}/edit",
+      "delay": 1000,
+      "section": "add-on",
+      "actions": [
+        "docReady",
+        {
+          "openAddon": {
+            "label": "{{addonLabel}}",
+            "text": "PAGE METADATA"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "addon-about-collection",
+      "label": "Add-on: about this collection",
+      "url": "/document/d/{{documentId}}/edit",
+      "delay": 1000,
+      "section": "add-on",
+      "actions": [
+        "docReady",
+        {
+          "openAddon": {
+            "label": "{{addonLabel}}",
+            "text": "PAGE METADATA"
+          }
+        },
+        {
+          "addonClick": {
+            "text": "About this collection",
+            "check": "Collection name"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "addon-components",
+      "label": "Add-on: components",
+      "url": "/document/d/{{documentId}}/edit",
+      "delay": 1000,
+      "section": "add-on",
+      "actions": [
+        "docReady",
+        {
+          "openAddon": {
+            "label": "{{addonLabel}}",
+            "text": "PAGE METADATA"
+          }
+        },
+        {
+          "addonClick": {
+            "text": "COMPONENTS",
+            "check": "components"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "addon-formatting-check",
+      "label": "Add-on: formatting check results",
+      "url": "/document/d/{{documentId}}/edit",
+      "delay": 1500,
+      "section": "add-on",
+      "actions": [
+        "docReady",
+        {
+          "openAddon": {
+            "label": "{{addonLabel}}",
+            "text": "PAGE METADATA"
+          }
+        },
+        {
+          "addonClick": {
+            "text": "FORMATTING CHECK",
+            "check": "DONE"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "addon-preview-publish",
+      "label": "Preview and publish window",
+      "url": "/document/d/{{documentId}}/edit",
+      "delay": 2000,
+      "section": "add-on",
+      "actions": [
+        "docReady",
+        {
+          "openAddon": {
+            "label": "{{addonLabel}}",
+            "text": "PAGE METADATA"
+          }
+        },
+        {
+          "addonWindow": {
+            "text": "PREVIEW AND PUBLISH",
+            "url": "/preview-publish",
+            "check": "Metadata",
+            "busy": "Checking content quality"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "addon-edit-metadata",
+      "label": "Edit metadata page",
+      "url": "https://content.pantheon.io/addon/articles/{{documentId}}/metadata",
+      "delay": 2000,
+      "section": "add-on",
+      "expect": [
+        {
+          "selector": "h1",
+          "text": "Edit metadata"
+        }
+      ]
+    }
+  ]
+}
