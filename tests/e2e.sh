@@ -45,7 +45,7 @@ EOF
   cap() { local out=$1; shift; node scripts/capture.mjs --brief briefs/p1-editor.json --config "$E2E_CFG" --out-dir "$out" "$@"; }
   chk() { python3 "$ROOT/tests/assert-report.py" "$@"; }
 
-  t "six shots are captured through the attached Chrome on a custom port (deep-linked page, workstream, block, collapse, menu)" bash -c "cd '$ROOT' && node scripts/capture.mjs --brief briefs/p1-editor.json --config '$E2E_CFG' --out-dir '$E/runA' >'$E/a.log' 2>&1; [ \$? -eq 0 ]"
+  t "six shots are captured through the attached Chrome on a custom port (deep-linked page, workstream, block, collapse, menu)" bash -c "cd '$ROOT' && node scripts/capture.mjs --brief briefs/p1-editor.json --config '$E2E_CFG' --out-dir '$E/runA' >'$E/a.log' 2>&1 || { tail -20 '$E/a.log'; exit 1; }"
   t "report records the custom project, workstream and page; all six shots are PNGs; nothing skipped" python3 - "$E/runA" <<'EOF'
 import json,sys,os
 d=json.load(open(sys.argv[1]+'/capture-report.json'))
