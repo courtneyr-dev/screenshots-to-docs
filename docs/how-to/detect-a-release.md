@@ -81,6 +81,17 @@ The first run has no state, so it lists every product's current version and the 
 notes (`--since-days` changes that). It exits 3 when something is new, 0 when nothing is, and 1 when a source
 fails. Another company or product works the same way: copy the watchlist and change its products and feed.
 
+### Every day, on GitHub
+
+`.github/workflows/release-watch.yml` runs the same watch at 13:17 UTC every day. When something is new, it
+comments on the open issue labeled `release-watch`, or opens one titled "Pantheon releases to check", and
+commits `watch/pantheon-state.json` so the next day starts from there. When nothing is new, it does nothing.
+A source that fails makes the run fail, and GitHub emails the repository's owner.
+
+The issue lists releases and release notes; it doesn't know which screenshots they affect, because the
+inventory isn't in this repository. Run the `release-check` command it shows, or the watch with
+`--inventory`, where your inventory lives. To run it now, use **Actions > Release watch > Run workflow**.
+
 ## Check one product
 
 1. List the screenshots and the release each was captured for:

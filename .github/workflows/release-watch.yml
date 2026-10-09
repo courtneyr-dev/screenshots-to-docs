@@ -1,0 +1,59 @@
+name: Release watch
+
+# Once a day, check everything in watchlists/pantheon.json and the release notes feed. When something is new,
+# comment on the open "release-watch" issue (or open one), then commit the state file so tomorrow starts
+# from today. Read-only toward Pantheon: it fetches public release data and changes nothing there.
+
+on:
+  schedule:
+    - cron: "17 13 * * *" # 13:17 UTC every day
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: release-watch
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 20
+
+      - name: Watch
+        id: watch
+        run: |
+          set +e
+          node scripts/watch.mjs --watchlist pantheon --state watch/pantheon-state.json --only-new --update > watch-report.txt
+          code=$?
+          cat watch-report.txt
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          # 0 nothing new, 3 something new, 1 a source failed (the run fails so GitHub notifies the owner).
+          [ "$code" -eq 1 ] && exit 1 || exit 0
+
+      - name: Post to the release-watch issue
+        if: steps.watch.outputs.code == '3'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh label create release-watch --color 0E8A16 --description "New Pantheon releases to check against the docs screenshots" --force
+          report=$(grep -v -e '^Saved what was seen' -e '^Run again with' watch-report.txt)
+          body=$(printf 'New since the last check (%s):\n\n```text\n%s\n```\n\nFor a product whose screenshots are in your inventory, run the `release-check` command shown, or run the watch locally with `--inventory`. Posted by the release-watch workflow.' "$(date -u +%F)" "$report")
+          num=$(gh issue list --label release-watch --state open --json number --jq '.[0].number')
+          if [ -n "$num" ]; then gh issue comment "$num" --body "$body"; else gh issue create --title "Pantheon releases to check" --label release-watch --body "$body"; fi
+
+      - name: Commit the state
+        if: steps.watch.outputs.code == '3'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add watch/pantheon-state.json
+          git diff --cached --quiet || { git commit -m "👌 IMPROVE: release watch state for $(date -u +%F)"; git push; }
