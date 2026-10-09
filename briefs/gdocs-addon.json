@@ -1,0 +1,27 @@
+{
+  "topic": "{{topic}}",
+  "site": "{{baseUrl}}",
+  "description": "Starter brief for Pantheon Content Publisher's Google Docs add-on. Run with a config whose preset is gdocs-addon (examples/gdocs-addon.config.example.json), with the dedicated Chrome open and signed in to Google. Use a test doc that isn't connected to a collection, so the add-on shows its connect screen.",
+  "dpr": 2,
+  "presets": [
+    "gdocs-addon"
+  ],
+  "shots": [
+    {
+      "slug": "addon-connect",
+      "label": "Content Publisher add-on: connect this doc",
+      "url": "/document/d/{{documentId}}/edit",
+      "delay": 1000,
+      "section": "add-on",
+      "actions": [
+        "docReady",
+        {
+          "openAddon": {
+            "label": "{{addonLabel}}",
+            "text": "Connect this doc to a collection"
+          }
+        }
+      ]
+    }
+  ]
+}
