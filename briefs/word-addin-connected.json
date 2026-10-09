@@ -1,0 +1,73 @@
+{
+  "topic": "{{topic}}",
+  "site": "{{baseUrl}}",
+  "description": "Content Publisher's Word add-in on a test document that is connected to a collection (the playground works). Nothing here clicks Save, Disconnect collection, or Preview and Publish. Preview and Publish isn't covered: in a background tab its click opened no window or dialog.",
+  "dpr": 2,
+  "presets": [
+    "word-addin"
+  ],
+  "shots": [
+    {
+      "slug": "word-addin-connected",
+      "label": "Word add-in, connected: publishing status and metadata",
+      "url": "{{documentUrl}}",
+      "delay": 1500,
+      "section": "add-in",
+      "actions": [
+        "wordReady",
+        {
+          "openAddin": {
+            "name": "{{addinName}}",
+            "text": "Publishing status"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "word-addin-metadata",
+      "label": "Word add-in: edit metadata",
+      "url": "{{documentUrl}}",
+      "delay": 1500,
+      "section": "add-in",
+      "actions": [
+        "wordReady",
+        {
+          "openAddin": {
+            "name": "{{addinName}}",
+            "text": "Publishing status"
+          }
+        },
+        {
+          "addinClick": {
+            "name": "{{addinName}}",
+            "text": "Metadata",
+            "check": "AI auto-suggestions"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "word-addin-settings",
+      "label": "Word add-in: collection settings",
+      "url": "{{documentUrl}}",
+      "delay": 1500,
+      "section": "add-in",
+      "actions": [
+        "wordReady",
+        {
+          "openAddin": {
+            "name": "{{addinName}}",
+            "text": "Publishing status"
+          }
+        },
+        {
+          "addinClick": {
+            "name": "{{addinName}}",
+            "text": "Setting",
+            "check": "Collection name"
+          }
+        }
+      ]
+    }
+  ]
+}

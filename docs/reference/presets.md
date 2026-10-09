@@ -16,6 +16,7 @@ A preset holds everything that differs between kinds of web app: the settings it
 | [`content-publisher`](#content-publisher)   | You, in the dedicated Chrome                 | (none; pass `--version` or `--source`)           | `briefs/content-publisher.json`  |
 | [`pantheon-dashboard`](#pantheon-dashboard) | You, in the dedicated Chrome                 | release notes tagged User interface (`watch`)    | `briefs/pantheon-dashboard.json` |
 | [`gdocs-addon`](#gdocs-addon)               | You, in the dedicated Chrome                 | release notes tagged Content Publisher (`watch`) | `briefs/gdocs-addon.json`        |
+| [`word-addin`](#word-addin)                 | You, in the dedicated Chrome                 | release notes tagged Content Publisher (`watch`) | `briefs/word-addin.json`         |
 | [`public-site`](#public-site)               | None                                         | (none; pass `--version` or `--source`)           | `briefs/public-site.json`        |
 
 ## p1-editor
@@ -125,6 +126,25 @@ A Google Docs add-on in the Docs side panel, for example Pantheon Content Publis
 | `openAddon`   | `label`, `text`                | click `.app-switcher-button[aria-label="{label}"]`; check `.app-switcher-button[aria-label="{label}"][aria-selected=true]`; check “{text}” in the panel |
 | `addonClick`  | `text`, `check`                | click `[role=button], button` with “{text}” in the panel; check “{check}” in the panel                                                                  |
 | `addonWindow` | `text`, `url`, `check`, `busy` | click `[role=button], button` with “{text}” in the panel, follow the window with “{url}”; check “{check}”; check no “{busy}”                            |
+
+## word-addin
+
+An Office add-in's task pane in Word for the web, for example Pantheon Content Publisher. You sign in to Microsoft yourself in the dedicated Chrome, and the add-in must already be added to Word (adding it accepts terms, so it's yours to do). openAddin clicks the add-in's ribbon button on the Home tab and waits for the task pane's text; addinClick clicks a button inside the task pane by its text. The task pane is an iframe inside Word's editor iframe, so checks use a frame list. Word's own panels (Navigation, the Copilot drafting prompt on an empty document) are inside Word's frame and aren't hidden: close the Navigation pane and put some text in the test document. Selectors checked against Word for the web on 2026-10-09.
+
+**Settings** (under `params` in the config):
+
+| Key           | Required | Default                      | Meaning                                                                |
+| ------------- | -------- | ---------------------------- | ---------------------------------------------------------------------- |
+| `documentUrl` | yes      |                              | The test document's full URL from the address bar of Word for the web. |
+| `addinName`   | no       | `Pantheon Content Publisher` | The add-in's name as its ribbon button and task pane title show it.    |
+
+**Actions:**
+
+| Action       | Parameters              | What it does                                                                                      |
+| ------------ | ----------------------- | ------------------------------------------------------------------------------------------------- |
+| `wordReady`  |                         | `iframe#WacFrame_Word_Inline`; in Word: `#InsertAddInFlyout`                                      |
+| `openAddin`  | `name`, `text`          | click `button[aria-label="{name}"]` in Word; check “{text}” in the task pane                      |
+| `addinClick` | `name`, `text`, `check` | click `button, [role=button], a` with “{text}” in the task pane; check “{check}” in the task pane |
 
 ## pantheon-dashboard
 

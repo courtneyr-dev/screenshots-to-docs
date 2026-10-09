@@ -1,0 +1,20 @@
+{
+  "$comment": "EXAMPLE. Copy, replace the values, and run: node scripts/preflight.mjs --config <file> --check-chrome. You sign in to Microsoft yourself in the dedicated Chrome and add the add-in to Word; never put credentials in this file. Use a test document.",
+  "topic": "my-word-addin",
+  "preset": "word-addin",
+  "baseUrl": "<your Microsoft 365 host, for example https://<tenant>-my.sharepoint.com>",
+  "params": {
+    "documentUrl": "<the test document's full URL from the address bar>"
+  },
+  "chrome": {
+    "profileDir": "<a dedicated directory outside any repository, for example ~/.cache/screenshots-profile>",
+    "cdpPort": "<a free local port, for example 9222>"
+  },
+  "figma": {
+    "fileKey": "<destination design file key from figma.com/design/<fileKey>/...>"
+  },
+  "docs": {
+    "handoffDir": "<directory for handoff notes>",
+    "format": "markdown"
+  }
+}

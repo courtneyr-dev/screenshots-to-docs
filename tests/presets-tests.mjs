@@ -31,7 +31,7 @@ const keys = r => r.errors.map(e => e.key);
 // ---------- presets ----------
 await test('every built-in preset loads, names a valid sign-in mode, and has a starter brief that uses it', () => {
   const names = listPresets();
-  for (const n of ['p1-editor', 'wordpress-admin', 'drupal-admin', 'public-site', 'content-publisher', 'pantheon-dashboard', 'gdocs-addon']) assert.ok(names.includes(n), `missing preset ${n}`);
+  for (const n of ['p1-editor', 'wordpress-admin', 'drupal-admin', 'public-site', 'content-publisher', 'pantheon-dashboard', 'gdocs-addon', 'word-addin']) assert.ok(names.includes(n), `missing preset ${n}`);
   for (const n of names) {
     const p = loadPreset(n);
     assert.ok(p.description.length > 40, `${n} needs a description`);
@@ -159,11 +159,12 @@ for (const [preset, extra, env] of [
   ['content-publisher', { chrome: { profileDir: PROFILE, cdpPort: 9447 } }, {}],
   ['pantheon-dashboard', { chrome: { profileDir: PROFILE, cdpPort: 9448 } }, {}],
   ['gdocs-addon', { chrome: { profileDir: PROFILE, cdpPort: 9449 } }, {}],
+  ['word-addin', { chrome: { profileDir: PROFILE, cdpPort: 9450 } }, {}],
 ]) {
   await test(`the ${preset} starter brief compiles with its preset (dry run)`, () => {
     const cfgFile = join(TMP, `${preset}.json`);
     const base = loadPreset(preset).params;
-    const params = Object.fromEntries(Object.entries(base).filter(([, s]) => s.required).map(([k, s]) => [k, ['qa', randomUUID(), 'qaTestDocument0123456789abcdef'].find(v => !s.pattern || new RegExp(s.pattern).test(v))]));
+    const params = Object.fromEntries(Object.entries(base).filter(([, s]) => s.required).map(([k, s]) => [k, ['qa', randomUUID(), 'qaTestDocument0123456789abcdef', 'https://example.com/doc.docx'].find(v => !s.pattern || new RegExp(s.pattern).test(v))]));
     writeFileSync(cfgFile, JSON.stringify({ topic: `qa-${preset}`, preset, baseUrl: 'http://localhost:9', ...(Object.keys(params).length && { params }), ...extra }));
     const r = spawnSync(process.execPath, [join(ROOT, 'scripts/capture.mjs'), '--config', cfgFile, '--brief', join(ROOT, 'briefs', `${preset}.json`), '--dry-run'], { encoding: 'utf-8', env: { ...process.env, ...env } });
     assert.equal(r.status, 0, r.stderr || r.stdout);

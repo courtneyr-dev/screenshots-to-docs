@@ -1,0 +1,86 @@
+{
+  "description": "An Office add-in's task pane in Word for the web, for example Pantheon Content Publisher. You sign in to Microsoft yourself in the dedicated Chrome, and the add-in must already be added to Word (adding it accepts terms, so it's yours to do). openAddin clicks the add-in's ribbon button on the Home tab and waits for the task pane's text; addinClick clicks a button inside the task pane by its text. The task pane is an iframe inside Word's editor iframe, so checks use a frame list. Word's own panels (Navigation, the Copilot drafting prompt on an empty document) are inside Word's frame and aren't hidden: close the Navigation pane and put some text in the test document. Selectors checked against Word for the web on 2026-10-09.",
+  "signIn": {
+    "mode": "chrome"
+  },
+  "params": {
+    "documentUrl": {
+      "required": true,
+      "pattern": "^https://\\S+$",
+      "what": "The test document's full URL from the address bar of Word for the web.",
+      "maxLength": 2000
+    },
+    "addinName": {
+      "default": "Pantheon Content Publisher",
+      "what": "The add-in's name as its ribbon button and task pane title show it."
+    }
+  },
+  "actions": {
+    "wordReady": {
+      "expect": [
+        "iframe#WacFrame_Word_Inline",
+        {
+          "frame": "iframe#WacFrame_Word_Inline",
+          "selector": "#InsertAddInFlyout"
+        }
+      ]
+    },
+    "openAddin": {
+      "params": [
+        "name",
+        "text"
+      ],
+      "steps": [
+        {
+          "wait": 3000
+        },
+        {
+          "click": "button[aria-label=\"{name}\"]",
+          "frame": "iframe#WacFrame_Word_Inline"
+        },
+        {
+          "check": {
+            "selector": "body",
+            "text": "{text}"
+          },
+          "frame": [
+            "iframe#WacFrame_Word_Inline",
+            "iframe[title=\"Office Add-in {name}\"]"
+          ],
+          "timeout": 40000
+        }
+      ]
+    },
+    "addinClick": {
+      "params": [
+        "name",
+        "text",
+        "check"
+      ],
+      "steps": [
+        {
+          "click": "button, [role=button], a",
+          "frame": [
+            "iframe#WacFrame_Word_Inline",
+            "iframe[title=\"Office Add-in {name}\"]"
+          ],
+          "text": "{text}"
+        },
+        {
+          "wait": 2000
+        },
+        {
+          "check": {
+            "selector": "body",
+            "text": "{check}"
+          },
+          "frame": [
+            "iframe#WacFrame_Word_Inline",
+            "iframe[title=\"Office Add-in {name}\"]"
+          ],
+          "timeout": 45000
+        }
+      ]
+    }
+  }
+}

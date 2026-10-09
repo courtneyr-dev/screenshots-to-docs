@@ -429,6 +429,19 @@ async function requireSelectedBlock(page, spec, fail) {
 //   absent  the element must not be visible (for example a loading spinner)
 //   frame   selector of a same-origin iframe; `selector` is then looked up inside it (for example
 //           the editor's preview canvas, to confirm the page being edited actually rendered)
+// A frame is one iframe selector, or a list of them for nested frames (an Office add-in's panel sits in an
+// iframe inside Word's editor iframe). Returns the innermost frame, or throws with the selector that failed.
+async function resolveFrame(page, frameSel, timeout = 15000) {
+  let scope = page;
+  for (const sel of [].concat(frameSel)) {
+    const el = await scope.waitForSelector(sel, { timeout }).catch(() => null);
+    if (!el) throw new Error(`iframe not found: ${sel}`);
+    scope = await el.contentFrame();
+    if (!scope) throw new Error(`${sel} has no readable content frame`);
+  }
+  return scope;
+}
+
 async function requireSelectors(page, checks, phase) {
   for (const check of checks || []) {
     const { selector, text, absent, frame: frameSel, selectedBlock } = typeof check === 'string' ? { selector: check } : check;
@@ -443,11 +456,7 @@ async function requireSelectors(page, checks, phase) {
       continue;
     }
     let scope = page;
-    if (frameSel) {
-      await page.waitForSelector(frameSel, { timeout: 15000 }).catch(async () => { throw await fail(`expected iframe not found: ${frameSel}`); });
-      scope = await (await page.$(frameSel)).contentFrame();
-      if (!scope) throw await fail(`${frameSel} has no readable content frame`);
-    }
+    if (frameSel) scope = await resolveFrame(page, frameSel).catch(async e => { throw await fail(`expected ${e.message}`); });
     if (absent) {
       await scope.waitForSelector(selector, { hidden: true, timeout: 30000 }).catch(async () => { throw await fail(`${selector} is still visible`); });
       continue;
@@ -500,7 +509,7 @@ function compileActions(spec, presets) {
 }
 
 // Interaction steps for a shot, run after the page settles and `expect` passes. Each step is one of:
-//   { click: selector, text?, frame?, offset?, skipIf? }
+//   { click: selector, text?, frame?, offset?, skipIf? }   (frame: an iframe selector, or a list for nested iframes)
 //       click the first visible match whose text contains `text`. `frame` is a same-origin iframe
 //       selector to look inside. `offset` {x, y} clicks that far from the element's top-left.
 //       `skipIf` is a selector: when the matched element matches it, the click is skipped
@@ -520,11 +529,7 @@ async function runSteps(page, steps, opened = []) {
   for (const step of steps || []) {
     const target = step.click || step.scroll || (typeof step.wait === 'string' ? step.wait : null);
     let scope = page;
-    if (step.frame) {
-      const frameEl = await page.waitForSelector(step.frame, { timeout: 15000 }).catch(async () => { throw await stepFail(page, `frame not found: ${step.frame}`); });
-      scope = await frameEl.contentFrame();
-      if (!scope) throw await stepFail(page, `${step.frame} has no readable content frame`);
-    }
+    if (step.frame) scope = await resolveFrame(page, step.frame).catch(async e => { throw await stepFail(page, e.message); });
     if (step.click || step.scroll) {
       // With `text`, wait for any visible match that contains it: the first match of a broad selector can be a
       // hidden element (a Back button on the first screen), and waiting for that one would time out.
