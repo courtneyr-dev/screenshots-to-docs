@@ -127,7 +127,7 @@ Use `"preset": "public-site"`. To build a brief from a sitemap instead of the st
 node scripts/routes.mjs --topic my-site --site https://example.com --sitemap
 ```
 
-A site behind a bot challenge fails closed: no PNG is saved.
+The preset hides common cookie banners and chat widgets, such as Qualified's docked sales chat on pantheon.io. A site behind a bot challenge fails closed: no PNG is saved.
 
 ## Add your own app
 
