@@ -1,13 +1,13 @@
 WEBVTT
 
-00:00.000 --> 00:08.925
-Alt text starts from the annotated frame's layers. Each numbered step is a layer named Step, number, and the label to read aloud.
+00:00:00.360 --> 00:00:08.302
+Alt text starts from the annotated frame's layers. Each numbered step is a layer named Step, a number, and the label to read aloud.
 
-00:08.905 --> 00:16.905
-Draft alt reads the steps in order and writes the alt text, so the numbers in the text always match the numbers in the image.
+00:00:09.323 --> 00:00:19.966
+Draft alt reads the steps in order and writes the alt text. The subject names the screen and opens the sentence, so the numbers in the text always match the numbers in the image.
 
-00:16.885 --> 00:21.235
-For the workstream selector, a subject sets how the sentence starts.
+00:00:20.946 --> 00:00:24.387
+For the workstream selector, the subject says the selector is open.
 
-00:21.215 --> 00:30.190
+00:00:25.427 --> 00:00:33.370
 Apply saves the draft through set alt, which runs the inventory's checks. Here it already matches the approved text, so nothing changes.

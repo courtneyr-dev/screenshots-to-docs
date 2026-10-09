@@ -32,30 +32,35 @@ dashboard.
 2. Run the watch:
 
    ```bash
-   node scripts/watch.mjs --watchlist pantheon --state watch-state.json --inventory <inventory>
+   node scripts/watch.mjs --watchlist pantheon --state watch-state.json --inventory <inventory> --only-new
    ```
 
    ```text
    Products
      P1 editor (p1-next-sdk)                   NEW RELEASE  0.20.0 → 0.20.1
-                                               → 1 screenshot(s) to refresh: p1.editor.shell
+                                               → 2 in progress for an older version: p1.live.editor-shell, p1.live.workstream-selector
                                                  release-check --product p1-editor --version 0.20.1
-     Terminus                                  no change    4.3.3
-     WordPress core                            no change    7.1.3
-     ...
+     P1 starter kit                            NEW RELEASE  0.20.0 → 0.20.1
+     33 more with no change
 
    Pantheon release notes: 5 new since 2026-10-05
      2026-10-06  New dashboard home experience, bookmarks feature now in beta  [User interface]
                  https://docs.pantheon.io/release-notes/2026/10/dashboard-home-experience-beta
      2026-10-06  WordPress 7.1.3 Security Release now available  [Action required, Security, WordPress]
                  https://docs.pantheon.io/release-notes/2026/10/wordpress-7-1-3
-     ...
-     → pantheon-dashboard: 1 screenshot(s) to review after "New dashboard home experience, bookmarks feature now in beta": dashboard.home.overview
-         release-check --product pantheon-dashboard --version 2026.10.6
+     2026-10-06  Pantheon MCP Server (Beta)  [New feature]
+                 https://docs.pantheon.io/release-notes/2026/10/pantheon-mcp-beta
+     2026-10-06  Public API v1 (Beta)  [New feature]
+                 https://docs.pantheon.io/release-notes/2026/10/pantheon-api-v1-beta
+     2026-10-05  Introducing Workspace Performance Insights  [User interface]
+                 https://docs.pantheon.io/release-notes/2026/10/workspace-performance-insights
    ```
 
-   This is a real run on 2026-10-09, against a saved state from before P1 0.20.1 shipped and a sample
-   inventory with two records tagged with a product.
+   This is a real run on 2026-10-09, against a saved state from before P1 0.20.1 shipped and a demo inventory
+   whose two records were handed off for 0.20.0, so they show as in progress for the older version.
+
+   `--only-new` lists only the products with a new release and counts the rest; without it, every product
+   gets a line.
 
    A release-notes entry tagged **User interface** or **Account management** points at
    `pantheon-dashboard`, **Content Publisher** at `content-publisher-dashboard`, and **Infrastructure** at
