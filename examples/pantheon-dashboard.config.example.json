@@ -1,0 +1,22 @@
+{
+  "$comment": "EXAMPLE. Copy, replace the values, and run: node scripts/preflight.mjs --config <file> --check-chrome. You sign in yourself in the dedicated Chrome (npm run chrome -- --config <file>); never put credentials in this file. Use a test workspace: shots show workspace, site, and team names.",
+  "topic": "my-pantheon-dashboard",
+  "preset": "pantheon-dashboard",
+  "baseUrl": "https://dashboard.pantheon.io",
+  "params": {
+    "workspaceId": "<workspace ID from dashboard.pantheon.io/workspace/<workspaceId>/home>",
+    "siteId": "<optional: a site ID from …/cms-site/<siteId>/…>",
+    "env": "dev"
+  },
+  "chrome": {
+    "profileDir": "<a dedicated directory outside any repository, for example ~/.cache/screenshots-profile>",
+    "cdpPort": "<a free local port, for example 9222>"
+  },
+  "figma": {
+    "fileKey": "<destination design file key from figma.com/design/<fileKey>/...>"
+  },
+  "docs": {
+    "handoffDir": "<directory for handoff notes>",
+    "format": "markdown"
+  }
+}

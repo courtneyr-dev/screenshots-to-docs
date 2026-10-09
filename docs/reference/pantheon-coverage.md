@@ -19,21 +19,21 @@ Counted on 2026-10-09; [how it was counted](#how-this-was-counted).
 
 ## By screen
 
-| Screen                                   | Images | Preset                               | Release source                                                         |
-| ---------------------------------------- | -----: | ------------------------------------ | ---------------------------------------------------------------------- |
-| Pantheon dashboard, site and environment |    282 | not built yet                        | release notes tagged User interface → `pantheon-dashboard`             |
-| Pantheon dashboard, workspace            |    141 | not built yet                        | same                                                                   |
-| Pantheon dashboard, personal settings    |     15 | not built yet                        | same                                                                   |
-| WordPress admin                          |    122 | `wordpress-admin`                    | `wordpress` and each plugin's `wporg-plugin:` or `github:` source      |
-| Drupal admin                             |     78 | `drupal-admin`                       | `drupal` and each module's `drupal:` or `github:` source               |
-| content.pantheon.io dashboard            |     42 | `content-publisher`                  | release notes tagged Content Publisher → `content-publisher-dashboard` |
-| Google Docs add-on                       |     45 | not built yet                        | release notes tagged Content Publisher                                 |
-| Content Publisher preview and publish    |     16 | not built yet                        | same                                                                   |
-| P1 editor                                |      7 | `p1-editor`                          | `npm:@pantheon-systems/p1-next-sdk`                                    |
-| Microsoft Word add-in                    |      6 | not built yet                        | release notes tagged Content Publisher                                 |
-| Terminal output                          |     38 | use text instead                     | the CLI's source, for example `github:pantheon-systems/terminus`       |
-| Other companies' screens                 |    234 | `public-site`, or `signIn: "chrome"` | not tracked                                                            |
-| Diagrams                                 |     68 | not a capture                        | not tracked                                                            |
+| Screen                                   | Images | Preset                                        | Release source                                                         |
+| ---------------------------------------- | -----: | --------------------------------------------- | ---------------------------------------------------------------------- |
+| Pantheon dashboard, site and environment |    282 | `pantheon-dashboard`                          | release notes tagged User interface → `pantheon-dashboard`             |
+| Pantheon dashboard, workspace            |    141 | `pantheon-dashboard`                          | same                                                                   |
+| Pantheon dashboard, personal settings    |     15 | `pantheon-dashboard` (routes not yet checked) | same                                                                   |
+| WordPress admin                          |    122 | `wordpress-admin`                             | `wordpress` and each plugin's `wporg-plugin:` or `github:` source      |
+| Drupal admin                             |     78 | `drupal-admin`                                | `drupal` and each module's `drupal:` or `github:` source               |
+| content.pantheon.io dashboard            |     42 | `content-publisher`                           | release notes tagged Content Publisher → `content-publisher-dashboard` |
+| Google Docs add-on                       |     45 | not built yet                                 | release notes tagged Content Publisher                                 |
+| Content Publisher preview and publish    |     16 | not built yet                                 | same                                                                   |
+| P1 editor                                |      7 | `p1-editor`                                   | `npm:@pantheon-systems/p1-next-sdk`                                    |
+| Microsoft Word add-in                    |      6 | not built yet                                 | release notes tagged Content Publisher                                 |
+| Terminal output                          |     38 | use text instead                              | the CLI's source, for example `github:pantheon-systems/terminus`       |
+| Other companies' screens                 |    234 | `public-site`, or `signIn: "chrome"`          | not tracked                                                            |
+| Diagrams                                 |     68 | not a capture                                 | not tracked                                                            |
 
 WordPress and Drupal admin counts add the Content Publisher docs' 3 and 6 to docs.pantheon.io's 119 and 72.
 The 42 content.pantheon.io images are the Content Publisher docs' 32 and the P1 docs' 10.

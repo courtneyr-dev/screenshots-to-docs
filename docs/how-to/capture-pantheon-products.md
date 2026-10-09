@@ -10,15 +10,15 @@ Screens for each area that Pantheon's docs show: the dashboard, Content Publishe
 plugins and Drupal modules. For how many images each area has and where its releases come from, see
 [Pantheon docs coverage](../reference/pantheon-coverage.html).
 
-| Area                                                     | Preset              | Starter brief                            | Status                                         |
-| -------------------------------------------------------- | ------------------- | ---------------------------------------- | ---------------------------------------------- |
-| Pantheon WordPress plugins                               | `wordpress-admin`   | `briefs/pantheon-wordpress-plugins.json` | Verified: 5 screens on a local site            |
-| Pantheon Drupal modules                                  | `drupal-admin`      | `briefs/pantheon-drupal-modules.json`    | Verified: 7 screens on a local site            |
-| Content Publisher and P1 dashboard (content.pantheon.io) | `content-publisher` | `briefs/content-publisher.json`          | Verified: 4 screens                            |
-| P1 editor                                                | `p1-editor`         | `briefs/p1-editor.json`                  | Verified                                       |
-| Pantheon dashboard (dashboard.pantheon.io)               | not built yet       | not built yet                            | Needs a signed-in Chrome to check its pages    |
-| Google Docs add-on                                       | not built yet       | not built yet                            | The largest Content Publisher area (45 images) |
-| Terminal output                                          | none                | none                                     | Show it as text, not an image                  |
+| Area                                                     | Preset               | Starter brief                            | Status                                         |
+| -------------------------------------------------------- | -------------------- | ---------------------------------------- | ---------------------------------------------- |
+| Pantheon WordPress plugins                               | `wordpress-admin`    | `briefs/pantheon-wordpress-plugins.json` | Verified: 5 screens on a local site            |
+| Pantheon Drupal modules                                  | `drupal-admin`       | `briefs/pantheon-drupal-modules.json`    | Verified: 7 screens on a local site            |
+| Content Publisher and P1 dashboard (content.pantheon.io) | `content-publisher`  | `briefs/content-publisher.json`          | Verified: 4 screens                            |
+| P1 editor                                                | `p1-editor`          | `briefs/p1-editor.json`                  | Verified                                       |
+| Pantheon dashboard (dashboard.pantheon.io)               | `pantheon-dashboard` | `briefs/pantheon-dashboard.json`         | Verified: 10 screens                           |
+| Google Docs add-on                                       | not built yet        | not built yet                            | The largest Content Publisher area (45 images) |
+| Terminal output                                          | none                 | none                                     | Show it as text, not an image                  |
 
 ## Pantheon WordPress plugins
 
@@ -99,13 +99,54 @@ date. That's from comparing the docs' images with each other; the live dashboard
 
 ## The Pantheon dashboard
 
-The dashboard is in 438 of the 1,003 image references on docs.pantheon.io, more than any other screen. A
-preset needs a signed-in Chrome: dashboard.pantheon.io signs in through Pantheon's single sign-on, which
-only you can complete. Once you have, the preset's checks get read from the real pages, with no clicks.
+The dashboard is in 438 of the 1,003 image references on docs.pantheon.io, more than any other screen.
 
-It also needs a test workspace with the state the docs show: a WordPress site and a Drupal site with Dev,
-Test, and Live initialized, a Multidev, a custom domain with HTTPS, backups, and Autopilot. Capturing from a
-production workspace would show customer data.
+1. Use a test workspace. Shots show workspace, site, and team names, so a production workspace would show
+   customer data.
+2. Copy `examples/pantheon-dashboard.config.example.json`. Set `params.workspaceId` from the dashboard's URL
+   (`dashboard.pantheon.io/workspace/<workspaceId>/home`) and, for site shots, `params.siteId` from a site's
+   URL (`…/cms-site/<siteId>/…`). Pick a site that isn't frozen: a frozen site's pages redirect to a
+   "frozen" notice. `params.env` picks the environment (default `dev`).
+3. Start the dedicated Chrome with `node scripts/chrome.mjs --config <file>` and sign in through Pantheon's
+   single sign-on.
+4. Capture with `briefs/pantheon-dashboard.json`:
+
+   ```text
+     workspace-home                                OK
+     sites                                         OK
+     team                                          OK
+     upstreams                                     OK
+     workspace-settings                            OK
+     site-code                                     OK
+     site-database                                 OK
+     site-backups                                  OK
+     site-domains                                  OK
+     site-status                                   OK
+
+   Done: 10/10 captured, 0 failed, 0 with HTTP >= 400
+   ```
+
+| Screen                        | Route                                                                  | Check                                         |
+| ----------------------------- | ---------------------------------------------------------------------- | --------------------------------------------- |
+| Workspace home                | `/workspace/<workspaceId>/home`                                        | global navigation, `main h1`                  |
+| Sites                         | `/workspace/<workspaceId>/sites`                                       | `main h1` contains "Sites"                    |
+| Team                          | `/workspace/<workspaceId>/team`                                        | `main h1` contains "Workspace Team"           |
+| Upstreams                     | `/workspace/<workspaceId>/upstreams`                                   | `main h1` contains "Custom Upstreams"         |
+| Workspace settings            | `/workspace/<workspaceId>/settings/profile`                            | `main h1` contains "Workspace settings"       |
+| Environment: Code             | `/workspace/<workspaceId>/cms-site/<siteId>/environment/<env>/code`    | site and environment navigation, `main h2`    |
+| Environment: Database & Files | `…/environment/<env>/database/clone` (also `import`, `export`, `wipe`) | `main h2` contains "Clone database and files" |
+| Environment: Backups          | `…/environment/<env>/backups/history` (also `schedule`)                | `main h2` contains "Backup History"           |
+| Environment: Domains & HTTPS  | `…/environment/<env>/domains`                                          | `main h2` contains "Domains & HTTPS"          |
+| Environment: Status           | `…/environment/<env>/status`                                           | `main h2` contains "Status"                   |
+
+The other tabs follow the same pattern: `merge`, `errors`, `security`, `newrelic`, and, for Test and Live,
+`deploys`. Site-level pages are `…/cms-site/<siteId>/settings/details` and `…/cms-site/<siteId>/workflows`.
+Insights, Autopilot, Edge, Support, and Billing are under `/workspace/<workspaceId>/`.
+
+The preset hides the maintenance and warning banners, toast notifications, and the support chat. It leaves in
+the "Upgrade to Next Generation GCDN" callout on site pages, which has no stable selector. The dashboard's
+header offers "Try the new dashboard"; these routes and checks are for the current one, and a switch to the
+new one means checking them again.
 
 ## Terminal output
 
