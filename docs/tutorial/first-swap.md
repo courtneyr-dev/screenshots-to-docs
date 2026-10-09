@@ -47,7 +47,7 @@ Open `~/p1-tutorial/marks.json`. The layers named `Step 1: …`, `Step 2: …`, 
 badges on the image. Draft the alt text from them:
 
 ```bash
-node scripts/draft-alt.mjs --marks ~/p1-tutorial/marks.json
+node scripts/draft-alt.mjs --marks ~/p1-tutorial/marks.json --subject "The P1 editor"
 ```
 
 ```text
@@ -57,7 +57,7 @@ The P1 editor with three numbered areas: 1 the Blocks panel, 2 the page canvas, 
 The record's current alt text is vaguer than that. Save the draft:
 
 ```bash
-node scripts/draft-alt.mjs --marks ~/p1-tutorial/marks.json --id p1.tutorial.editor --inventory ~/p1-tutorial/inventory.json --apply
+node scripts/draft-alt.mjs --marks ~/p1-tutorial/marks.json --subject "The P1 editor" --id p1.tutorial.editor --inventory ~/p1-tutorial/inventory.json --apply
 ```
 
 ```text

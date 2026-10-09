@@ -10,7 +10,7 @@ Set up once, then follow the release steps in order each time the app you docume
 
 1. [Set up the tool](set-up.html)
 2. [Detect a release](detect-a-release.html)
-3. [Capture the editor](capture.html), or [WordPress, Drupal, and other apps](capture-other-apps.html)
+3. [Capture the editor](capture.html), [WordPress, Drupal, and other apps](capture-other-apps.html), or [Pantheon products](capture-pantheon-products.html)
 4. [Push a run to Figma](push-to-figma.html)
 5. [Annotate with the kit](annotate.html)
 6. [Write alt text from the marks](alt-text.html)

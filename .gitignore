@@ -25,6 +25,8 @@ tmp/
 
 # Per-run settings (project, workstream, paths, Figma file key): local to each person
 p1-editor.config.json
+# Every preset's config written by setup: <preset>.config.json (examples are *.config.example.json)
+/*.config.json
 *.config.local.json
 
 # Apps Script project written by npm run setup (holds a script ID, never the token)

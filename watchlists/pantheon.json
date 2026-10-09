@@ -1,0 +1,203 @@
+{
+  "description": "Everything Pantheon ships that its docs can show: SDKs and CLIs, plugins and modules, upstreams, and core versions, each from where it is released; plus the release notes feed for changes with no version, such as the dashboard and the platform. Each product's id is what an inventory record's \"product\" names. Sources checked on 2026-10-09. Not watchable: wp-audit-tool (no releases or tags) and drops-7 (Drupal 7 tags only).",
+  "products": [
+    {
+      "id": "p1-editor",
+      "name": "P1 editor (p1-next-sdk)",
+      "source": "npm:@pantheon-systems/p1-next-sdk"
+    },
+    {
+      "id": "content-publisher-sdk",
+      "name": "Content Publisher React SDK",
+      "source": "npm:@pantheon-systems/cpub-react-sdk"
+    },
+    {
+      "id": "content-publisher-cli",
+      "name": "Content Publisher CLI",
+      "source": "npm:@pantheon-systems/cpub-cli"
+    },
+    {
+      "id": "content-publisher-wordpress",
+      "name": "Content Publisher for WordPress",
+      "source": "wporg-plugin:pantheon-content-publisher"
+    },
+    {
+      "id": "content-publisher-drupal",
+      "name": "Content Publisher for Drupal",
+      "source": "drupal:pantheon_content_publisher"
+    },
+    {
+      "id": "terminus",
+      "name": "Terminus",
+      "source": "github:pantheon-systems/terminus"
+    },
+    {
+      "id": "terminus-build-tools",
+      "name": "Terminus Build Tools plugin",
+      "source": "github:pantheon-systems/terminus-build-tools-plugin"
+    },
+    {
+      "id": "push-to-pantheon",
+      "name": "Push to Pantheon",
+      "source": "github:pantheon-systems/push-to-pantheon"
+    },
+    {
+      "id": "wordpress-core",
+      "name": "WordPress core",
+      "source": "wordpress"
+    },
+    {
+      "id": "drupal-core",
+      "name": "Drupal core",
+      "source": "drupal"
+    },
+    {
+      "id": "wordpress-composer-managed",
+      "name": "WordPress Composer Managed upstream",
+      "source": "github:pantheon-systems/wordpress-composer-managed"
+    },
+    {
+      "id": "pantheon-mu-plugin",
+      "name": "Pantheon MU plugin",
+      "source": "github:pantheon-systems/pantheon-mu-plugin"
+    },
+    {
+      "id": "pantheon-advanced-page-cache",
+      "name": "Pantheon Advanced Page Cache (WordPress)",
+      "source": "wporg-plugin:pantheon-advanced-page-cache"
+    },
+    {
+      "id": "pantheon-advanced-page-cache-drupal",
+      "name": "Pantheon Advanced Page Cache (Drupal)",
+      "source": "drupal:pantheon_advanced_page_cache"
+    },
+    {
+      "id": "pantheon-hud",
+      "name": "Pantheon HUD",
+      "source": "wporg-plugin:pantheon-hud"
+    },
+    {
+      "id": "solr-power",
+      "name": "Solr Power",
+      "source": "wporg-plugin:solr-power"
+    },
+    {
+      "id": "search-api-pantheon",
+      "name": "Search API Pantheon",
+      "source": "drupal:search_api_pantheon"
+    },
+    {
+      "id": "wp-redis",
+      "name": "WP Redis",
+      "source": "wporg-plugin:wp-redis"
+    },
+    {
+      "id": "wp-native-php-sessions",
+      "name": "WordPress Native PHP Sessions",
+      "source": "wporg-plugin:wp-native-php-sessions"
+    },
+    {
+      "id": "wp-saml-auth",
+      "name": "WP SAML Auth",
+      "source": "wporg-plugin:wp-saml-auth"
+    },
+    {
+      "id": "pantheon-secrets",
+      "name": "Pantheon Secrets (Drupal)",
+      "source": "drupal:pantheon_secrets"
+    },
+    {
+      "id": "pds-toolkit-react",
+      "name": "Pantheon Design System React toolkit",
+      "source": "npm:@pantheon-systems/pds-toolkit-react"
+    },
+    {
+      "id": "pds-design-tokens",
+      "name": "Pantheon Design System tokens",
+      "source": "npm:@pantheon-systems/pds-design-tokens"
+    },
+    {
+      "id": "pantheon-migrations-wp",
+      "name": "Pantheon Migrations (BlogVault)",
+      "source": "wporg-plugin:bv-pantheon-migration"
+    },
+    {
+      "id": "wp-tls-compatibility-checker",
+      "name": "WP TLS Compatibility Checker",
+      "source": "github:pantheon-systems/wp-tls-compatibility-checker"
+    },
+    {
+      "id": "wp-launch-check",
+      "name": "WP Launch Check",
+      "source": "github:pantheon-systems/wp_launch_check"
+    },
+    {
+      "id": "drupal-tls-checker",
+      "name": "TLS Checker (Drupal)",
+      "source": "github:pantheon-systems/drupal_tls_checker"
+    },
+    {
+      "id": "pantheon-domain-masking",
+      "name": "Pantheon Domain Masking (Drupal)",
+      "source": "github:pantheon-systems/pantheon_domain_masking"
+    },
+    {
+      "id": "terminus-github-actions",
+      "name": "Terminus GitHub Action",
+      "source": "github:pantheon-systems/terminus-github-actions"
+    },
+    {
+      "id": "create-p1-starter-kit",
+      "name": "P1 starter kit",
+      "source": "npm:@pantheon-systems/create-p1-starter-kit"
+    },
+    {
+      "id": "content-publisher-browser-sdk",
+      "name": "Content Publisher Browser SDK",
+      "source": "npm:@pantheon-systems/cpub-browser-sdk"
+    },
+    {
+      "id": "content-publisher-php-sdk",
+      "name": "Content Publisher PHP SDK",
+      "source": "github:pantheon-systems/pcc-php-sdk"
+    },
+    {
+      "id": "nextjs-cache-handler",
+      "name": "Next.js Cache Handler",
+      "source": "npm:@pantheon-systems/nextjs-cache-handler"
+    },
+    {
+      "id": "customer-secrets-php-sdk",
+      "name": "Customer Secrets PHP SDK",
+      "source": "github:pantheon-systems/customer-secrets-php-sdk"
+    },
+    {
+      "id": "pantheon-secrets-js",
+      "name": "Pantheon Secrets JS",
+      "source": "npm:@pantheon-systems/pantheon-secrets"
+    }
+  ],
+  "feeds": [
+    {
+      "id": "pantheon-release-notes",
+      "name": "Pantheon release notes",
+      "url": "https://docs.pantheon.io/release-notes/rss.xml",
+      "tagPattern": "tag__label\" title=\"([^\"]+)\"",
+      "tagProducts": {
+        "User interface": [
+          "pantheon-dashboard"
+        ],
+        "Account management": [
+          "pantheon-dashboard"
+        ],
+        "Content Publisher": [
+          "content-publisher-dashboard"
+        ],
+        "Infrastructure": [
+          "pantheon-platform"
+        ]
+      },
+      "maxEntries": 30
+    }
+  ]
+}

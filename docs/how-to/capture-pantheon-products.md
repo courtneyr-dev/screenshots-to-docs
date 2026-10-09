@@ -1,0 +1,120 @@
+---
+title: Capture Pantheon products
+parent: How-to guides
+nav_order: 3.6
+---
+
+# Capture Pantheon products
+
+Screens for each area that Pantheon's docs show: the dashboard, Content Publisher, P1, and Pantheon's WordPress
+plugins and Drupal modules. For how many images each area has and where its releases come from, see
+[Pantheon docs coverage](../reference/pantheon-coverage.html).
+
+| Area                                                     | Preset              | Starter brief                            | Status                                         |
+| -------------------------------------------------------- | ------------------- | ---------------------------------------- | ---------------------------------------------- |
+| Pantheon WordPress plugins                               | `wordpress-admin`   | `briefs/pantheon-wordpress-plugins.json` | Verified: 5 screens on a local site            |
+| Pantheon Drupal modules                                  | `drupal-admin`      | `briefs/pantheon-drupal-modules.json`    | Verified: 7 screens on a local site            |
+| Content Publisher and P1 dashboard (content.pantheon.io) | `content-publisher` | `briefs/content-publisher.json`          | Verified: 4 screens                            |
+| P1 editor                                                | `p1-editor`         | `briefs/p1-editor.json`                  | Verified                                       |
+| Pantheon dashboard (dashboard.pantheon.io)               | not built yet       | not built yet                            | Needs a signed-in Chrome to check its pages    |
+| Google Docs add-on                                       | not built yet       | not built yet                            | The largest Content Publisher area (45 images) |
+| Terminal output                                          | none                | none                                     | Show it as text, not an image                  |
+
+## Pantheon WordPress plugins
+
+1. Install and activate the plugins on a local or Dev site, for example the WordPress Studio site from
+   [Capture WordPress, Drupal, and other apps](capture-other-apps.html):
+
+   ```bash
+   wp plugin install pantheon-content-publisher wp-saml-auth wp-native-php-sessions pantheon-hud pantheon-advanced-page-cache solr-power --activate
+   wp plugin install https://github.com/pantheon-systems/wp-tls-compatibility-checker/archive/refs/tags/1.0.0.zip --activate
+   ```
+
+2. Capture with the `wordpress-admin` config and `briefs/pantheon-wordpress-plugins.json`:
+
+   ```text
+     content-publisher                             OK
+     wp-saml-auth                                  OK
+     native-php-sessions                           OK
+     tls-compatibility-checker                     OK
+     pantheon-hud                                  OK
+
+   Done: 5/5 captured, 0 failed, 0 with HTTP >= 400
+   ```
+
+   {% include figure.html src="pantheon-wp-content-publisher.jpg" alt="The Pantheon Content Publisher plugin's page in WordPress admin: Get started with Content Publisher by connecting a collection, with Connect existing collection and Create new collection." caption="content-publisher: the plugin's start page, before a collection is connected." %}
+
+| Plugin                        | Screen                                    | Route                                                      | Where it renders                          |
+| ----------------------------- | ----------------------------------------- | ---------------------------------------------------------- | ----------------------------------------- |
+| Pantheon Content Publisher    | Content Publisher                         | `/wp-admin/admin.php?page=pantheon-content-publisher`      | Any site                                  |
+| WP SAML Auth                  | Settings > WP SAML Auth                   | `/wp-admin/options-general.php?page=wp-saml-auth-settings` | Any site                                  |
+| WordPress Native PHP Sessions | Tools > Pantheon Sessions                 | `/wp-admin/tools.php?page=pantheon-sessions`               | Any site                                  |
+| WP TLS Compatibility Checker  | Tools > TLS Compatibility Checker         | `/wp-admin/tools.php?page=tls-compatibility-checker`       | Any site                                  |
+| Pantheon HUD                  | Admin bar menu                            | every admin page (`#wp-admin-bar-pantheon-hud`)            | Any site; shows only "local" off Pantheon |
+| Pantheon MU plugin            | Settings > Pantheon Page Cache            | `/wp-admin/options-general.php?page=pantheon-cache`        | Pantheon only                             |
+| Pantheon Advanced Page Cache  | Clear cache admin bar item, max-age panel | admin bar, and the Pantheon Page Cache page                | Pantheon only                             |
+| Solr Power                    | Solr Power                                | `/wp-admin/admin.php?page=solr-power`                      | Pantheon only (needs a Solr index)        |
+| WP Redis                      | none (WP-CLI only)                        |                                                            |                                           |
+
+"Pantheon only" screens refused access or were missing on a local site. Capture them from a Pantheon Dev or
+Multidev environment: set `"signIn": "chrome"` in the config, open the site's WordPress admin from the
+dashboard's **Site Admin** button in the dedicated Chrome, and add the routes to a copy of the brief.
+
+## Pantheon Drupal modules
+
+1. Add and enable the modules. With Composer and Drush in the site:
+
+   ```bash
+   composer require drush/drush drupal/pantheon_content_publisher drupal/pantheon_secrets drupal/search_api_pantheon
+   vendor/bin/drush pm:install -y pantheon_content_publisher pantheon_secrets search_api_pantheon
+   ```
+
+   TLS Checker and Pantheon Domain Masking are on GitHub, not Drupal.org: download their latest release into
+   `web/modules/custom/` (as `tls_checker` and `pantheon_domain_masking`) and enable them the same way.
+
+2. Capture with the `drupal-admin` config and `briefs/pantheon-drupal-modules.json` (7 of 7 captured on
+   Drupal 11.4).
+
+   {% include figure.html src="pantheon-drupal-content-publisher.jpg" alt="Drupal's Pantheon Content Publisher collections page with a Connect a new collection button and an empty collections table." caption="content-publisher-collections" %}
+
+| Module                       | Screen                                  | Route                                                    |
+| ---------------------------- | --------------------------------------- | -------------------------------------------------------- |
+| Pantheon Content Publisher   | Collections                             | `/admin/structure/pantheon-content-publisher-collection` |
+| Pantheon Content Publisher   | Documents                               | `/admin/content/pantheon-content-publisher`              |
+| Pantheon Content Publisher   | Smart components                        | `/admin/structure/pantheon-smart-component`              |
+| Pantheon Secrets             | Sync all Pantheon Secrets               | `/admin/config/system/keys/pantheon`                     |
+| Search API Pantheon          | Search API (the "Pantheon" server type) | `/admin/config/search/search-api`                        |
+| Pantheon Domain Masking      | Options                                 | `/admin/config/pantheon-domain-masking`                  |
+| TLS Checker                  | TLS Compatibility Checker               | `/admin/config/development/tls-checker`                  |
+| Pantheon Advanced Page Cache | none                                    |                                                          |
+
+## Content Publisher and the P1 dashboard
+
+Content Publisher's dashboard and P1's dashboard are the same app at content.pantheon.io, so one preset covers
+both. Follow [Capture WordPress, Drupal, and other apps: Content Publisher](capture-other-apps.html#content-publisher).
+
+The Content Publisher docs show this dashboard with two older sidebars, and the P1 docs show a newer one
+(Overview, Sites, Content Publisher, Team), so the 32 Content Publisher dashboard images are likely out of
+date. That's from comparing the docs' images with each other; the live dashboard wasn't compared.
+
+## The Pantheon dashboard
+
+The dashboard is in 438 of the 1,003 image references on docs.pantheon.io, more than any other screen. A
+preset needs a signed-in Chrome: dashboard.pantheon.io signs in through Pantheon's single sign-on, which
+only you can complete. Once you have, the preset's checks get read from the real pages, with no clicks.
+
+It also needs a test workspace with the state the docs show: a WordPress site and a Drupal site with Dev,
+Test, and Live initialized, a Multidev, a custom domain with HTTPS, backups, and Autopilot. Capturing from a
+production workspace would show customer data.
+
+## Terminal output
+
+34 images on docs.pantheon.io are terminal output, and the Content Publisher docs have 4 terminal screenshots.
+Use a code block instead: readers can copy it, screen readers can read it, and a release only changes text.
+[The docs for this tool](capture.html) do the same.
+
+## Third-party screens
+
+216 images on docs.pantheon.io show other companies' screens (Google, GitHub, Cloudflare, New Relic, and
+more). Capture one with the `public-site` preset if it's public, or with `"signIn": "chrome"` and your own
+sign-in if it isn't. Their releases don't come from Pantheon, so the watch doesn't track them.

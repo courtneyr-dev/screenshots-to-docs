@@ -199,4 +199,4 @@ if (format === 'json') {
   writeFileSync(out, filled.value);
 }
 console.log(`Handoff note (${format}): ${out}`);
-console.log('Fill in the TO FILL lines, then give the note to the docs author. This does not export anything to Google Docs or the P1 docs.');
+console.log('Fill in the TO FILL lines, then give the note to the docs author. This does not export anything to Google Docs or a docs site.');

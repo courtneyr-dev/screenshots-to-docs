@@ -37,11 +37,11 @@ cd "$SKILL" || exit 1
 [ -d node_modules ] || { echo "Run: bash scripts/setup.sh (in $SKILL)"; exit 1; }
 
 echo "== static"
-for f in capture preflight chrome handoff compare-runs cleanup validate-skill check-identity figma-plan figma-upload make-gallery routes verify-site inventory publish-markdown draft-alt figma-export gdocs-manifest setup build-figma-plugin; do t "node --check scripts/$f.mjs" node --check "scripts/$f.mjs"; done
-for f in config presets release-sources; do t "node --check scripts/lib/$f.mjs" node --check "scripts/lib/$f.mjs"; done
+for f in capture preflight chrome handoff compare-runs cleanup validate-skill check-identity figma-plan figma-upload make-gallery routes verify-site inventory publish-markdown draft-alt figma-export gdocs-manifest setup build-figma-plugin watch; do t "node --check scripts/$f.mjs" node --check "scripts/$f.mjs"; done
+for f in config presets release-sources watch; do t "node --check scripts/lib/$f.mjs" node --check "scripts/lib/$f.mjs"; done
 t "JSON files parse" python3 -c "
 import json,glob
-for p in glob.glob('briefs/*.json')+glob.glob('scripts/presets/*.json')+glob.glob('templates/*.json')+glob.glob('examples/**/*.json',recursive=True)+glob.glob('$FX/*.json')+['package.json']: json.load(open(p))"
+for p in glob.glob('briefs/*.json')+glob.glob('scripts/presets/*.json')+glob.glob('watchlists/*.json')+glob.glob('templates/*.json')+glob.glob('examples/**/*.json',recursive=True)+glob.glob('$FX/*.json')+['package.json']: json.load(open(p))"
 t "no preset step clicks a delete/destructive item" python3 - <<'EOF'
 import json,re
 a=json.load(open('scripts/presets/p1-editor.json'))['actions']
@@ -341,6 +341,14 @@ pr_pass=$(grep -c '^PASS  ' "$TMP/presets-tests.log"); pr_fail=$(grep -c '^FAIL 
 echo "      preset tests: $pr_pass passed, $pr_fail failed (names: node tests/presets-tests.mjs)"
 pass=$((pass + pr_pass)); fail=$((fail + pr_fail))
 [ "$pr_pass" -gt 0 ] || { echo "FAIL  the preset tests did not run"; fail=$((fail + 1)); }
+
+echo "== Release watch: watchlists, release-notes feeds, products"
+node tests/watch-tests.mjs >"$TMP/watch-tests.log" 2>&1
+grep -E '^(FAIL)  |^        ' "$TMP/watch-tests.log" | head -40
+wt_pass=$(grep -c '^PASS  ' "$TMP/watch-tests.log"); wt_fail=$(grep -c '^FAIL  ' "$TMP/watch-tests.log")
+echo "      watch tests: $wt_pass passed, $wt_fail failed (names: node tests/watch-tests.mjs)"
+pass=$((pass + wt_pass)); fail=$((fail + wt_fail))
+[ "$wt_pass" -gt 0 ] || { echo "FAIL  the watch tests did not run"; fail=$((fail + 1)); }
 
 echo "== project skill: .claude/skills/p1-screenshot-inventory"
 REPO_ROOT=$(cd "$ROOT/../.." && pwd)

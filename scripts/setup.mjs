@@ -8,7 +8,7 @@
  *
  * Steps
  *   tools     Node, dependencies, Chrome (scripts/setup.sh)
- *   config    p1-editor.config.json for captures, checked by preflight
+ *   config    <preset>.config.json for captures (P1, WordPress, Drupal, Content Publisher, public sites), checked by preflight
  *   kit       the Figma annotation kit plugin (import once, run in any file)
  *   markdown  screenshots.map.json in a Markdown docs repository
  *   gdocs     the Google Docs swap: Apps Script project via clasp, plus the read-only GitHub token
@@ -22,6 +22,7 @@ import { join, dirname, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { createInterface } from 'node:readline/promises';
 import { stdin, stdout, platform } from 'node:process';
+import { listPresets, loadPreset, signInEnvVars } from './lib/presets.mjs';
 
 const ROOT = resolve(dirname(new URL(import.meta.url).pathname), '..');
 export const CLASP = ['--yes', '@google/clasp@3.4.1'];
@@ -32,7 +33,7 @@ export function tokenUrl(repo) {
   if (!REPO_RE.test(repo)) throw new Error('repository must look like owner/name');
   const [owner, name] = repo.split('/');
   const q = new URLSearchParams({
-    name: `P1 screenshot swap (${name})`.slice(0, 40),
+    name: `Screenshot swap (${name})`.slice(0, 40),
     description: `Read-only access for the Google Docs screenshot swap. Repository: ${repo}`,
     target_name: owner,
     expires_in: '90',
@@ -64,7 +65,7 @@ function status() {
   const kitCurrent = spawnSync(process.execPath, [join(ROOT, 'scripts', 'build-figma-plugin.mjs'), '--check'], { encoding: 'utf-8' }).status === 0;
   return [
     ['tools', has('node_modules/puppeteer-core'), 'dependencies installed'],
-    ['config', has('p1-editor.config.json'), 'p1-editor.config.json'],
+    ['config', listPresets().some(p => has(`${p}.config.json`)), `a <preset>.config.json (${listPresets().filter(p => has(`${p}.config.json`)).join(', ') || 'none yet'})`],
     ['kit', kitCurrent, 'figma-plugin/code.js built and current'],
     ['gdocs', has('build/gdocs-swap/.clasp.json'), 'Apps Script project created (build/gdocs-swap)'],
   ];
@@ -94,25 +95,35 @@ async function main() {
       if (!run('bash', ['scripts/setup.sh'])) throw new Error('scripts/setup.sh failed');
     }
 
-    if (await want('config', 'Capture config (p1-editor.config.json)')) {
-      const file = join(ROOT, 'p1-editor.config.json');
-      if (existsSync(file) && !(await yes('p1-editor.config.json exists. Replace it?'))) console.log('Kept the existing config.');
+    if (await want('config', 'Capture config (<preset>.config.json)')) {
+      const presets = listPresets();
+      let preset = await ask(`Which kind of app? ${presets.join(', ')}`, 'p1-editor');
+      while (!presets.includes(preset)) preset = await ask(`Choose one of: ${presets.join(', ')}`, 'p1-editor');
+      const p = loadPreset(preset);
+      const name = `${preset}.config.json`;
+      const file = join(ROOT, name);
+      if (existsSync(file) && !(await yes(`${name} exists. Replace it?`))) console.log('Kept the existing config.');
       else {
-        const cfg = JSON.parse(readFileSync(join(ROOT, 'examples', 'config.example.json'), 'utf-8'));
-        delete cfg.$comment; delete cfg.blockType;
-        cfg.topic = await ask('Short name for these runs (kebab-case)', 'p1-docs');
-        cfg.baseUrl = await ask('P1 site origin', 'http://localhost:3000');
-        cfg.projectName = await ask('Project name as the editor header shows it');
-        cfg.workstream = await ask('Workstream name as the selector lists it');
-        cfg.pagePath = await ask('Page path to capture', '/');
-        cfg.chrome = { profileDir: await ask('Dedicated Chrome profile folder (outside any repo)', '~/.cache/p1-screenshots-profile'), cdpPort: Number(await ask('Chrome debugging port', '9222')) };
-        cfg.figma.fileKey = await ask('Figma file key (from figma.com/design/<key>/...)');
-        cfg.figma.pageNamePattern = 'RUN-{date} · {runId}';
-        cfg.docs.handoffDir = await ask('Folder for handoff notes', './handoff');
+        const example = join(ROOT, 'examples', preset === 'p1-editor' ? 'config.example.json' : `${preset}.config.example.json`);
+        const base = existsSync(example) ? JSON.parse(readFileSync(example, 'utf-8')) : {};
+        const cfg = { topic: await ask('Short name for these runs (kebab-case)', `${preset}-docs`), preset, baseUrl: await ask('Origin of the app to capture', base.baseUrl && !base.baseUrl.startsWith('<') ? base.baseUrl : 'http://localhost:3000') };
+        const params = {};
+        for (const [k, spec] of Object.entries(p.params)) {
+          if (!spec.required && !(await yes(`Set ${k}? ${spec.what || ''}`.trim()))) continue;
+          params[k] = await ask(`${k}: ${spec.what || ''}`.trim(), spec.default);
+        }
+        if (Object.keys(params).length) cfg.params = params;
+        if (p.signIn.mode === 'chrome') {
+          cfg.chrome = { profileDir: await ask('Dedicated Chrome profile folder (outside any repo)', '~/.cache/screenshots-profile'), cdpPort: Number(await ask('Chrome debugging port', '9222')) };
+        } else if (p.signIn.mode === 'form') {
+          console.log(`This preset signs in with a login form. Before each capture, export ${signInEnvVars(p.signIn).join(' and ')} in your shell (read -s keeps a password off the screen). They never go in a file.`);
+        }
+        cfg.figma = { fileKey: await ask('Figma file key (from figma.com/design/<key>/...)'), pageNamePattern: 'RUN-{date} · {runId}' };
+        cfg.docs = { handoffDir: await ask('Folder for handoff notes', './handoff'), format: 'markdown' };
         writeFileSync(file, JSON.stringify(cfg, null, 2) + '\n');
         console.log(`Wrote ${file} (git-ignored).`);
       }
-      run(process.execPath, ['scripts/preflight.mjs', '--config', 'p1-editor.config.json', '--need', 'capture,figma,handoff']);
+      run(process.execPath, ['scripts/preflight.mjs', '--config', name, '--need', 'capture,figma,handoff']);
     }
 
     if (await want('kit', 'Figma annotation kit (plugin)')) {
@@ -124,7 +135,7 @@ async function main() {
         '  1. Open any design file. Menu: Plugins > Development > Import plugin from manifest...',
         `  2. Choose ${manifest}`,
         'In each file that needs the kit:',
-        '  3. Plugins > Development > P1 screenshot annotation kit',
+        '  3. Plugins > Development > Screenshot annotation kit',
         'It adds the "Annotation" variables and an "Annotation kit · Components" page with 13 components: 11 sets with 70 variants, plus 2 single components.',
         'If the Pantheon Design System library is enabled for the file, colors alias it; otherwise they use the same values locally.',
       ].join('\n'));
@@ -157,7 +168,7 @@ async function main() {
       await ask('Press Enter when the Apps Script API is on');
       if (!run('npx', [...CLASP, 'login'])) throw new Error('clasp login failed');
       if (!existsSync(join(dir, '.clasp.json'))) {
-        if (!run('npx', [...CLASP, 'create-script', '--type', 'standalone', '--title', 'P1 screenshot swap', '--rootDir', '.'], { cwd: dir })) throw new Error('clasp create-script failed');
+        if (!run('npx', [...CLASP, 'create-script', '--type', 'standalone', '--title', 'Screenshot swap', '--rootDir', '.'], { cwd: dir })) throw new Error('clasp create-script failed');
       }
       if (!run('npx', [...CLASP, 'push', '--force'], { cwd: dir })) throw new Error('clasp push failed');
 

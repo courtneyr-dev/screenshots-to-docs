@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
- * p1-editor-screenshots / draft-alt
+ * screenshots-to-docs / draft-alt
  *
  * Drafts alt text from an annotated frame's step marks, so the numbers in the image and in the text
  * always match. Step layers are named "Step <n>: <label>"; the label is used as written.
  *
  * Usage:
- *   node draft-alt.mjs --marks marks.json [--subject "The P1 editor"] [--id <id> --inventory <file> --apply]
+ *   node draft-alt.mjs --marks marks.json --subject "<what the screen is>" [--id <id> --inventory <file> --apply]
  *
  * marks.json: a list of layer names, { "marks": [...] }, or a Figma REST GET /v1/files/:key/nodes response.
  * Without --apply it prints the draft only. --apply saves it with `inventory.mjs set-alt`, which runs the
@@ -49,7 +49,9 @@ export function stepsFrom(names) {
   return nums.map(n => ({ n, label: steps.get(n) }));
 }
 
-export function draftAlt(steps, subject = 'The P1 editor') {
+// subject names the screen, as the alt text should open: "The P1 editor", "The WordPress dashboard".
+export function draftAlt(steps, subject) {
+  if (typeof subject !== 'string' || !subject.trim()) throw new Error('give --subject, what the screenshot shows, for example "The WordPress dashboard" or "The P1 editor"');
   const count = WORDS[steps.length] || String(steps.length);
   const list = steps.map(s => `${s.n} ${s.label.replace(/[.\s]+$/, '')}`).join(', ');
   return `${subject.trim()} with ${count} numbered area${steps.length === 1 ? '' : 's'}: ${list}.`;
@@ -62,7 +64,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   } });
   const fail = msg => { console.error(`FAIL: ${msg}`); process.exit(1); };
   if (values.help || !values.marks) {
-    console.log('Usage: node draft-alt.mjs --marks marks.json [--subject "The P1 editor"] [--id <id> --inventory <file> --apply]');
+    console.log('Usage: node draft-alt.mjs --marks marks.json --subject "<what the screen is>" [--id <id> --inventory <file> --apply]');
     process.exit(values.help ? 0 : 1);
   }
   let text;
@@ -75,6 +77,6 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     const r = spawnSync(process.execPath, args, { stdio: 'inherit' });
     process.exit(r.status ?? 1);
   } else if (values.id) {
-    console.log(`\nRead it, then save it with: node scripts/draft-alt.mjs --marks ${values.marks} --id ${values.id}${values.subject ? ` --subject "${values.subject}"` : ''} --apply`);
+    console.log(`\nRead it, then save it with: node scripts/draft-alt.mjs --marks ${values.marks} --id ${values.id} --subject "${values.subject}" --apply`);
   }
 }

@@ -33,7 +33,7 @@
         "#wpadminbar",
         "#adminmenu",
         {
-          "selector": ".wrap h1",
+          "selector": "#wpbody-content h1, #wpbody-content h2",
           "text": "{title}"
         }
       ]
