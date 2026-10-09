@@ -244,7 +244,12 @@ Two differences from the Google Docs add-on:
 - The Word add-in signs in to Content Publisher separately. Its collection list can differ from the Google Docs
   add-on's: the test account saw only the playground, so the test document is connected to "Content Publisher
   playground".
-- **Preview and Publish** opened no window or dialog when clicked in a background tab, so it isn't in the brief.
+- **Preview and Publish** opens the same page as the Google Docs add-on,
+  `content.pantheon.io/addon/articles/<id>/preview-publish`, so the Google Docs shot (`addon-preview-publish`)
+  covers it. Word only opens that window from a tab that's in front; a capture step can do that with
+  `{ "bringToFront": true }`, which takes the screen while the shot runs. For a document connected to the
+  playground, the window's requests return 403 and it shows "Loading..." without an error. A Word document needs
+  a collection under a connected Microsoft account for the window to load.
 
 ## Terminal output
 

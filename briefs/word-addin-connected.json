@@ -1,7 +1,7 @@
 {
   "topic": "{{topic}}",
   "site": "{{baseUrl}}",
-  "description": "Content Publisher's Word add-in on a test document that is connected to a collection (the playground works). Nothing here clicks Save, Disconnect collection, or Preview and Publish. Preview and Publish isn't covered: in a background tab its click opened no window or dialog.",
+  "description": "Content Publisher's Word add-in on a test document that is connected to a collection (the playground works). Nothing here clicks Save, Publish, or Disconnect collection. Preview and Publish isn't in this brief: it opens the same content.pantheon.io preview-publish page as the Google Docs add-on, captured by briefs/gdocs-addon-connected.json.",
   "dpr": 2,
   "presets": [
     "word-addin"
