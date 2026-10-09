@@ -55,6 +55,16 @@ await test('every brief in briefs/ names only presets and actions that exist', (
   }
 });
 
+await test('no brief tells an action to click Publish, Save, Disconnect, or Delete', () => {
+  for (const file of readdirSync(join(ROOT, 'briefs')).filter(f => f.endsWith('.json'))) {
+    const brief = JSON.parse(readFileSync(join(ROOT, 'briefs', file), 'utf-8'));
+    for (const s of brief.shots) for (const a of s.actions || []) {
+      if (typeof a === 'string') continue;
+      for (const v of Object.values(Object.values(a)[0])) assert.doesNotMatch(String(v).trim(), /^(publish|save|disconnect|delete|remove)( collection| site)?$/i, `${file}: ${s.slug}`);
+    }
+  }
+});
+
 await test('no preset step clicks anything destructive, and form sign-in reads only environment variables', () => {
   for (const n of listPresets()) {
     const p = loadPreset(n);
