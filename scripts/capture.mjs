@@ -518,6 +518,7 @@ function compileActions(spec, presets) {
 //   { wait: selector | ms, frame? } wait for a selector to be visible, or pause
 //   { key: "Escape" }              press a key
 //   { moveMouse: {x, y} }          move the pointer (clears hover tooltips)
+//   { bringToFront: true }         bring this tab in front (takes the screen while the shot runs)
 //   { check: selector | { selector, text?, notText? }, frame?, timeout? }  wait until it's visible, contains
 //       text, and (with notText) no longer shows that text
 // A click can add `opensWindow: "<text in the new window's URL>"`: the click opens a window (an add-on's
@@ -578,6 +579,11 @@ async function runSteps(page, steps, opened = []) {
           await settle(page, {});
         }
       }
+    } else if (step.bringToFront) {
+      // Some add-ins only open their windows from a tab that's in front (a background tab's click opens nothing).
+      // This takes the screen while the shot runs.
+      await page.bringToFront();
+      await new Promise(r => setTimeout(r, 1500));
     } else if (step.check) {
       // A check partway through the steps: wait (up to `timeout` ms, default 20000) until the selector is
       // visible and, with `text`, contains it. For screens that load after a click, such as an add-on panel.
