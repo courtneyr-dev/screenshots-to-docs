@@ -128,7 +128,7 @@ A Google Docs add-on in the Docs side panel, for example Pantheon Content Publis
 
 ## pantheon-dashboard
 
-The Pantheon dashboard (dashboard.pantheon.io): workspace pages and a site's environment tabs. You sign in yourself, through Pantheon's single sign-on, in the dedicated Chrome. Use a test workspace: shots show workspace, site, and team names. Hides the maintenance and warning banners, toast notifications, and the support chat, which change from day to day. Selectors checked against the live dashboard on 2026-10-09; site routes are /workspace/<workspaceId>/cms-site/<siteId>/environment/<env>/<tab>.
+The Pantheon dashboard (dashboard.pantheon.io): workspace pages and a site's environment tabs. You sign in yourself, through Pantheon's single sign-on, in the dedicated Chrome. Use a test workspace: shots show workspace, site, and team names. Hides the maintenance and warning banners, toast notifications, and the support chat, which change from day to day. Selectors checked against the live dashboard on 2026-10-09; personal settings are /workspace/<workspaceId>/personal-settings/<page>; site routes are /workspace/<workspaceId>/cms-site/<siteId>/environment/<env>/<tab>.
 
 **Settings** (under `params` in the config):
 
@@ -146,6 +146,7 @@ The Pantheon dashboard (dashboard.pantheon.io): workspace pages and a site's env
 | `workspacePage`  | `title`    | `nav[aria-label="Global Primary Navigation"]`; `main h1 contains “{title}”`                                                       |
 | `siteTab`        | `heading`  | `nav[aria-label="CMS Site Top Navigation"]`; `nav[aria-label="CMS Site Environments Navigation"]`; `main h2 contains “{heading}”` |
 | `siteReady`      |            | `nav[aria-label="CMS Site Top Navigation"]`; `nav[aria-label="CMS Site Environments Navigation"]`; `main h2`                      |
+| `personalPage`   | `heading`  | `nav[aria-label="Global Primary Navigation"]`; `main h1 contains “User settings”`; `main h2 contains “{heading}”`                 |
 
 ## public-site
 

@@ -1,7 +1,7 @@
 {
   "topic": "{{topic}}",
   "site": "{{baseUrl}}",
-  "description": "Starter brief for the Pantheon dashboard. Run with a config whose preset is pantheon-dashboard (examples/pantheon-dashboard.config.example.json), with the dedicated Chrome open and signed in. Site shots need params.siteId and are skipped without it.",
+  "description": "Starter brief for the Pantheon dashboard. Run with a config whose preset is pantheon-dashboard (examples/pantheon-dashboard.config.example.json), with the dedicated Chrome open and signed in. Personal settings shots show your name, email address, and key and token names. Site shots need params.siteId and are skipped without it.",
   "dpr": 2,
   "presets": [
     "pantheon-dashboard"
@@ -155,6 +155,90 @@
       ],
       "requires": [
         "siteId"
+      ]
+    },
+    {
+      "slug": "personal-profile",
+      "label": "Personal settings: profile",
+      "url": "/workspace/{{workspaceId}}/personal-settings/profile",
+      "delay": 1500,
+      "section": "personal",
+      "actions": [
+        {
+          "personalPage": {
+            "heading": "Basic Information"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "personal-login",
+      "label": "Personal settings: login details",
+      "url": "/workspace/{{workspaceId}}/personal-settings/login-details",
+      "delay": 1500,
+      "section": "personal",
+      "actions": [
+        {
+          "personalPage": {
+            "heading": "Email address"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "personal-email",
+      "label": "Personal settings: email notifications",
+      "url": "/workspace/{{workspaceId}}/personal-settings/email-notifications",
+      "delay": 1500,
+      "section": "personal",
+      "actions": [
+        {
+          "personalPage": {
+            "heading": "Autopilot Email Notifications"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "personal-security",
+      "label": "Personal settings: security (MFA)",
+      "url": "/workspace/{{workspaceId}}/personal-settings/security",
+      "delay": 1500,
+      "section": "personal",
+      "actions": [
+        {
+          "personalPage": {
+            "heading": "Multi-factor authentication"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "personal-ssh-keys",
+      "label": "Personal settings: SSH keys",
+      "url": "/workspace/{{workspaceId}}/personal-settings/ssh-keys",
+      "delay": 1500,
+      "section": "personal",
+      "actions": [
+        {
+          "personalPage": {
+            "heading": "Active SSH Keys"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "personal-tokens",
+      "label": "Personal settings: personal access tokens",
+      "url": "/workspace/{{workspaceId}}/personal-settings/personal-access-token",
+      "delay": 1500,
+      "section": "personal",
+      "actions": [
+        {
+          "personalPage": {
+            "heading": "Personal access tokens"
+          }
+        }
       ]
     }
   ]

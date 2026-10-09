@@ -1,5 +1,5 @@
 {
-  "description": "The Pantheon dashboard (dashboard.pantheon.io): workspace pages and a site's environment tabs. You sign in yourself, through Pantheon's single sign-on, in the dedicated Chrome. Use a test workspace: shots show workspace, site, and team names. Hides the maintenance and warning banners, toast notifications, and the support chat, which change from day to day. Selectors checked against the live dashboard on 2026-10-09; site routes are /workspace/<workspaceId>/cms-site/<siteId>/environment/<env>/<tab>.",
+  "description": "The Pantheon dashboard (dashboard.pantheon.io): workspace pages and a site's environment tabs. You sign in yourself, through Pantheon's single sign-on, in the dedicated Chrome. Use a test workspace: shots show workspace, site, and team names. Hides the maintenance and warning banners, toast notifications, and the support chat, which change from day to day. Selectors checked against the live dashboard on 2026-10-09; personal settings are /workspace/<workspaceId>/personal-settings/<page>; site routes are /workspace/<workspaceId>/cms-site/<siteId>/environment/<env>/<tab>.",
   "signIn": {
     "mode": "chrome"
   },
@@ -65,6 +65,22 @@
         "nav[aria-label=\"CMS Site Top Navigation\"]",
         "nav[aria-label=\"CMS Site Environments Navigation\"]",
         "main h2"
+      ]
+    },
+    "personalPage": {
+      "params": [
+        "heading"
+      ],
+      "expect": [
+        "nav[aria-label=\"Global Primary Navigation\"]",
+        {
+          "selector": "main h1",
+          "text": "User settings"
+        },
+        {
+          "selector": "main h2",
+          "text": "{heading}"
+        }
       ]
     }
   }
