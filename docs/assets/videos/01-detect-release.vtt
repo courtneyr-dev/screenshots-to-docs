@@ -1,19 +1,19 @@
 WEBVTT
 
-00:00.000 --> 00:07.525
-The inventory lists every screenshot the docs use. Both of ours were captured for P1 0.16.0.
+00:00:00.300 --> 00:00:06.621
+The inventory lists every screenshot the docs use. Both of these were handed off for P1 0.20.0.
 
-00:07.505 --> 00:21.380
-Release check compares the SDK installed in the capture app with the latest published version. The app runs 0.16.0, and 0.20.0 is out, so it warns you to update the app before capturing.
+00:00:07.721 --> 00:00:28.783
+The watch command checks everything Pantheon ships, plus the release notes, against what it saw last time. P1's SDK went from 0.20.0 to 0.20.1, and both screenshots are still in progress for the older version. New release notes are listed with their tags; ones tagged User interface point at dashboard screenshots.
 
-00:21.360 --> 00:29.610
-Checking against 0.20.0 flags both screenshots as behind, and prints the exact command that retargets each one.
+00:00:29.803 --> 00:00:37.043
+Release check for 0.20.1 lists both screenshots as behind, with the command that retargets each one.
 
-00:29.590 --> 00:35.065
-Approving a screenshot for 0.20.0 tells the capture step to shoot it again.
+00:00:38.043 --> 00:00:43.164
+Approving a screenshot for 0.20.1 tells the capture step to shoot it again.
 
-00:35.045 --> 00:37.570
+00:00:44.244 --> 00:00:45.664
 Same for the workstream selector.
 
-00:37.550 --> 00:45.250
-Both records are now approved for 0.20.0, marked refresh. Nothing is captured until a person approves it.
+00:00:46.724 --> 00:00:53.905
+Update saves what the watch saw, so the next check only shows newer releases. Nothing is captured until a person approves it.

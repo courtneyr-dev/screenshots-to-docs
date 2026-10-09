@@ -10,6 +10,8 @@
  *   node scripts/watch.mjs --watchlist pantheon --state watch-state.json [--inventory <file>] [--update]
  *   node scripts/watch.mjs --watchlist ./my-watchlist.json --state s.json --since-days 30 --json
  *
+ * --only-new   list only products with a new release (or an error), and count the rest
+ *
  * --watchlist  a name in watchlists/ (for example "pantheon") or a path to a watchlist file
  * --state      what was seen last time; created by --update. Commit it next to the inventory so the team shares it.
  *
@@ -25,12 +27,12 @@ import { validateWatchlist, runWatch, renderWatch } from './lib/watch.mjs';
 const { values } = parseArgs({
   options: {
     watchlist: { type: 'string' }, state: { type: 'string' }, inventory: { type: 'string' },
-    update: { type: 'boolean' }, json: { type: 'boolean' }, 'since-days': { type: 'string', default: '14' }, help: { type: 'boolean' },
+    update: { type: 'boolean' }, 'only-new': { type: 'boolean' }, json: { type: 'boolean' }, 'since-days': { type: 'string', default: '14' }, help: { type: 'boolean' },
   },
 });
 const fail = m => { console.error(`FAIL: ${m}`); process.exit(1); };
 if (values.help || !values.watchlist || !values.state) {
-  console.log('Usage: node scripts/watch.mjs --watchlist <name|file> --state <file> [--inventory <file>] [--update] [--json] [--since-days 14]');
+  console.log('Usage: node scripts/watch.mjs --watchlist <name|file> --state <file> [--inventory <file>] [--update] [--only-new] [--json] [--since-days 14]');
   process.exit(values.help ? 0 : 1);
 }
 
@@ -49,11 +51,11 @@ if (!Number.isFinite(sinceDays) || sinceDays <= 0) fail('--since-days must be a 
 const r = await runWatch({ watchlist, state, doc, sinceDays });
 if (values.json) console.log(JSON.stringify({ products: r.products, feeds: r.feeds, changed: r.changed, failed: r.failed }, null, 2));
 else {
-  console.log(renderWatch(r));
+  console.log(renderWatch(r, { onlyNew: values['only-new'] }));
   if (!existsSync(statePath)) console.log(`\nFirst check: no state file yet. Feeds show the last ${sinceDays} days.`);
 }
 if (values.update) {
   writeFileSync(statePath, JSON.stringify(r.nextState, null, 2) + '\n');
-  if (!values.json) console.log(`\nSaved what was seen to ${statePath}.`);
+  if (!values.json) console.log(`\nSaved what was seen to ${values.state}.`);
 } else if (!values.json && r.changed) console.log(`\nRun again with --update to mark these as seen.`);
 process.exit(r.failed ? 1 : r.changed ? 3 : 0);

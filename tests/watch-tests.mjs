@@ -111,6 +111,8 @@ await test('a second check reports only what changed since the saved state', asy
   const by = Object.fromEntries(r.products.map(p => [p.id, p]));
   assert.equal(by.terminus.change, 'changed'); assert.equal(by.terminus.previous, '4.3.2');
   assert.equal(by['p1-editor'].change, 'same');
+  const onlyNewText = renderWatch(r, { onlyNew: true });
+  assert.match(onlyNewText, /Terminus\s+NEW RELEASE/); assert.doesNotMatch(onlyNewText, /P1\s+no change/); assert.match(onlyNewText, /1 more with no change/);
   assert.deepEqual(r.feeds[0].entries.map(e => e.title), ['Dashboard home now in beta']);
   assert.equal(r.changed, true); assert.equal(r.failed, false);
   const quiet = await runWatch({ watchlist: { products: WATCHLIST.products.slice(0, 2), feeds: WATCHLIST.feeds }, state: r.nextState, fetchImpl: fakeFetch(ROUTES), now: new Date('2026-10-10T12:00:00Z') });
@@ -128,6 +130,8 @@ await test('only screenshots of the released product are matched: a Terminus rel
   assert.deepEqual([...by['p1-editor'].screenshots.refresh, ...by['p1-editor'].screenshots.behind], ['qa.p1.shell']);
   assert.deepEqual(r.feeds[0].review.dashboard, { label: '2026.10.6', title: 'Dashboard home now in beta', screenshots: ['qa.dash.home'] });
   const text = renderWatch(r);
+  const quietText = renderWatch(r, { onlyNew: true });
+  assert.doesNotMatch(quietText, /no change/);
   assert.match(text, /release-check --product terminus --version 4\.3\.3/);
   assert.match(text, /release-check --product dashboard --version 2026\.10\.6/);
 });

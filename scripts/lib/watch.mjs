@@ -143,11 +143,14 @@ export async function runWatch({ watchlist, state = {}, doc = null, fetchImpl = 
   return { products, feeds, nextState: next, changed, failed };
 }
 
-export function renderWatch(r) {
+// onlyNew hides products whose version didn't change and says how many were hidden.
+export function renderWatch(r, { onlyNew = false } = {}) {
   const lines = [];
+  const hidden = onlyNew ? r.products.filter(p => p.change === 'same').length : 0;
   const width = Math.max(...r.products.map(p => p.name.length), 10);
   if (r.products.length) lines.push('Products');
   for (const p of r.products) {
+    if (onlyNew && p.change === 'same') continue;
     const mark = { changed: 'NEW RELEASE', first: 'first check', same: 'no change', error: 'ERROR' }[p.change];
     const ver = p.change === 'error' ? p.error : p.change === 'changed' ? `${p.previous} → ${p.latest}` : p.latest;
     lines.push(`  ${p.name.padEnd(width)}  ${mark.padEnd(11)}  ${ver}`);
@@ -157,6 +160,7 @@ export function renderWatch(r) {
       lines.push(`  ${''.padEnd(width)}    release-check --product ${p.id} --version ${p.latest}`);
     }
   }
+  if (hidden) lines.push(`  ${hidden} more with no change`);
   for (const f of r.feeds) {
     lines.push('', `${f.name}: ${f.error ? `ERROR ${f.error}` : `${f.entries.length} new since ${f.since.slice(0, 10)}`}`);
     for (const e of f.entries) {
