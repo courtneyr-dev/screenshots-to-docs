@@ -11,15 +11,16 @@ alt text, swaps, and verification) is the same for every app.
 
 ## Choose a preset
 
-| Preset               | For                                                               | Sign-in                                                         |
-| -------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------- |
-| `p1-editor`          | The P1 editor (the default when a config names no preset)         | You, in the dedicated Chrome                                    |
-| `wordpress-admin`    | wp-admin, the block editor, the Site Editor                       | Login form, `WP_USER` and `WP_PASSWORD` from your shell         |
-| `drupal-admin`       | Drupal administration pages (Claro)                               | Login form, `DRUPAL_USER` and `DRUPAL_PASSWORD` from your shell |
-| `content-publisher`  | Pantheon Content Publisher's dashboard                            | You, in the dedicated Chrome                                    |
-| `pantheon-dashboard` | The Pantheon dashboard: workspace pages and a site's environments | You, in the dedicated Chrome                                    |
-| `gdocs-addon`        | A Google Docs add-on's side panel, such as Content Publisher      | You, in the dedicated Chrome                                    |
-| `public-site`        | Any public website                                                | None                                                            |
+| Preset               | For                                                                         | Sign-in                                                         |
+| -------------------- | --------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| `p1-editor`          | The P1 editor (the default when a config names no preset)                   | You, in the dedicated Chrome                                    |
+| `wordpress-admin`    | wp-admin, the block editor, the Site Editor                                 | Login form, `WP_USER` and `WP_PASSWORD` from your shell         |
+| `drupal-admin`       | Drupal administration pages (Claro)                                         | Login form, `DRUPAL_USER` and `DRUPAL_PASSWORD` from your shell |
+| `content-publisher`  | Pantheon Content Publisher's dashboard                                      | You, in the dedicated Chrome                                    |
+| `pantheon-dashboard` | The Pantheon dashboard: workspace pages and a site's environments           | You, in the dedicated Chrome                                    |
+| `gdocs-addon`        | A Google Docs add-on's side panel, such as Content Publisher                | You, in the dedicated Chrome                                    |
+| `word-addin`         | An Office add-in's task pane in Word for the web, such as Content Publisher | You, in the dedicated Chrome                                    |
+| `public-site`        | Any public website                                                          | None                                                            |
 
 Each preset has a starter brief in `briefs/<preset>.json` and an example config in
 `examples/<preset>.config.example.json`. What each preset checks and hides: [Presets](../reference/presets.html).

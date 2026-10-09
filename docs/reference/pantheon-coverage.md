@@ -30,7 +30,7 @@ Counted on 2026-10-09; [how it was counted](#how-this-was-counted).
 | Google Docs add-on                       |     45 | `gdocs-addon`                        | release notes tagged Content Publisher                                 |
 | Content Publisher preview and publish    |     16 | not built yet                        | same                                                                   |
 | P1 editor                                |      7 | `p1-editor`                          | `npm:@pantheon-systems/p1-next-sdk`                                    |
-| Microsoft Word add-in                    |      6 | not built yet                        | release notes tagged Content Publisher                                 |
+| Microsoft Word add-in                    |      6 | `word-addin`                         | release notes tagged Content Publisher                                 |
 | Terminal output                          |     38 | use text instead                     | the CLI's source, for example `github:pantheon-systems/terminus`       |
 | Other companies' screens                 |    234 | `public-site`, or `signIn: "chrome"` | not tracked                                                            |
 | Diagrams                                 |     68 | not a capture                        | not tracked                                                            |

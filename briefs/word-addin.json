@@ -1,0 +1,27 @@
+{
+  "topic": "{{topic}}",
+  "site": "{{baseUrl}}",
+  "description": "Starter brief for Pantheon Content Publisher's Word add-in, on a test document that isn't connected to a collection. Run with a config whose preset is word-addin (examples/word-addin.config.example.json), with the dedicated Chrome open and signed in to Microsoft.",
+  "dpr": 2,
+  "presets": [
+    "word-addin"
+  ],
+  "shots": [
+    {
+      "slug": "word-addin-welcome",
+      "label": "Word add-in: connect this doc",
+      "url": "{{documentUrl}}",
+      "delay": 1500,
+      "section": "add-in",
+      "actions": [
+        "wordReady",
+        {
+          "openAddin": {
+            "name": "{{addinName}}",
+            "text": "Connect this doc to a collection"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -18,6 +18,7 @@ plugins and Drupal modules. For how many images each area has and where its rele
 | P1 editor                                                | `p1-editor`          | `briefs/p1-editor.json`                                        | Verified                            |
 | Pantheon dashboard (dashboard.pantheon.io)               | `pantheon-dashboard` | `briefs/pantheon-dashboard.json`                               | Verified: 16 screens                |
 | Google Docs add-on                                       | `gdocs-addon`        | `briefs/gdocs-addon.json`, `briefs/gdocs-addon-connected.json` | Verified: 7 screens                 |
+| Word add-in                                              | `word-addin`         | `briefs/word-addin.json`, `briefs/word-addin-connected.json`   | Verified: 4 screens                 |
 | Terminal output                                          | none                 | none                                                           | Show it as text, not an image       |
 
 ## Pantheon WordPress plugins
@@ -211,6 +212,39 @@ The formatting check's results depend on the doc: the test doc shows "Unsupporte
 The add-on draws its buttons as images. **Connect to collection** has the alt text "Connect to Site", and
 other images have none, so a screen reader announces the wrong label or nothing. Capture doesn't need these
 buttons, because the doc is connected beforehand, but that's worth reporting to the Content Publisher team.
+
+## The Word add-in
+
+Content Publisher's Microsoft Word add-in is in 6 of the 149 images on docs.content.pantheon.io. It runs in Word
+for the web as a task pane, opened from its button on the Home tab.
+
+1. In the dedicated Chrome, sign in to Microsoft and create a test document with some text in it. On an empty
+   document Word shows a "Draft with Copilot" prompt, which ends up in the shots.
+2. Add the add-in: **Home > Add-ins**, search for **Pantheon Content Publisher**, and add it. That accepts
+   Microsoft's and Pantheon's terms, so it's yours to do.
+3. Copy `examples/word-addin.config.example.json` and set `params.documentUrl` to the document's full URL from
+   the address bar.
+4. Capture with `briefs/word-addin.json` for a document that isn't connected (the welcome screen), or
+   `briefs/word-addin-connected.json` for one that is (home, metadata, and settings):
+
+   ```text
+     word-addin-connected                          OK
+     word-addin-metadata                           OK
+     word-addin-settings                           OK
+
+   Done: 3/3 captured, 0 failed, 0 with HTTP >= 400
+   ```
+
+The task pane is an iframe inside Word's editor iframe, so the preset's checks use a list of frames:
+`["iframe#WacFrame_Word_Inline", "iframe[title=\"Office Add-in Pantheon Content Publisher\"]"]`. Word's own
+panels, such as Navigation and the Copilot prompt, are inside Word's frame and aren't hidden.
+
+Two differences from the Google Docs add-on:
+
+- The Word add-in signs in to Content Publisher separately. Its collection list can differ from the Google Docs
+  add-on's: the test account saw only the playground, so the test document is connected to "Content Publisher
+  playground".
+- **Preview and Publish** opened no window or dialog when clicked in a background tab, so it isn't in the brief.
 
 ## Terminal output
 

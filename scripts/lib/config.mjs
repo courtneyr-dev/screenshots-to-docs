@@ -143,14 +143,14 @@ export function validateConfig(cfg, stages = ['capture']) {
     for (const k of Object.keys(cfg[sect])) if (!known.has(k)) err(`${sect}.${k}`, 'unknown key');
   }
 
-  const str = (key, value, { required, pattern, what } = {}) => {
+  const str = (key, value, { required, pattern, what, max = 200 } = {}) => {
     if (value === undefined || value === null || value === '') {
       if (required) err(key, `missing. ${what || 'Set it in the config file.'}`);
       return false;
     }
     if (typeof value !== 'string') { err(key, 'must be a string'); return false; }
     if (isPlaceholder(value)) { err(key, `still a placeholder ("${value}"). Replace it with a real value.`); return false; }
-    if ([...value].some(ch => ch.charCodeAt(0) < 32) || value.length > 200) { err(key, 'contains control characters or is over 200 characters'); return false; }
+    if ([...value].some(ch => ch.charCodeAt(0) < 32) || value.length > max) { err(key, `contains control characters or is over ${max} characters`); return false; }
     if (pattern && !pattern.test(value)) { err(key, `invalid value "${value}"`); return false; }
     return true;
   };
@@ -176,7 +176,7 @@ export function validateConfig(cfg, stages = ['capture']) {
       const where = k => (LEGACY_P1_KEYS.includes(k) && cfg[k] !== undefined ? k : `params.${k}`);
       for (const [k, spec] of Object.entries(preset.params)) {
         const v = values[k];
-        if (str(where(k), v, { required: spec.required, what: spec.what }) ) {
+        if (str(where(k), v, { required: spec.required, what: spec.what, max: spec.maxLength || 200 })) {
           if (spec.pattern && !new RegExp(spec.pattern).test(v)) err(where(k), `invalid value "${v}". ${spec.what || ''}`.trim());
           if (spec.enum && !spec.enum.includes(v)) err(where(k), `must be one of ${spec.enum.map(x => JSON.stringify(x)).join(', ')} (got ${JSON.stringify(v)})`);
         }
