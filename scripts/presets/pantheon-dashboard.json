@@ -1,0 +1,71 @@
+{
+  "description": "The Pantheon dashboard (dashboard.pantheon.io): workspace pages and a site's environment tabs. You sign in yourself, through Pantheon's single sign-on, in the dedicated Chrome. Use a test workspace: shots show workspace, site, and team names. Hides the maintenance and warning banners, toast notifications, and the support chat, which change from day to day. Selectors checked against the live dashboard on 2026-10-09; site routes are /workspace/<workspaceId>/cms-site/<siteId>/environment/<env>/<tab>.",
+  "signIn": {
+    "mode": "chrome"
+  },
+  "css": ".pds-banner-group, .Toastify, [data-testid=\"chat-frame\"], #engagement-wrapper, #te-floating-button-container, #glasp-web-summary-button, .glasp-extension-toaster { display: none !important; }",
+  "params": {
+    "workspaceId": {
+      "required": true,
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "what": "The workspace ID from the dashboard URL (dashboard.pantheon.io/workspace/<workspaceId>/home)."
+    },
+    "siteId": {
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "what": "A site ID from a site's URL (…/cms-site/<siteId>/…). Shots of a site's environments need it; use a site that isn't frozen."
+    },
+    "env": {
+      "pattern": "^[a-z0-9-]{1,11}$",
+      "default": "dev",
+      "what": "The environment for site shots: dev, test, live, or a Multidev name."
+    }
+  },
+  "warnUnlessAny": [
+    {
+      "keys": [
+        "siteId"
+      ],
+      "message": "No siteId: the shots of a site's environment tabs will be skipped and reported as skipped."
+    }
+  ],
+  "actions": {
+    "dashboardReady": {
+      "expect": [
+        "nav[aria-label=\"Global Primary Navigation\"]",
+        "main#app-layout-main"
+      ]
+    },
+    "workspacePage": {
+      "params": [
+        "title"
+      ],
+      "expect": [
+        "nav[aria-label=\"Global Primary Navigation\"]",
+        {
+          "selector": "main h1",
+          "text": "{title}"
+        }
+      ]
+    },
+    "siteTab": {
+      "params": [
+        "heading"
+      ],
+      "expect": [
+        "nav[aria-label=\"CMS Site Top Navigation\"]",
+        "nav[aria-label=\"CMS Site Environments Navigation\"]",
+        {
+          "selector": "main h2",
+          "text": "{heading}"
+        }
+      ]
+    },
+    "siteReady": {
+      "expect": [
+        "nav[aria-label=\"CMS Site Top Navigation\"]",
+        "nav[aria-label=\"CMS Site Environments Navigation\"]",
+        "main h2"
+      ]
+    }
+  }
+}

@@ -1,0 +1,161 @@
+{
+  "topic": "{{topic}}",
+  "site": "{{baseUrl}}",
+  "description": "Starter brief for the Pantheon dashboard. Run with a config whose preset is pantheon-dashboard (examples/pantheon-dashboard.config.example.json), with the dedicated Chrome open and signed in. Site shots need params.siteId and are skipped without it.",
+  "dpr": 2,
+  "presets": [
+    "pantheon-dashboard"
+  ],
+  "shots": [
+    {
+      "slug": "workspace-home",
+      "label": "Workspace home",
+      "url": "/workspace/{{workspaceId}}/home",
+      "delay": 1500,
+      "section": "workspace",
+      "actions": [
+        "dashboardReady"
+      ],
+      "expect": [
+        "main h1"
+      ]
+    },
+    {
+      "slug": "sites",
+      "label": "Sites list",
+      "url": "/workspace/{{workspaceId}}/sites",
+      "delay": 1500,
+      "section": "workspace",
+      "actions": [
+        {
+          "workspacePage": {
+            "title": "Sites"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "team",
+      "label": "Workspace team",
+      "url": "/workspace/{{workspaceId}}/team",
+      "delay": 1500,
+      "section": "workspace",
+      "actions": [
+        {
+          "workspacePage": {
+            "title": "Workspace Team"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "upstreams",
+      "label": "Custom upstreams",
+      "url": "/workspace/{{workspaceId}}/upstreams",
+      "delay": 1500,
+      "section": "workspace",
+      "actions": [
+        {
+          "workspacePage": {
+            "title": "Custom Upstreams"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "workspace-settings",
+      "label": "Workspace settings",
+      "url": "/workspace/{{workspaceId}}/settings/profile",
+      "delay": 1500,
+      "section": "workspace",
+      "actions": [
+        {
+          "workspacePage": {
+            "title": "Workspace settings"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "site-code",
+      "label": "Site environment: Code",
+      "url": "/workspace/{{workspaceId}}/cms-site/{{siteId}}/environment/{{env}}/code",
+      "delay": 1500,
+      "section": "site",
+      "actions": [
+        "siteReady"
+      ],
+      "requires": [
+        "siteId"
+      ]
+    },
+    {
+      "slug": "site-database",
+      "label": "Site environment: Database & Files, Clone",
+      "url": "/workspace/{{workspaceId}}/cms-site/{{siteId}}/environment/{{env}}/database/clone",
+      "delay": 1500,
+      "section": "site",
+      "actions": [
+        {
+          "siteTab": {
+            "heading": "Clone database and files"
+          }
+        }
+      ],
+      "requires": [
+        "siteId"
+      ]
+    },
+    {
+      "slug": "site-backups",
+      "label": "Site environment: Backups, History",
+      "url": "/workspace/{{workspaceId}}/cms-site/{{siteId}}/environment/{{env}}/backups/history",
+      "delay": 1500,
+      "section": "site",
+      "actions": [
+        {
+          "siteTab": {
+            "heading": "Backup History"
+          }
+        }
+      ],
+      "requires": [
+        "siteId"
+      ]
+    },
+    {
+      "slug": "site-domains",
+      "label": "Site environment: Domains & HTTPS",
+      "url": "/workspace/{{workspaceId}}/cms-site/{{siteId}}/environment/{{env}}/domains",
+      "delay": 1500,
+      "section": "site",
+      "actions": [
+        {
+          "siteTab": {
+            "heading": "Domains & HTTPS"
+          }
+        }
+      ],
+      "requires": [
+        "siteId"
+      ]
+    },
+    {
+      "slug": "site-status",
+      "label": "Site environment: Status",
+      "url": "/workspace/{{workspaceId}}/cms-site/{{siteId}}/environment/{{env}}/status",
+      "delay": 1500,
+      "section": "site",
+      "actions": [
+        {
+          "siteTab": {
+            "heading": "Status"
+          }
+        }
+      ],
+      "requires": [
+        "siteId"
+      ]
+    }
+  ]
+}

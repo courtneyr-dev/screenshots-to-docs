@@ -8,13 +8,14 @@ nav_order: 2.5
 
 A preset holds everything that differs between kinds of web app: the settings it needs, how you sign in, CSS that hides what changes from day to day, the checks and steps a brief can name, and where `release-check` finds the latest version. The capture engine itself knows no product. Presets live in `scripts/presets/<name>.json`; a config picks one with `"preset"`, and a brief lists the ones it uses in `"presets"`.
 
-| Preset                                    | Sign-in                                      | Release source                         | Starter brief                   |
-| ----------------------------------------- | -------------------------------------------- | -------------------------------------- | ------------------------------- |
-| [`p1-editor`](#p1-editor)                 | You, in the dedicated Chrome                 | `npm:@pantheon-systems/p1-next-sdk`    | `briefs/p1-editor.json`         |
-| [`wordpress-admin`](#wordpress-admin)     | Login form: `WP_USER`, `WP_PASSWORD`         | `wordpress`                            | `briefs/wordpress-admin.json`   |
-| [`drupal-admin`](#drupal-admin)           | Login form: `DRUPAL_USER`, `DRUPAL_PASSWORD` | `drupal`                               | `briefs/drupal-admin.json`      |
-| [`content-publisher`](#content-publisher) | You, in the dedicated Chrome                 | (none; pass `--version` or `--source`) | `briefs/content-publisher.json` |
-| [`public-site`](#public-site)             | None                                         | (none; pass `--version` or `--source`) | `briefs/public-site.json`       |
+| Preset                                      | Sign-in                                      | Release source                                | Starter brief                    |
+| ------------------------------------------- | -------------------------------------------- | --------------------------------------------- | -------------------------------- |
+| [`p1-editor`](#p1-editor)                   | You, in the dedicated Chrome                 | `npm:@pantheon-systems/p1-next-sdk`           | `briefs/p1-editor.json`          |
+| [`wordpress-admin`](#wordpress-admin)       | Login form: `WP_USER`, `WP_PASSWORD`         | `wordpress`                                   | `briefs/wordpress-admin.json`    |
+| [`drupal-admin`](#drupal-admin)             | Login form: `DRUPAL_USER`, `DRUPAL_PASSWORD` | `drupal`                                      | `briefs/drupal-admin.json`       |
+| [`content-publisher`](#content-publisher)   | You, in the dedicated Chrome                 | (none; pass `--version` or `--source`)        | `briefs/content-publisher.json`  |
+| [`pantheon-dashboard`](#pantheon-dashboard) | You, in the dedicated Chrome                 | release notes tagged User interface (`watch`) | `briefs/pantheon-dashboard.json` |
+| [`public-site`](#public-site)               | None                                         | (none; pass `--version` or `--source`)        | `briefs/public-site.json`        |
 
 ## p1-editor
 
@@ -103,6 +104,27 @@ Pantheon Content Publisher's dashboard (content.pantheon.io): overview, collecti
 | `dashboardReady`  |            | `nav[aria-label="Main navigation"]`; `main#app-layout-main`                                                  |
 | `pageHeading`     | `text`     | `nav[aria-label="Main navigation"]`; `main h1 contains “{text}”`                                             |
 | `collectionReady` |            | `nav[aria-label="Main navigation"]`; `nav[aria-label="Collection settings secondary navigation"]`; `main h1` |
+
+## pantheon-dashboard
+
+The Pantheon dashboard (dashboard.pantheon.io): workspace pages and a site's environment tabs. You sign in yourself, through Pantheon's single sign-on, in the dedicated Chrome. Use a test workspace: shots show workspace, site, and team names. Hides the maintenance and warning banners, toast notifications, and the support chat, which change from day to day. Selectors checked against the live dashboard on 2026-10-09; site routes are /workspace/<workspaceId>/cms-site/<siteId>/environment/<env>/<tab>.
+
+**Settings** (under `params` in the config):
+
+| Key           | Required | Default | Meaning                                                                                                                    |
+| ------------- | -------- | ------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `workspaceId` | yes      |         | The workspace ID from the dashboard URL (dashboard.pantheon.io/workspace/<workspaceId>/home).                              |
+| `siteId`      | no       |         | A site ID from a site's URL (…/cms-site/<siteId>/…). Shots of a site's environments need it; use a site that isn't frozen. |
+| `env`         | no       | `dev`   | The environment for site shots: dev, test, live, or a Multidev name.                                                       |
+
+**Actions:**
+
+| Action           | Parameters | Checks                                                                                                                            |
+| ---------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `dashboardReady` |            | `nav[aria-label="Global Primary Navigation"]`; `main#app-layout-main`                                                             |
+| `workspacePage`  | `title`    | `nav[aria-label="Global Primary Navigation"]`; `main h1 contains “{title}”`                                                       |
+| `siteTab`        | `heading`  | `nav[aria-label="CMS Site Top Navigation"]`; `nav[aria-label="CMS Site Environments Navigation"]`; `main h2 contains “{heading}”` |
+| `siteReady`      |            | `nav[aria-label="CMS Site Top Navigation"]`; `nav[aria-label="CMS Site Environments Navigation"]`; `main h2`                      |
 
 ## public-site
 
