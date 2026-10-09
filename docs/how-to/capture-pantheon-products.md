@@ -16,7 +16,7 @@ plugins and Drupal modules. For how many images each area has and where its rele
 | Pantheon Drupal modules                                  | `drupal-admin`       | `briefs/pantheon-drupal-modules.json`    | Verified: 7 screens on a local site |
 | Content Publisher and P1 dashboard (content.pantheon.io) | `content-publisher`  | `briefs/content-publisher.json`          | Verified: 4 screens                 |
 | P1 editor                                                | `p1-editor`          | `briefs/p1-editor.json`                  | Verified                            |
-| Pantheon dashboard (dashboard.pantheon.io)               | `pantheon-dashboard` | `briefs/pantheon-dashboard.json`         | Verified: 10 screens                |
+| Pantheon dashboard (dashboard.pantheon.io)               | `pantheon-dashboard` | `briefs/pantheon-dashboard.json`         | Verified: 16 screens                |
 | Google Docs add-on                                       | `gdocs-addon`        | `briefs/gdocs-addon.json`                | Verified: the connect screen        |
 | Terminal output                                          | none                 | none                                     | Show it as text, not an image       |
 
@@ -102,7 +102,7 @@ date. That's from comparing the docs' images with each other; the live dashboard
 The dashboard is in 438 of the 1,003 image references on docs.pantheon.io, more than any other screen.
 
 1. Use a test workspace. Shots show workspace, site, and team names, so a production workspace would show
-   customer data.
+   customer data. Personal settings shots show your own name, email address, and SSH key fingerprints.
 2. Copy `examples/pantheon-dashboard.config.example.json`. Set `params.workspaceId` from the dashboard's URL
    (`dashboard.pantheon.io/workspace/<workspaceId>/home`) and, for site shots, `params.siteId` from a site's
    URL (`…/cms-site/<siteId>/…`). Pick a site that isn't frozen: a frozen site's pages redirect to a
@@ -123,21 +123,26 @@ The dashboard is in 438 of the 1,003 image references on docs.pantheon.io, more 
      site-domains                                  OK
      site-status                                   OK
 
-   Done: 10/10 captured, 0 failed, 0 with HTTP >= 400
+     personal-profile                              OK
+     …
+     personal-tokens                               OK
+
+   Done: 16/16 captured, 0 failed, 0 with HTTP >= 400
    ```
 
-| Screen                        | Route                                                                  | Check                                         |
-| ----------------------------- | ---------------------------------------------------------------------- | --------------------------------------------- |
-| Workspace home                | `/workspace/<workspaceId>/home`                                        | global navigation, `main h1`                  |
-| Sites                         | `/workspace/<workspaceId>/sites`                                       | `main h1` contains "Sites"                    |
-| Team                          | `/workspace/<workspaceId>/team`                                        | `main h1` contains "Workspace Team"           |
-| Upstreams                     | `/workspace/<workspaceId>/upstreams`                                   | `main h1` contains "Custom Upstreams"         |
-| Workspace settings            | `/workspace/<workspaceId>/settings/profile`                            | `main h1` contains "Workspace settings"       |
-| Environment: Code             | `/workspace/<workspaceId>/cms-site/<siteId>/environment/<env>/code`    | site and environment navigation, `main h2`    |
-| Environment: Database & Files | `…/environment/<env>/database/clone` (also `import`, `export`, `wipe`) | `main h2` contains "Clone database and files" |
-| Environment: Backups          | `…/environment/<env>/backups/history` (also `schedule`)                | `main h2` contains "Backup History"           |
-| Environment: Domains & HTTPS  | `…/environment/<env>/domains`                                          | `main h2` contains "Domains & HTTPS"          |
-| Environment: Status           | `…/environment/<env>/status`                                           | `main h2` contains "Status"                   |
+| Screen                        | Route                                                                                                                                                   | Check                                              |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| Workspace home                | `/workspace/<workspaceId>/home`                                                                                                                         | global navigation, `main h1`                       |
+| Sites                         | `/workspace/<workspaceId>/sites`                                                                                                                        | `main h1` contains "Sites"                         |
+| Team                          | `/workspace/<workspaceId>/team`                                                                                                                         | `main h1` contains "Workspace Team"                |
+| Upstreams                     | `/workspace/<workspaceId>/upstreams`                                                                                                                    | `main h1` contains "Custom Upstreams"              |
+| Workspace settings            | `/workspace/<workspaceId>/settings/profile`                                                                                                             | `main h1` contains "Workspace settings"            |
+| Environment: Code             | `/workspace/<workspaceId>/cms-site/<siteId>/environment/<env>/code`                                                                                     | site and environment navigation, `main h2`         |
+| Environment: Database & Files | `…/environment/<env>/database/clone` (also `import`, `export`, `wipe`)                                                                                  | `main h2` contains "Clone database and files"      |
+| Environment: Backups          | `…/environment/<env>/backups/history` (also `schedule`)                                                                                                 | `main h2` contains "Backup History"                |
+| Environment: Domains & HTTPS  | `…/environment/<env>/domains`                                                                                                                           | `main h2` contains "Domains & HTTPS"               |
+| Environment: Status           | `…/environment/<env>/status`                                                                                                                            | `main h2` contains "Status"                        |
+| Personal settings             | `/workspace/<workspaceId>/personal-settings/<page>`: `profile`, `login-details`, `email-notifications`, `security`, `ssh-keys`, `personal-access-token` | `main h1` "User settings" and the page's `main h2` |
 
 The other tabs follow the same pattern: `merge`, `errors`, `security`, `newrelic`, and, for Test and Live,
 `deploys`. Site-level pages are `…/cms-site/<siteId>/settings/details` and `…/cms-site/<siteId>/workflows`.
