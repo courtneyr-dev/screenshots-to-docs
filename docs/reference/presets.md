@@ -170,7 +170,7 @@ The Pantheon dashboard (dashboard.pantheon.io): workspace pages and a site's env
 
 ## public-site
 
-Any public website: no sign-in. Hides the cookie and consent banners of common consent platforms (OneTrust, Cookiebot, CookieYes, Osano, Usercentrics, Cookie Notice, Cookie Consent), so shots don't depend on a stored consent choice. A site behind a bot challenge fails closed: no PNG is saved.
+Any public website: no sign-in. Hides the cookie and consent banners of common consent platforms (OneTrust, Cookiebot, CookieYes, Osano, Usercentrics, Cookie Notice, Cookie Consent), so shots don't depend on a stored consent choice, and the chat widgets of Qualified, Intercom, HubSpot, Drift, Zendesk, and Crisp. Qualified's docked panel also narrows the page with a margin on <html>; the preset removes it, but only on pages that have that panel. A site behind a bot challenge fails closed: no PNG is saved.
 
 **Settings:** none beyond `topic` and `baseUrl`.
 
