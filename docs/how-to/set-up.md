@@ -19,8 +19,8 @@ targets. Each step can be skipped and rerun.
 ## Run setup
 
 ```bash
-git clone <this repository's URL>
-cd screenshots-to-docs
+git clone {{ site.github.clone_url }}
+cd {{ site.github.repository_name }}
 npm run setup
 ```
 
