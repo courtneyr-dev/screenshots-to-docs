@@ -1,5 +1,5 @@
 {
-  "description": "A Google Docs add-on in the Docs side panel, for example Pantheon Content Publisher. You sign in to Google yourself in the dedicated Chrome. openAddon presses the add-on's button in the right-hand side panel (skipped when it's already open), waits for the panel, and checks the panel's text; it clicks nothing inside the add-on, so nothing is connected or published. The panel closes with the tab, so the doc isn't left with it open. Use a test doc: shots show the doc's content and your account's avatar. Selectors checked against Google Docs on 2026-10-09, where Content Publisher's button is labeled \"Pantheon\".",
+  "description": "A Google Docs add-on in the Docs side panel, for example Pantheon Content Publisher. You sign in to Google yourself in the dedicated Chrome. openAddon presses the add-on's button in the right-hand side panel (skipped when it's already open), waits for the panel, and checks the panel's text; it clicks nothing inside the add-on, so nothing is connected or published. The panel closes with the tab, so the doc isn't left with it open. Use a test doc: shots show the doc's content and your account's avatar. addonClick clicks a button inside the panel by its text and checks the panel's text; addonWindow does the same for a button that opens a window (Preview and publish) and captures that window, which is closed afterward. Neither clicks Publish, Save, or Disconnect. Selectors checked against Google Docs on 2026-10-09, where Content Publisher's button is labeled \"Pantheon\".",
   "signIn": {
     "mode": "chrome"
   },
@@ -39,15 +39,69 @@
           "wait": ".companion-shell-addon-content-container iframe"
         },
         {
-          "wait": 8000
-        }
-      ],
-      "expectAfter": [
-        ".app-switcher-button[aria-label=\"{label}\"][aria-selected=true]",
+          "check": ".app-switcher-button[aria-label=\"{label}\"][aria-selected=true]"
+        },
         {
+          "check": {
+            "selector": "body",
+            "text": "{text}"
+          },
           "frame": ".companion-shell-addon-content-container iframe",
-          "selector": "body",
+          "timeout": 30000
+        }
+      ]
+    },
+    "addonClick": {
+      "params": [
+        "text",
+        "check"
+      ],
+      "steps": [
+        {
+          "click": "[role=button], button",
+          "frame": ".companion-shell-addon-content-container iframe",
           "text": "{text}"
+        },
+        {
+          "wait": 2000
+        },
+        {
+          "check": {
+            "selector": "body",
+            "text": "{check}"
+          },
+          "frame": ".companion-shell-addon-content-container iframe",
+          "timeout": 45000
+        }
+      ]
+    },
+    "addonWindow": {
+      "params": [
+        "text",
+        "url",
+        "check",
+        "busy"
+      ],
+      "steps": [
+        {
+          "click": "[role=button], button",
+          "frame": ".companion-shell-addon-content-container iframe",
+          "text": "{text}",
+          "opensWindow": "{url}"
+        },
+        {
+          "check": {
+            "selector": "h1, h2, h3",
+            "text": "{check}"
+          },
+          "timeout": 30000
+        },
+        {
+          "check": {
+            "selector": "body",
+            "notText": "{busy}"
+          },
+          "timeout": 60000
         }
       ]
     }

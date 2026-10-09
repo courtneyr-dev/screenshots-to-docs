@@ -10,15 +10,15 @@ Screens for each area that Pantheon's docs show: the dashboard, Content Publishe
 plugins and Drupal modules. For how many images each area has and where its releases come from, see
 [Pantheon docs coverage](../reference/pantheon-coverage.html).
 
-| Area                                                     | Preset               | Starter brief                            | Status                              |
-| -------------------------------------------------------- | -------------------- | ---------------------------------------- | ----------------------------------- |
-| Pantheon WordPress plugins                               | `wordpress-admin`    | `briefs/pantheon-wordpress-plugins.json` | Verified: 5 screens on a local site |
-| Pantheon Drupal modules                                  | `drupal-admin`       | `briefs/pantheon-drupal-modules.json`    | Verified: 7 screens on a local site |
-| Content Publisher and P1 dashboard (content.pantheon.io) | `content-publisher`  | `briefs/content-publisher.json`          | Verified: 4 screens                 |
-| P1 editor                                                | `p1-editor`          | `briefs/p1-editor.json`                  | Verified                            |
-| Pantheon dashboard (dashboard.pantheon.io)               | `pantheon-dashboard` | `briefs/pantheon-dashboard.json`         | Verified: 10 screens                |
-| Google Docs add-on                                       | `gdocs-addon`        | `briefs/gdocs-addon.json`                | Verified: the connect screen        |
-| Terminal output                                          | none                 | none                                     | Show it as text, not an image       |
+| Area                                                     | Preset               | Starter brief                                                  | Status                              |
+| -------------------------------------------------------- | -------------------- | -------------------------------------------------------------- | ----------------------------------- |
+| Pantheon WordPress plugins                               | `wordpress-admin`    | `briefs/pantheon-wordpress-plugins.json`                       | Verified: 5 screens on a local site |
+| Pantheon Drupal modules                                  | `drupal-admin`       | `briefs/pantheon-drupal-modules.json`                          | Verified: 7 screens on a local site |
+| Content Publisher and P1 dashboard (content.pantheon.io) | `content-publisher`  | `briefs/content-publisher.json`                                | Verified: 4 screens                 |
+| P1 editor                                                | `p1-editor`          | `briefs/p1-editor.json`                                        | Verified                            |
+| Pantheon dashboard (dashboard.pantheon.io)               | `pantheon-dashboard` | `briefs/pantheon-dashboard.json`                               | Verified: 10 screens                |
+| Google Docs add-on                                       | `gdocs-addon`        | `briefs/gdocs-addon.json`, `briefs/gdocs-addon-connected.json` | Verified: 7 screens                 |
+| Terminal output                                          | none                 | none                                                           | Show it as text, not an image       |
 
 ## Pantheon WordPress plugins
 
@@ -166,9 +166,46 @@ waits for the panel, and checks the panel's text, for example "Connect this doc 
 nothing inside the add-on, so nothing gets connected or published, and the panel closes when capture closes
 its tab. The button is a tab: it reports open with `aria-selected`, not `aria-pressed`.
 
-Screens inside the add-on after connecting (the publish options, metadata, and preview) need a doc connected
-to a test collection, and a step that clicks inside the panel. Add those steps with
-`"frame": ".companion-shell-addon-content-container iframe"`, which reaches the add-on's frame.
+### After the doc is connected
+
+`briefs/gdocs-addon-connected.json` captures six screens of a doc that's connected to a collection:
+
+| Shot                     | Screen                                                        | Where it renders                  |
+| ------------------------ | ------------------------------------------------------------- | --------------------------------- |
+| `addon-connected`        | Page metadata, components, formatting check, and the actions  | The panel                         |
+| `addon-about-collection` | About this collection: name, URL, ID, and administrator tools | The panel                         |
+| `addon-components`       | Components                                                    | The panel                         |
+| `addon-formatting-check` | Formatting check results                                      | The panel, about 25 seconds later |
+| `addon-preview-publish`  | Preview and publish                                           | A window the add-on opens         |
+| `addon-edit-metadata`    | Edit metadata                                                 | content.pantheon.io, by its URL   |
+
+1. Connect the test doc to a test collection whose site publishes nowhere, for example one whose URL is
+   `https://example.com`. The add-on's collection list includes production collections, so check the name, URL,
+   and ID on its confirmation screen before you press **Connect to collection**.
+2. Capture with `briefs/gdocs-addon-connected.json` and the same config:
+
+   ```text
+     addon-connected                               OK
+     addon-about-collection                        OK
+     addon-components                              OK
+     addon-formatting-check                        OK
+     addon-preview-publish                         OK
+     addon-edit-metadata                           OK
+
+   Done: 6/6 captured, 0 failed, 0 with HTTP >= 400
+   ```
+
+`addonClick` clicks a panel button by its text and waits for the panel's text to change. `addonWindow` clicks
+a button that opens a window, takes the shot of that window, and closes it. Preview and publish only loads from
+the add-on: opened by its URL, it shows "Failed to load page". It also shows "Checking content quality
+issues…" for a few seconds, so the shot waits until that's gone. No shot clicks Publish, Save, or Disconnect
+collection, and a test in the suite fails if a brief tells an action to.
+
+The formatting check's results depend on the doc: the test doc shows "Unsupported Format (289)".
+
+The add-on draws its buttons as images. **Connect to collection** has the alt text "Connect to Site", and
+other images have none, so a screen reader announces the wrong label or nothing. Capture doesn't need these
+buttons, because the doc is connected beforehand, but that's worth reporting to the Content Publisher team.
 
 ## Terminal output
 
