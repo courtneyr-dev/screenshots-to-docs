@@ -1,0 +1,15 @@
+{
+  "$comment": "EXAMPLE. Copy, replace the values, and run: node scripts/preflight.mjs --config <file>. Never put credentials in this file. The sign-in form reads WP_USER and WP_PASSWORD from your shell environment.",
+  "topic": "my-wordpress-admin",
+  "preset": "wordpress-admin",
+  "baseUrl": "http://localhost:8881",
+  "figma": {
+    "fileKey": "<destination design file key from figma.com/design/<fileKey>/...>",
+    "pageNamePattern": "{topic} · {datetime} · {runId}",
+    "runIdPattern": "{topic}-{yyyymmdd}-{hhmm}"
+  },
+  "docs": {
+    "handoffDir": "<directory for handoff notes>",
+    "format": "markdown"
+  }
+}

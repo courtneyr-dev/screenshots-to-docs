@@ -36,7 +36,9 @@ import {
   renderDocsHandoff, lookup, releaseReport, mappingFor, frameName, STATUSES, RELEASE_RE,
   releaseCheck, reopenForRelease, parseVersion, compareVersions, traceInventory, renderTrace,
 } from './lib/inventory.mjs';
-import { loadConfig, applyOverrides, validateConfig, formatValidation } from './lib/config.mjs';
+import { loadConfig, applyOverrides, validateConfig, formatValidation, targetParams, presetNameOf } from './lib/config.mjs';
+import { loadPreset } from './lib/presets.mjs';
+import { parseSource, latestVersion } from './lib/release-sources.mjs';
 import { compareRuns } from './compare-runs.mjs';
 
 const TOOL_DIR = resolve(dirname(new URL(import.meta.url).pathname), '..');
@@ -48,7 +50,7 @@ const { values, positionals } = parseArgs({
     inventory: { type: 'string' }, against: { type: 'string' }, json: { type: 'boolean' },
     status: { type: 'string' }, release: { type: 'string' }, owner: { type: 'string' }, workstream: { type: 'string' }, 'release-status': { type: 'string' },
     id: { type: 'string' }, config: { type: 'string' }, set: { type: 'string', multiple: true }, target: { type: 'string' }, out: { type: 'string' },
-    run: { type: 'string' }, version: { type: 'string' }, app: { type: 'string' }, package: { type: 'string' }, registry: { type: 'boolean' }, reopen: { type: 'boolean' }, file: { type: 'string' }, 'assets-dir': { type: 'string' }, source: { type: 'string' },
+    run: { type: 'string' }, version: { type: 'string' }, app: { type: 'string' }, package: { type: 'string' }, pattern: { type: 'string' }, registry: { type: 'boolean' }, reopen: { type: 'boolean' }, file: { type: 'string' }, 'assets-dir': { type: 'string' }, source: { type: 'string' },
     evidence: { type: 'string' }, 'file-url': { type: 'string' }, 'page-name': { type: 'string' }, 'node-id': { type: 'string' }, 'annotated-node-id': { type: 'string' }, 'version-name': { type: 'string' },
     'branch-url': { type: 'string' }, 'manifest-commit': { type: 'string' }, 'annotation-status': { type: 'string' }, 'dev-resource': { type: 'string', multiple: true }, 'not-used-reason': { type: 'string' },
     'inserted-at': { type: 'string' }, 'published-url': { type: 'string' }, 'published-file': { type: 'string' }, 'published-sha256': { type: 'string' }, 'verified-at': { type: 'string' }, 'verified-release': { type: 'string' }, notes: { type: 'string' },
@@ -152,7 +154,8 @@ switch (cmd) {
       try { cfg = applyOverrides(loadConfig(values.config), values.set || []); } catch (e) { fail(e.message); }
       const check = validateConfig(cfg, ['capture']);
       if (check.errors?.length) { console.error(formatValidation(check)); process.exit(1); }
-      target = `${cfg.projectName} | ${cfg.workstream} | ${cfg.pagePath}`;
+      const p = targetParams(cfg);
+      target = presetNameOf(cfg) === 'p1-editor' ? `${p.projectName} | ${p.workstream} | ${p.pagePath}` : `${presetNameOf(cfg)} | ${cfg.baseUrl}`;
     }
     const c = inventoryCommit(file);
     const g = generateBrief(doc, { file: file.startsWith(TOOL_DIR) ? file.slice(TOOL_DIR.length + 1) : file, release: values.release, ids, target, commit: c.commit });
@@ -368,9 +371,21 @@ switch (cmd) {
     break;
   }
   case 'release-check': {
-    const pkg = values.package || '@pantheon-systems/p1-next-sdk';
+    // Where the latest version comes from: --source, --package (npm), or the config's preset.
+    let source = values.source || (values.package ? `npm:${values.package}` : null);
+    if (!source && values.config) {
+      let cfg;
+      try { cfg = loadConfig(values.config); } catch (e) { fail(e.message); }
+      source = loadPreset(presetNameOf(cfg)).release?.source || null;
+    }
+    let src = null;
+    if (source) { try { src = parseSource(source); } catch (e) { fail(e.message); } }
+    const pkg = src?.kind === 'npm' ? src.name : null;
+    const label = src ? (pkg || source) : 'Release';
     let appVersion = null, latest = null;
+    if ((values.app || values.registry) && !src) fail('say where releases come from: --source npm:<package> | github:<owner>/<repo> | wordpress | drupal | page:<url> (with --pattern), --package <npm package>, or --config <file> to use its preset\'s source');
     if (values.app) {
+      if (!pkg) fail(`--app reads an installed npm package, but the source is ${source}. Use --source npm:<package> or --package.`);
       const appDir = resolve(values.app);
       const tryJson = f => { try { return JSON.parse(readFileSync(f, 'utf-8')); } catch { return null; } };
       appVersion = tryJson(join(appDir, 'package-lock.json'))?.packages?.[`node_modules/${pkg}`]?.version
@@ -378,21 +393,26 @@ switch (cmd) {
       if (!appVersion) fail(`cannot find the installed version of ${pkg} in ${appDir} (looked in package-lock.json and node_modules). Run npm install there, or pass --version.`);
     }
     if (values.registry) {
-      const r = spawnSync('npm', ['view', pkg, 'dist-tags.latest'], { encoding: 'utf-8' });
-      latest = r.status === 0 ? r.stdout.trim() : null;
-      if (!latest) fail(`npm view ${pkg} failed: ${(r.stderr || '').trim().split('\n')[0] || 'no output'}`);
+      if (pkg) {
+        // npm itself, so a private registry and its auth in .npmrc apply.
+        const r = spawnSync('npm', ['view', pkg, 'dist-tags.latest'], { encoding: 'utf-8' });
+        latest = r.status === 0 ? r.stdout.trim() : null;
+        if (!latest) fail(`npm view ${pkg} failed: ${(r.stderr || '').trim().split('\n')[0] || 'no output'}`);
+      } else {
+        try { latest = await latestVersion(source, { pattern: values.pattern }); } catch (e) { fail(`${source}: ${e.message}`); }
+      }
     }
-    // The version that matters is the one the captured app runs: the editor UI ships inside the SDK.
+    // The version that matters is the one the captured app runs (for the P1 editor, the UI ships inside the SDK).
     const version = values.version || appVersion || latest;
-    if (!version) fail('give --version <x.y.z>, --app <dir> (the app you will capture), or --registry (the latest published version)');
+    if (!version) fail('give --version <x.y.z>, --app <dir> (the app you will capture), or --registry with a source (the latest published version)');
     if (parseVersion(version)?.pre) fail(`${version} is a prerelease; screenshots track shipped versions. Pass a released version.`);
     const warn = [];
     if (appVersion && latest && compareVersions(appVersion, latest) < 0) warn.push(`the app you would capture runs ${pkg} ${appVersion}, but ${latest} is the latest published. Screenshots show the UI of the installed version; update the app first to capture the new release.`);
     const res = releaseCheck(doc, version);
     if (res.error) fail(res.error);
-    if (values.json) { out({ ...res, package: pkg, app_version: appVersion, latest, warnings: warn }); }
+    if (values.json) { out({ ...res, source, package: pkg, app_version: appVersion, latest, warnings: warn }); }
     else {
-      console.log(`${pkg} ${version}${appVersion ? ` (installed in the app)` : ''}${latest ? `, latest published ${latest}` : ''}`);
+      console.log(`${label} ${version}${appVersion ? ` (installed in the app)` : ''}${latest ? `, latest published ${latest}` : ''}`);
       for (const w of warn) console.log(`  WARN: ${w}`);
       console.log(`  ${res.current.length} screenshot(s) already captured for ${version}`);
       for (const c of res.candidates) console.log(`  REFRESH ${c.id}  (${c.status}, captured for ${c.captured_for})`);

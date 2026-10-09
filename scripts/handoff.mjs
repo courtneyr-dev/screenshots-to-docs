@@ -80,9 +80,7 @@ const params = {
   workstream: first.report.workstream || cfg.workstream || '(not recorded)',
   pagePath: first.report.pagePath || cfg.pagePath || '(not recorded)',
   baseUrl: first.report.site || cfg.baseUrl || '(not recorded)',
-  blockType: cfg.blockType || 'the selected block',
-  blockCategory: cfg.blockCategory || DEFAULTS.blockCategory,
-  publishMenuLabel: cfg.publishMenuLabel || DEFAULTS.publishMenuLabel,
+  blockType: base.blockType || 'the selected block',
 };
 
 let toolCommit = '(unknown)';

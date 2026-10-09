@@ -1,0 +1,40 @@
+{
+  "description": "Pantheon Content Publisher's dashboard (content.pantheon.io): overview, collections, sites, and one collection's settings. You sign in yourself, with Google, in the dedicated Chrome. Hides the support chat launcher, toast notifications, first-visit onboarding dialogs (without dismissing them, which would save a preference to the account), and the buttons some browser extensions inject; a capture profile with no extensions is cleaner still. Selectors checked against the live dashboard on 2026-10-08. The starter brief leaves out Accounts and Tokens, which show account data. A trial account also shows a free-trial banner across the top, which has no stable selector and is left in.",
+  "signIn": {
+    "mode": "chrome"
+  },
+  "css": "#launcher, iframe#launcher, .Toastify, #te-floating-button-container, #glasp-web-summary-button, .glasp-extension-toaster, [data-floating-ui-portal]:has([id^=\"onboarding-\"][role=dialog]) { display: none !important; }",
+  "params": {
+    "collectionId": {
+      "pattern": "^[A-Za-z0-9]{10,40}$",
+      "what": "A collection ID from the collection's URL (content.pantheon.io/dashboard/collections/<collectionId>). Shots of one collection's settings need it."
+    }
+  },
+  "actions": {
+    "dashboardReady": {
+      "expect": [
+        "nav[aria-label=\"Main navigation\"]",
+        "main#app-layout-main"
+      ]
+    },
+    "pageHeading": {
+      "params": [
+        "text"
+      ],
+      "expect": [
+        "nav[aria-label=\"Main navigation\"]",
+        {
+          "selector": "main h1",
+          "text": "{text}"
+        }
+      ]
+    },
+    "collectionReady": {
+      "expect": [
+        "nav[aria-label=\"Main navigation\"]",
+        "nav[aria-label=\"Collection settings secondary navigation\"]",
+        "main h1"
+      ]
+    }
+  }
+}

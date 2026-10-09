@@ -1,0 +1,61 @@
+{
+  "topic": "{{topic}}",
+  "site": "{{baseUrl}}",
+  "description": "Starter brief for Drupal administration screens. Run with a config whose preset is drupal-admin (examples/drupal-admin.config.example.json). Every shot is signed in unless it sets loggedOut: true.",
+  "dpr": 2,
+  "presets": [
+    "drupal-admin"
+  ],
+  "shots": [
+    {
+      "slug": "content",
+      "label": "Content",
+      "url": "/admin/content",
+      "delay": 1000,
+      "section": "admin",
+      "actions": [
+        {
+          "adminPage": {
+            "title": "Content"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "structure",
+      "label": "Structure",
+      "url": "/admin/structure",
+      "delay": 1000,
+      "section": "admin",
+      "actions": [
+        {
+          "adminPage": {
+            "title": "Structure"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "status-report",
+      "label": "Status report",
+      "url": "/admin/reports/status",
+      "delay": 1000,
+      "section": "admin",
+      "actions": [
+        {
+          "adminPage": {
+            "title": "Status report"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "front-page",
+      "label": "Front page, signed out",
+      "url": "/",
+      "loggedOut": true,
+      "delay": 1000,
+      "section": "front-end"
+    }
+  ]
+}

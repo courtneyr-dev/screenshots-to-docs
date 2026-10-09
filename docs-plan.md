@@ -1,4 +1,4 @@
-# Documentation plan — p1-screenshots-to-docs
+# Documentation plan — screenshots-to-docs
 
 ## Header
 

@@ -1,5 +1,5 @@
-title: P1 screenshots to docs
-description: Keep P1 docs screenshots current across releases, from capture to annotated Figma frames to every doc.
+title: Screenshots to docs
+description: Keep docs screenshots current across releases, for P1, WordPress, Drupal, Content Publisher, or any web app, from capture to annotated Figma frames to every doc.
 remote_theme: just-the-docs/just-the-docs@v0.12.0
 plugins:
   - jekyll-remote-theme

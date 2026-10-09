@@ -1,9 +1,9 @@
 {
-  "name": "p1-screenshots-to-docs",
+  "name": "screenshots-to-docs",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Capture authenticated P1 editor screenshots through a user-signed-in Chrome, validate them, and push each run to Figma for manual annotation.",
+  "description": "Capture screenshots of any web app (P1 editor, WordPress, Drupal, Content Publisher, public sites), annotate them in Figma, and swap them into Markdown and Google Docs on each release.",
   "scripts": {
     "setup": "node scripts/setup.mjs",
     "preflight": "node scripts/preflight.mjs",

@@ -1,0 +1,41 @@
+{
+  "description": "Drupal administration pages (Claro theme, with the Navigation sidebar in Drupal 11.3 and later or the classic toolbar before it). Signs in at /user/login with DRUPAL_USER and DRUPAL_PASSWORD from the environment, for a local or test site; for a hosted site with SSO, set \"signIn\": \"chrome\" in the config and sign in yourself in the dedicated Chrome. Hides status messages so a leftover \"saved\" message doesn't end up in a shot. Selectors checked against Drupal 11.4 on 2026-10-08.",
+  "signIn": {
+    "mode": "form",
+    "login": {
+      "url": "/user/login",
+      "fields": {
+        "#edit-name": "DRUPAL_USER",
+        "#edit-pass": "DRUPAL_PASSWORD"
+      },
+      "form": "#user-login-form",
+      "success": "/user/"
+    }
+  },
+  "css": "[data-drupal-messages], .messages, .messages-list { display: none !important; }",
+  "release": {
+    "source": "drupal"
+  },
+  "params": {},
+  "actions": {
+    "adminReady": {
+      "expect": [
+        "#admin-toolbar, #toolbar-administration",
+        "main",
+        "h1.page-title"
+      ]
+    },
+    "adminPage": {
+      "params": [
+        "title"
+      ],
+      "expect": [
+        "#admin-toolbar, #toolbar-administration",
+        {
+          "selector": "h1.page-title",
+          "text": "{title}"
+        }
+      ]
+    }
+  }
+}

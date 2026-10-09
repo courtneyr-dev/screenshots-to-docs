@@ -1,0 +1,15 @@
+{
+  "$comment": "EXAMPLE. Copy, replace the values, and run: node scripts/preflight.mjs --config <file>. Never put credentials in this file. No sign-in.",
+  "topic": "my-public-site",
+  "preset": "public-site",
+  "baseUrl": "https://example.com",
+  "figma": {
+    "fileKey": "<destination design file key from figma.com/design/<fileKey>/...>",
+    "pageNamePattern": "{topic} · {datetime} · {runId}",
+    "runIdPattern": "{topic}-{yyyymmdd}-{hhmm}"
+  },
+  "docs": {
+    "handoffDir": "<directory for handoff notes>",
+    "format": "markdown"
+  }
+}

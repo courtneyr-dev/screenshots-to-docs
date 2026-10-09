@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * p1-screenshots-to-docs / setup — one command for everything:
+ * screenshots-to-docs / setup — one command for everything:
  *
  *   npm run setup                  walk through every step (each can be skipped, each is safe to rerun)
  *   npm run setup -- --status      show what is set up, change nothing

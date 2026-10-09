@@ -1,0 +1,20 @@
+{
+  "$comment": "EXAMPLE. Copy, replace the values, and run: node scripts/preflight.mjs --config <file> --check-chrome. You sign in yourself in the dedicated Chrome (npm run chrome -- --config <file>); never put credentials in this file.",
+  "topic": "my-content-publisher",
+  "preset": "content-publisher",
+  "baseUrl": "https://content.pantheon.io",
+  "params": {
+    "collectionId": "<optional: a collection ID from the collection's URL>"
+  },
+  "chrome": {
+    "profileDir": "<a dedicated directory outside any repository, for example ~/.cache/screenshots-profile>",
+    "cdpPort": "<a free local port, for example 9222>"
+  },
+  "figma": {
+    "fileKey": "<destination design file key from figma.com/design/<fileKey>/...>"
+  },
+  "docs": {
+    "handoffDir": "<directory for handoff notes>",
+    "format": "markdown"
+  }
+}

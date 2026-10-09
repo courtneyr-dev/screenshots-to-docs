@@ -1,0 +1,66 @@
+{
+  "topic": "{{topic}}",
+  "site": "{{baseUrl}}",
+  "description": "Starter brief for Pantheon Content Publisher's dashboard. Run with a config whose preset is content-publisher (examples/content-publisher.config.example.json), with the dedicated Chrome open and signed in. The collection shot needs params.collectionId and is skipped without it.",
+  "dpr": 2,
+  "presets": [
+    "content-publisher"
+  ],
+  "shots": [
+    {
+      "slug": "overview",
+      "label": "Overview",
+      "url": "/dashboard",
+      "delay": 1500,
+      "section": "dashboard",
+      "actions": [
+        {
+          "pageHeading": {
+            "text": "Overview"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "collections",
+      "label": "Collections",
+      "url": "/dashboard/collections",
+      "delay": 1500,
+      "section": "dashboard",
+      "actions": [
+        {
+          "pageHeading": {
+            "text": "Collections"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "sites",
+      "label": "Sites",
+      "url": "/dashboard/sites",
+      "delay": 1500,
+      "section": "dashboard",
+      "actions": [
+        {
+          "pageHeading": {
+            "text": "Sites"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "collection",
+      "label": "One collection: details and content tree",
+      "url": "/dashboard/collections/{{collectionId}}",
+      "requires": [
+        "collectionId"
+      ],
+      "delay": 1500,
+      "section": "collection",
+      "actions": [
+        "collectionReady"
+      ]
+    }
+  ]
+}

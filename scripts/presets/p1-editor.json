@@ -1,5 +1,73 @@
 {
   "description": "Actions for the P1 editor (the /p1 route by default). Selectors come from the editor's data-testid attributes and from Puck's data-puck-component attribute on canvas blocks, which holds the same props.id the P1 MCP returns from get_document. Values such as the project, page, workstream, and block type are parameters: the brief passes them in, and they come from the per-run config file. Re-check the selectors after a P1 editor upgrade. editorReady also restores the left panel, because the editor keeps panel state across page loads in the same browser. The block-selection actions end with a selectedBlock check: exactly one selected overlay, matching the intended block's box, and the properties panel naming its type. A neighboring block fails it.",
+  "signIn": {
+    "mode": "chrome"
+  },
+  "release": {
+    "source": "npm:@pantheon-systems/p1-next-sdk"
+  },
+  "params": {
+    "projectName": {
+      "required": true,
+      "what": "The project or site name as the editor header shows it. Find it with the P1 MCP (list_sites) or in the editor."
+    },
+    "workstream": {
+      "required": true,
+      "what": "The workstream to show, as the editor's workstream selector lists it. Choose it for each run (P1 MCP list_branches); there is no default."
+    },
+    "pagePath": {
+      "required": true,
+      "pattern": "^/\\S*$",
+      "what": "The page being edited, for example \"/\" or \"/about\" (P1 MCP list_documents); it must start with \"/\" and contain no spaces."
+    },
+    "pageNavigation": {
+      "enum": [
+        "url",
+        "manual"
+      ],
+      "default": "url",
+      "what": "\"url\" opens the page through the editor URL; \"manual\" opens the editor route only and you select the page."
+    },
+    "pageLabel": {
+      "default": "{pagePath}",
+      "what": "The page label the editor's page selector shows (default: pagePath)."
+    },
+    "editorRoute": {
+      "pattern": "^/\\S*$",
+      "default": "/p1",
+      "what": "The editor route; it must start with \"/\"."
+    },
+    "blockCategory": {
+      "default": "P1 Layout",
+      "what": "The block category to expand in the blocks browser."
+    },
+    "blockType": {
+      "pattern": "^[A-Za-z][A-Za-z0-9_]*$",
+      "what": "A block type that selects reliably."
+    },
+    "blockSelector": {
+      "what": "A CSS selector for the block to select, instead of blockType."
+    },
+    "publishMenuLabel": {
+      "default": "Publish this page to",
+      "what": "The publish menu's label."
+    }
+  },
+  "atMostOne": [
+    [
+      "blockType",
+      "blockSelector"
+    ]
+  ],
+  "warnUnlessAny": [
+    {
+      "keys": [
+        "blockType",
+        "blockSelector"
+      ],
+      "message": "No blockType or blockSelector: the shots that select a block will be skipped and reported as skipped."
+    }
+  ],
   "actions": {
     "editorReady": {
       "params": [

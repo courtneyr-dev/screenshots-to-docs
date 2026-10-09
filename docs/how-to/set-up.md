@@ -20,7 +20,7 @@ targets. Each step can be skipped and rerun.
 
 ```bash
 git clone <this repository's URL>
-cd p1-screenshots-to-docs
+cd screenshots-to-docs
 npm run setup
 ```
 

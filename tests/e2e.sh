@@ -45,7 +45,7 @@ EOF
   cap() { local out=$1; shift; node scripts/capture.mjs --brief briefs/p1-editor.json --config "$E2E_CFG" --out-dir "$out" "$@"; }
   chk() { python3 "$ROOT/tests/assert-report.py" "$@"; }
 
-  t "six shots are captured through the attached Chrome on a custom port (deep-linked page, workstream, block, collapse, menu)" bash -c "cd '$ROOT' && node scripts/capture.mjs --brief briefs/p1-editor.json --config '$E2E_CFG' --out-dir '$E/runA' >'$E/a.log' 2>&1; [ \$? -eq 0 ]"
+  t "six shots are captured through the attached Chrome on a custom port (deep-linked page, workstream, block, collapse, menu)" bash -c "cd '$ROOT' && node scripts/capture.mjs --brief briefs/p1-editor.json --config '$E2E_CFG' --out-dir '$E/runA' >'$E/a.log' 2>&1 || { tail -20 '$E/a.log'; exit 1; }"
   t "report records the custom project, workstream and page; all six shots are PNGs; nothing skipped" python3 - "$E/runA" <<'EOF'
 import json,sys,os
 d=json.load(open(sys.argv[1]+'/capture-report.json'))
@@ -382,12 +382,12 @@ t "one failed upload exits 1, names the file, and prints a --only retry for just
 
 echo "== skill validator"
 t "the in-repo skill validator passes on this tool" node scripts/validate-skill.mjs
-rm -rf "$TMP/skillcopy" && mkdir -p "$TMP/skillcopy/p1-screenshots-to-docs" && cp -R SKILL.md references scripts templates examples briefs tests "$TMP/skillcopy/p1-screenshots-to-docs/" 2>/dev/null
-SC="$TMP/skillcopy/p1-screenshots-to-docs"
+rm -rf "$TMP/skillcopy" && mkdir -p "$TMP/skillcopy/screenshots-to-docs" && cp -R SKILL.md references scripts templates examples briefs tests "$TMP/skillcopy/screenshots-to-docs/" 2>/dev/null
+SC="$TMP/skillcopy/screenshots-to-docs"
 t "the validator accepts an intact copy" node scripts/validate-skill.mjs "$SC"
-sed -i.bak 's/^name: p1-screenshots-to-docs/name: some-other-name/' "$SC/SKILL.md" && rm -f "$SC/SKILL.md.bak"
+sed -i.bak 's/^name: screenshots-to-docs/name: some-other-name/' "$SC/SKILL.md" && rm -f "$SC/SKILL.md.bak"
 t "the validator rejects a name that doesn't match the folder" bash -c "node scripts/validate-skill.mjs '$SC' >/dev/null 2>&1; [ \$? -eq 1 ]"
-sed -i.bak 's/^name: some-other-name/name: p1-screenshots-to-docs/' "$SC/SKILL.md" && rm -f "$SC/SKILL.md.bak"
+sed -i.bak 's/^name: some-other-name/name: screenshots-to-docs/' "$SC/SKILL.md" && rm -f "$SC/SKILL.md.bak"
 echo 'See `references/does-not-exist.md`.' >> "$SC/SKILL.md"
 t "the validator rejects a link to a file that doesn't exist" bash -c "node scripts/validate-skill.mjs '$SC' >'$TMP/v.log' 2>&1; [ \$? -eq 1 ] && grep -q 'does-not-exist' '$TMP/v.log'"
 sed -i.bak '/does-not-exist/d' "$SC/SKILL.md" && rm -f "$SC/SKILL.md.bak"

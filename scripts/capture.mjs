@@ -20,7 +20,8 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 
 import { parseArgs } from 'node:util';
 import { join, resolve, isAbsolute, dirname } from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { loadConfig, applyOverrides, validateConfig, formatValidation, deriveParams, applyParams } from './lib/config.mjs';
+import { loadConfig, applyOverrides, validateConfig, formatValidation, deriveParams, applyParams, presetNameOf, signInModeOf } from './lib/config.mjs';
+import { loadPreset } from './lib/presets.mjs';
 
 // Freeze motion and hide the Next.js dev overlay / build indicator.
 const STABILIZE_CSS = `
@@ -134,8 +135,8 @@ try {
 
 // Per-run settings. Everything that differs between people and projects comes from the config.
 let params = {};
+let cfg = null;
 if (values.config) {
-  let cfg;
   try {
     cfg = applyOverrides(loadConfig(values.config), values.set || []);
   } catch (e) {
@@ -211,15 +212,28 @@ if (target !== 'next' && !BASELINE) {
   process.exit(1);
 }
 
-const auth = values['no-login'] ? null : brief.auth || null;
+// Presets: the config's preset first, then any the brief lists. Each adds actions, CSS, and a sign-in mode.
+let presets;
+try {
+  presets = loadPresets([...new Set([...(cfg ? [presetNameOf(cfg)] : []), ...(brief.presets || [])])], briefPath);
+} catch (e) {
+  fail(e.message);
+}
+// Sign-in: "chrome" attaches to the dedicated Chrome you signed in to; "form" signs in to a local or test
+// site with a password read from the environment; "none" captures public pages.
+const signInMode = values['no-login'] ? 'none' : values.connect && !cfg ? 'chrome' : cfg ? signInModeOf(cfg) : brief.auth ? 'form' : presets.signIn.mode;
+if (signInMode !== 'chrome') delete values.connect;
+const auth = signInMode === 'form' ? brief.auth || (presets.signIn.mode === 'form' ? { login: presets.signIn.login } : null) : null;
+if (signInMode === 'form' && !auth) fail('sign-in mode "form" needs a preset with a sign-in form, or "auth" in the brief');
+// With a sign-in form every shot is signed in unless it sets loggedOut: true.
+if (signInMode === 'form') for (const s of brief.shots) if (s.loggedIn === undefined) s.loggedIn = !s.loggedOut;
 const needsAuth = !!auth && brief.shots.some(s => s.loggedIn);
 
 const onlySet = values.only ? new Set(values.only.split(',').map(s => s.trim())) : null;
 const shots = onlySet ? brief.shots.filter(s => onlySet.has(s.slug)) : brief.shots;
 
 try {
-  const presets = loadPresets(brief.presets, briefPath);
-  for (const spec of shots) compileActions(spec, presets);
+  for (const spec of shots) compileActions(spec, presets.actions);
 } catch (e) {
   console.error(`FAIL: ${e.message}`);
   process.exit(1);
@@ -227,7 +241,7 @@ try {
 
 if (values['dry-run']) {
   console.log(JSON.stringify({
-    topic: brief.topic, site: SITE, connect: values.connect || null, project: params.projectName || null,
+    topic: brief.topic, site: SITE, preset: presets.names.join(', ') || null, signIn: signInMode, connect: values.connect || null, project: params.projectName || null,
     workstream: params.workstream || null, pagePath: params.pagePath || null,
     shots: shots.map(s => ({ slug: s.slug, url: s.url, steps: s.steps, expect: s.expect, expectAfter: s.expectAfter })),
     skipped,
@@ -292,7 +306,7 @@ async function authenticate(context) {
   }
   if (auth.login) {
     const page = await context.newPage();
-    const { url, fields = {}, submit, success } = auth.login;
+    const { url, fields = {}, form, submit, success } = auth.login;
     await page.goto(resolveUrl(SITE, url), { waitUntil: 'networkidle2', timeout: 60000 });
     for (const [selector, envName] of Object.entries(fields)) {
       const value = process.env[envName];
@@ -300,9 +314,11 @@ async function authenticate(context) {
       await page.waitForSelector(selector, { timeout: 15000 });
       await page.type(selector, value);
     }
+    // `form` submits the form element directly. On some WordPress setups a click on the submit button
+    // never posts, and the only symptom is the login page coming back with no error.
     await Promise.all([
       page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 30000 }).catch(() => {}),
-      page.click(submit || 'button[type="submit"]'),
+      form ? page.$eval(form, el => el.submit()) : page.click(submit || 'button[type="submit"]'),
     ]);
     if (success && !page.url().includes(success)) {
       throw new Error(`login failed: expected URL containing "${success}", got ${page.url()}`);
@@ -312,7 +328,7 @@ async function authenticate(context) {
 }
 
 async function settle(page, spec) {
-  await page.addStyleTag({ content: STABILIZE_CSS }).catch(() => {});
+  await page.addStyleTag({ content: STABILIZE_CSS + presets.css }).catch(() => {});
   if (spec.hide?.length) {
     await page.addStyleTag({ content: `${spec.hide.join(', ')} { visibility: hidden !important; }` }).catch(() => {});
   }
@@ -329,9 +345,16 @@ async function settle(page, spec) {
       window.scrollTo(0, 0);
     }).catch(() => {});
   }
+  // A lazy image that isn't rendered (inside a closed menu) or sits below the fold of a viewport-sized
+  // shot never loads, so it isn't waited for.
   await page.waitForFunction(
-    () => [...document.images].every(img => img.complete),
+    full => [...document.images].every(img => {
+      if (img.complete || img.loading !== 'lazy') return img.complete;
+      const r = img.getBoundingClientRect();
+      return (r.width === 0 && r.height === 0) || (!full && r.top >= innerHeight);
+    }),
     { timeout: 10000 },
+    !!spec.fullPage,
   ).catch(() => console.log('    (some images still loading after 10s)'));
 }
 
@@ -442,14 +465,15 @@ async function requireSelectors(page, checks, phase) {
 // steps and checks its preset defines, with {param} replaced. Raw `steps` still work and run after
 // the actions. Everything is resolved before a browser opens, so a typo fails immediately.
 function loadPresets(names, briefFile) {
-  const actions = {};
-  for (const n of names || []) {
-    const local = join(dirname(new URL(import.meta.url).pathname), 'presets', `${n}.json`);
-    const p = existsSync(local) ? local : resolve(dirname(briefFile), n);
-    if (!existsSync(p)) throw new Error(`preset "${n}" not found (looked for ${local} and ${p})`);
-    Object.assign(actions, JSON.parse(readFileSync(p, 'utf-8')).actions);
+  const out = { names: [], actions: {}, css: '', signIn: { mode: 'none' } };
+  for (const n of names) {
+    const p = loadPreset(n, dirname(briefFile));
+    out.names.push(p.name);
+    Object.assign(out.actions, p.actions);
+    if (p.css) out.css += `\n${p.css}`;
+    if (out.signIn.mode === 'none') out.signIn = p.signIn;
   }
-  return actions;
+  return out;
 }
 
 function compileActions(spec, presets) {
@@ -560,8 +584,9 @@ async function captureOne(page, spec, base, file) {
   const res = await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
   const status = res ? res.status() : null;
   // The pointer keeps its last position across tabs and runs, and a leftover hover style would make two
-  // identical captures differ. Start every shot from the same neutral position.
-  await page.mouse.move(1, 1);
+  // identical captures differ. Start every shot just off the page: (1, 1) is inside the WordPress logo's
+  // hover menu, so any on-page corner can open something.
+  await page.mouse.move(-1, -1);
   const finalUrl = page.url();
   const devMode = await page.evaluate(() => !!document.querySelector('nextjs-portal')).catch(() => false);
 
@@ -666,7 +691,7 @@ async function main() {
   }
 
   writeFileSync(join(outDir, 'capture-report.json'), JSON.stringify({
-    topic: brief.topic, site: SITE, baseline: BASELINE || null, target,
+    topic: brief.topic, site: SITE, baseline: BASELINE || null, target, preset: presets.names.join(', ') || null, signIn: signInMode,
     projectName: params.projectName || null, workstream: params.workstream || null, pagePath: params.pagePath || null,
     skipped,
     ...(brief.inventory && { inventory: brief.inventory }),
