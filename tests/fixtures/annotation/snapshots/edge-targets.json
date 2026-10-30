@@ -1,0 +1,173 @@
+{
+  "name": "edge-targets",
+  "frame": [
+    1440,
+    900
+  ],
+  "tokens": "8b904786053b",
+  "nodes": [
+    {
+      "name": "screenshot",
+      "component": "RECTANGLE",
+      "variant": null,
+      "bbox": [
+        0,
+        0,
+        1440,
+        900
+      ],
+      "markHex": null,
+      "text": []
+    },
+    {
+      "name": "Highlight",
+      "component": "Highlight box",
+      "variant": {
+        "Style": "Solid",
+        "Tone": "Purple"
+      },
+      "bbox": [
+        12,
+        12,
+        56,
+        56
+      ],
+      "markHex": "#3017A1",
+      "text": []
+    },
+    {
+      "name": "Step 1: the home icon",
+      "component": "Step badge",
+      "variant": {
+        "Tone": "Purple",
+        "Size": "M"
+      },
+      "bbox": [
+        80,
+        24,
+        48,
+        48
+      ],
+      "markHex": "#3017A1",
+      "text": [
+        "Poppins Bold 28: 1"
+      ]
+    },
+    {
+      "name": "Highlight",
+      "component": "Highlight box",
+      "variant": {
+        "Style": "Solid",
+        "Tone": "Purple"
+      },
+      "bbox": [
+        1372,
+        832,
+        56,
+        56
+      ],
+      "markHex": "#3017A1",
+      "text": []
+    },
+    {
+      "name": "Step 2: the help icon",
+      "component": "Step badge",
+      "variant": {
+        "Tone": "Purple",
+        "Size": "M"
+      },
+      "bbox": [
+        1300,
+        846,
+        48,
+        48
+      ],
+      "markHex": "#3017A1",
+      "text": [
+        "Poppins Bold 28: 2"
+      ]
+    },
+    {
+      "name": "Highlight",
+      "component": "Highlight box",
+      "variant": {
+        "Style": "Solid",
+        "Tone": "Purple"
+      },
+      "bbox": [
+        1372,
+        12,
+        56,
+        56
+      ],
+      "markHex": "#3017A1",
+      "text": []
+    },
+    {
+      "name": "Step 3: the account icon",
+      "component": "Step badge",
+      "variant": {
+        "Tone": "Purple",
+        "Size": "M"
+      },
+      "bbox": [
+        1380,
+        80,
+        48,
+        48
+      ],
+      "markHex": "#3017A1",
+      "text": [
+        "Poppins Bold 28: 3"
+      ]
+    },
+    {
+      "name": "Label: Home",
+      "component": "Callout label",
+      "variant": {
+        "Tone": "Purple",
+        "Pointer": "None"
+      },
+      "bbox": [
+        6,
+        830,
+        106,
+        52
+      ],
+      "markHex": "#3017A1",
+      "text": [
+        "Poppins Bold 28: Home"
+      ]
+    }
+  ],
+  "checks": [
+    "manifest-shape:pass",
+    "token-identity:pass",
+    "frame-mapping:pass",
+    "provenance:pass",
+    "kit-components:pass",
+    "token-colors:pass",
+    "typography:pass",
+    "targets:pass",
+    "bounds:pass",
+    "collisions:pass",
+    "redaction:pass",
+    "contrast:pass",
+    "grayscale:pass",
+    "background-variant:pass",
+    "display-size:pass",
+    "color-independence:pass",
+    "export:pass",
+    "alt-text:pass"
+  ],
+  "humanReview": [
+    "redaction-declared",
+    "redaction-complete",
+    "alt-task",
+    "render-fidelity"
+  ],
+  "pixels": {
+    "clean": "798206630ccdda79c096bd84895313bae54916dc3f1536db0cd961a1e177eb19",
+    "export": "8c6f1aa7e14f5baeac5b8e1450c8f9cec0ca2115dd441f20ef7b32d2afea9cf9"
+  }
+}

@@ -34,7 +34,7 @@ templates/            handoff note template, suggested captions, and gdocs-swap/
 inventory/            screenshots.json: the screenshot inventory (source of truth)
 scripts/              capture, preflight, chrome, figma-plan, figma-upload, handoff, inventory, compare-runs, cleanup,
                       validate-skill, check-identity, presets/, lib/
-figma-plugin/         the annotation kit plugin: manifest.json, kit.json, src/, and the built code.js
+figma-plugin/         the annotation kit plugin: manifest.json, kit.json (components), annotation-tokens.json (the brand contract), src/, and the built code.js
 docs/                 the GitHub Pages documentation site and its videos
 tests/                run-tests.sh, e2e.sh, Figma and upload mocks, and fixtures (fixture editor, servers, briefs)
 package.json          scripts and the one dependency (puppeteer-core)
@@ -56,7 +56,7 @@ The short version: a person signs in; the harness never sees credentials; the co
 
 ## Origin
 
-The tool was built in the `pantheon-systems/p1-docs` repository (`tools/p1-editor-screenshots-to-docs/`) and copied here without its history. The capture harness started as a Next.js screenshot tool; its original documentation is kept at [`references/nextjs-screenshots-harness.md`](references/nextjs-screenshots-harness.md).
+The tool began on 2026-09-29 in its own repository, as a fork of the `nextjs-screenshots` and `wp-screenshots` skills. This repository holds a copy without that history. The capture harness started as a Next.js screenshot tool; its original documentation is kept at [`references/nextjs-screenshots-harness.md`](references/nextjs-screenshots-harness.md).
 
 ## Contributing
 

@@ -1,9 +1,11 @@
 {
-  "name": "Screenshot annotation kit",
-  "id": "p1-screenshot-annotation-kit",
+  "name": "Screenshots to docs: annotation kit",
+  "id": "screenshots-to-docs-annotation-kit",
   "api": "1.0.0",
   "main": "code.js",
   "editorType": ["figma"],
   "documentAccess": "dynamic-page",
-  "networkAccess": { "allowedDomains": ["none"] }
+  "networkAccess": {
+    "allowedDomains": ["none"]
+  }
 }

@@ -25,8 +25,13 @@ alt text into each image it replaces, so a release swap also repairs missing alt
 ## Marks stay readable on any background
 
 Every mark carries a white halo, so a purple highlight stays visible on the dark parts of the editor as well
-as on white panels. Gold variants exist for dark UI, with dark text for contrast. Do and Don't markers use a
-check and a cross as well as green and red, so the meaning doesn't depend on color alone.
+as on white panels. Gold (the brand Yellow) is for dark regions only, with Purple text for contrast. Do and
+Don't markers use a check and a cross as well as green and pink, which look alike in grayscale, so the
+meaning doesn't depend on color alone.
+
+These aren't left to the person annotating. `record-annotation.mjs` measures the clean screenshot beside
+each mark and fails a mark that doesn't reach 3:1 through its fill or halo, in color or in grayscale. It fails
+text under WCAG AA, text or strokes too small at the docs width, and a tone on a region it isn't approved for.
 
 ## Text in images isn't searchable
 

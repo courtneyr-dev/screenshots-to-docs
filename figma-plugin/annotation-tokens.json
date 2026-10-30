@@ -1,0 +1,601 @@
+{
+  "schemaVersion": 1,
+  "name": "Pantheon screenshot annotation tokens",
+  "sources": [
+    "Pantheon brand colors and typography, as given in the annotation brief of 2026-10-21 (primary and secondary palettes, Poppins, Inter, Aleo, squared strokes, no gradient backgrounds, no equal-weight Yellow and Black).",
+    "Grays: Grey-1 #333333, Grey-2 #777B86 and #DFDFEC come from the Pantheon Presentation Template color slide. The full documented gray ramp was not available, so only these three are listed and none is used by an annotation role."
+  ],
+  "brand": {
+    "yellow": {
+      "hex": "#FFDC28",
+      "group": "primary"
+    },
+    "white": {
+      "hex": "#FFFFFF",
+      "group": "primary"
+    },
+    "purple": {
+      "hex": "#3017A1",
+      "group": "primary"
+    },
+    "black": {
+      "hex": "#23232D",
+      "group": "primary"
+    },
+    "pink": {
+      "hex": "#DE0093",
+      "group": "secondary"
+    },
+    "midPurple": {
+      "hex": "#5F41E5",
+      "group": "secondary"
+    },
+    "lightPurple": {
+      "hex": "#D0C6FF",
+      "group": "secondary"
+    },
+    "green": {
+      "hex": "#218C5F",
+      "group": "secondary"
+    },
+    "blue": {
+      "hex": "#0F62FE",
+      "group": "secondary"
+    },
+    "grey1": {
+      "hex": "#333333",
+      "group": "gray"
+    },
+    "grey2": {
+      "hex": "#777B86",
+      "group": "gray"
+    },
+    "greyLight": {
+      "hex": "#DFDFEC",
+      "group": "gray"
+    }
+  },
+  "roles": {
+    "mark": {
+      "color": "purple",
+      "note": "Default mark and the main emphasis color. Purple leads when Yellow and Black would compete."
+    },
+    "halo": {
+      "color": "white",
+      "note": "Outline under every mark so it survives dark screenshot regions."
+    },
+    "onMark": {
+      "color": "white",
+      "note": "Text on Purple, Ink, Info, Do, and Dont surfaces."
+    },
+    "markYellow": {
+      "color": "yellow",
+      "note": "Marks on dark screenshot regions only. The white halo does not separate Yellow from a light background."
+    },
+    "onYellow": {
+      "color": "purple",
+      "note": "Text on Yellow marks. Purple, not Black, so Yellow never sits against Black at equal weight."
+    },
+    "ink": {
+      "color": "black",
+      "note": "Low-emphasis notes, key caps, and the dim overlay."
+    },
+    "info": {
+      "color": "blue",
+      "note": "Neutral notes."
+    },
+    "do": {
+      "color": "green",
+      "note": "Correct example. Always paired with a check marker; Green and Pink are near-identical in grayscale."
+    },
+    "dont": {
+      "color": "pink",
+      "note": "Mistaken example. Always paired with a cross marker."
+    }
+  },
+  "tones": {
+    "Purple": {
+      "fill": "mark",
+      "text": "onMark",
+      "halo": "halo",
+      "backgrounds": [
+        "light",
+        "dark"
+      ]
+    },
+    "Gold": {
+      "fill": "markYellow",
+      "text": "onYellow",
+      "halo": "halo",
+      "backgrounds": [
+        "dark"
+      ],
+      "brandColor": "yellow"
+    },
+    "Ink": {
+      "fill": "ink",
+      "text": "onMark",
+      "halo": "halo",
+      "backgrounds": [
+        "light",
+        "dark"
+      ]
+    },
+    "Info": {
+      "fill": "info",
+      "text": "onMark",
+      "halo": "halo",
+      "backgrounds": [
+        "light",
+        "dark"
+      ]
+    },
+    "Do": {
+      "fill": "do",
+      "text": "onMark",
+      "halo": "halo",
+      "backgrounds": [
+        "light",
+        "dark"
+      ],
+      "requiresShapeMarker": "Do"
+    },
+    "Dont": {
+      "fill": "dont",
+      "text": "onMark",
+      "halo": "halo",
+      "backgrounds": [
+        "light",
+        "dark"
+      ],
+      "requiresShapeMarker": "Dont"
+    }
+  },
+  "backgroundVariants": {
+    "classify": {
+      "lightMinLuminance": 0.35,
+      "note": "Mean WCAG relative luminance of the clean screenshot under a mark. At or above the threshold is light; below is dark."
+    },
+    "light": {
+      "preferredTone": "Purple",
+      "halo": "white"
+    },
+    "dark": {
+      "preferredTone": "Gold",
+      "halo": "white",
+      "note": "Purple with its white halo also works on dark regions. Gold reads against dark without the halo."
+    }
+  },
+  "taxonomy": {
+    "marker": {
+      "purpose": "Numbered marker: identifies an ordered user action.",
+      "components": [
+        "Step badge"
+      ]
+    },
+    "outline": {
+      "purpose": "Outline: identifies a control or region without obscuring it. Never filled.",
+      "components": [
+        "Highlight box",
+        "Highlight ellipse",
+        "Underline",
+        "Click indicator"
+      ]
+    },
+    "highlight": {
+      "purpose": "Highlight: emphasizes a larger target area by dimming what surrounds it. Never placed over the target.",
+      "components": [
+        "Dim overlay"
+      ]
+    },
+    "arrow": {
+      "purpose": "Arrow: connects explanatory text to a target.",
+      "components": [
+        "Arrow",
+        "Cursor"
+      ]
+    },
+    "label": {
+      "purpose": "Label: explains purpose or expected action.",
+      "components": [
+        "Callout label",
+        "Note box",
+        "Key cap",
+        "Do / Dont marker"
+      ]
+    }
+  },
+  "styles": {
+    "marker": {
+      "shape": "circle",
+      "halo": "size/halo",
+      "numeral": "required, 1..N in reading order, no gaps or repeats",
+      "sizes": "S, M, L: diameters in metrics.badgePx",
+      "edgeRing": {
+        "innerPx": 4,
+        "outerPx": 14,
+        "unit": "px at the export scale, measured from the badge edge on the clean capture",
+        "edgeLuma": 40,
+        "skipDistance": 40,
+        "note": "A badge must not straddle a background edge (half on a dialog, half on the dimmed backdrop). The median luma (Rec. 601, 0-255) of opposite sides of the ring may differ by at most edgeLuma; pixels within skipDistance of the mark color are ignored."
+      }
+    },
+    "outline": {
+      "fill": "none",
+      "stroke": "size/stroke",
+      "haloStroke": "size/halo-line",
+      "dashed": [
+        12,
+        8
+      ],
+      "cornerRadius": "radius/highlight",
+      "styles": [
+        "Solid",
+        "Dashed"
+      ],
+      "note": "Solid marks the focus of the step; Dashed marks a secondary or optional area.",
+      "nesting": "Two outlines or highlights keep metrics.outlineGapPx of clear space between their outer edges (halo included). A mark nested inside another clears the outer mark's inner stroke edge by the same amount. A marker sits wholly inside a box or clear of its stroke."
+    },
+    "highlight": {
+      "component": "Dim overlay",
+      "fill": "ink",
+      "note": "Place over distracting regions only; it must not intersect any target."
+    },
+    "arrow": {
+      "stroke": "size/stroke",
+      "haloStroke": "size/halo-line",
+      "strokeCap": "SQUARE",
+      "strokeJoin": "MITER",
+      "head": "The kit Arrow component's head (Head=End, or Both for ranges). It is not redrawn per run.",
+      "maxPerStep": 1
+    },
+    "label": {
+      "padding": [
+        "spacing/label-x",
+        "spacing/label-y"
+      ],
+      "cornerRadius": "radius/label",
+      "halo": "size/halo",
+      "maxWords": 4,
+      "longText": "Use Note box (Inter Regular body) for anything over four words."
+    },
+    "redaction": {
+      "methods": [
+        "fake-data",
+        "pixelate"
+      ],
+      "preferred": "fake-data",
+      "kinds": [
+        "text",
+        "name",
+        "email",
+        "id",
+        "token",
+        "url",
+        "path",
+        "avatar",
+        "image"
+      ],
+      "minPaddingPx": 4,
+      "pixelate": {
+        "stage": "capture",
+        "minBlockCssPx": 7,
+        "resample": "Shrink the region with bilinear filtering, then enlarge it with nearest neighbor, so each block is one color averaged from the unredacted pixels under it.",
+        "edgeTolerancePx": 2,
+        "colorTolerance": 3
+      },
+      "retiredComponents": [
+        "Redact"
+      ],
+      "note": "Replace personal data with plausible fake data in the page before capture (preferred). Otherwise pixelate each declared region in the capture itself, before it goes to Figma, and keep the unredacted original out of anything delivered. Solid boxes and blur are not allowed: a box reads as a broken screenshot, and blur can be reversed."
+    }
+  },
+  "typography": {
+    "label": {
+      "family": "Poppins",
+      "style": "Bold",
+      "fallback": {
+        "family": "Inter",
+        "style": "Bold"
+      }
+    },
+    "body": {
+      "family": "Inter",
+      "style": "Regular",
+      "fallback": {
+        "family": "Inter",
+        "style": "Regular"
+      }
+    },
+    "disallowed": [
+      "Aleo"
+    ],
+    "fallbackBehavior": "If Poppins cannot load in the Figma file, the kit builder falls back to Inter Bold and warns. A rebuilt kit must be rebuilt again once Poppins is available."
+  },
+  "metrics": {
+    "referenceFrameWidth": 1440,
+    "strokePx": 6,
+    "haloStrokePx": 12,
+    "haloOutlinePx": 3,
+    "badgePx": {
+      "S": 32,
+      "M": 48,
+      "L": 64
+    },
+    "labelPaddingPx": {
+      "x": 16,
+      "y": 8
+    },
+    "cornerRadiusPx": {
+      "label": 8,
+      "highlight": 8
+    },
+    "strokeRule": "Strokes are authored for a 1440 px wide frame. At the docs display width a stroke must still render at 2 px or more, so on a wider frame the stroke scales up by frameWidth / displayWidth.",
+    "strokeThinPx": 4,
+    "haloStrokeThinPx": 8,
+    "outlineGapPx": 3
+  },
+  "display": {
+    "docsColumnWidthPx": 800,
+    "exportScale": 2,
+    "minRenderedTextPx": {
+      "label": 12,
+      "numeral": 10,
+      "body": 12
+    },
+    "minRenderedStrokePx": 2,
+    "note": "Rendered size is the authored size times min(1, docsColumnWidthPx / frameWidth)."
+  },
+  "contrast": {
+    "textNormal": 4.5,
+    "textLarge": 3,
+    "largeTextMinPx": 24,
+    "largeTextMinPxBold": 18.67,
+    "graphicalObject": 3,
+    "markVersusHalo": 3,
+    "note": "WCAG 2.2 AA: 1.4.3 for text, 1.4.11 for marks. A mark is perceivable when its fill or its halo reaches 3:1 against the screenshot beneath it, and the fill reaches 3:1 against its halo."
+  },
+  "logo": {
+    "policy": "Annotated screenshots carry no Pantheon logo. If one is genuinely needed, use an approved lockup with clear space and minimum size, and never recolor, stretch, rotate, distort, or cover it."
+  },
+  "forbidden": {
+    "fills": [
+      "GRADIENT_LINEAR",
+      "GRADIENT_RADIAL",
+      "GRADIENT_ANGULAR",
+      "GRADIENT_DIAMOND"
+    ],
+    "note": "No gradients as annotation label or component backgrounds."
+  },
+  "figmaVariables": {
+    "collections": [
+      {
+        "name": "Annotation primitives",
+        "vars": [
+          {
+            "name": "brand/yellow",
+            "type": "COLOR",
+            "brand": "yellow"
+          },
+          {
+            "name": "brand/white",
+            "type": "COLOR",
+            "brand": "white"
+          },
+          {
+            "name": "brand/purple",
+            "type": "COLOR",
+            "brand": "purple"
+          },
+          {
+            "name": "brand/black",
+            "type": "COLOR",
+            "brand": "black"
+          },
+          {
+            "name": "brand/pink",
+            "type": "COLOR",
+            "brand": "pink"
+          },
+          {
+            "name": "brand/green",
+            "type": "COLOR",
+            "brand": "green"
+          },
+          {
+            "name": "brand/blue",
+            "type": "COLOR",
+            "brand": "blue"
+          }
+        ]
+      },
+      {
+        "name": "Annotation",
+        "vars": [
+          {
+            "name": "color/mark",
+            "type": "COLOR",
+            "role": "mark",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL",
+              "STROKE_COLOR"
+            ]
+          },
+          {
+            "name": "color/halo",
+            "type": "COLOR",
+            "role": "halo",
+            "scopes": [
+              "SHAPE_FILL",
+              "STROKE_COLOR"
+            ]
+          },
+          {
+            "name": "color/on-mark",
+            "type": "COLOR",
+            "role": "onMark",
+            "scopes": [
+              "TEXT_FILL"
+            ]
+          },
+          {
+            "name": "color/mark-gold",
+            "type": "COLOR",
+            "role": "markYellow",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL",
+              "STROKE_COLOR"
+            ]
+          },
+          {
+            "name": "color/on-gold",
+            "type": "COLOR",
+            "role": "onYellow",
+            "scopes": [
+              "TEXT_FILL"
+            ]
+          },
+          {
+            "name": "color/ink",
+            "type": "COLOR",
+            "role": "ink",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL",
+              "TEXT_FILL",
+              "STROKE_COLOR"
+            ]
+          },
+          {
+            "name": "color/info",
+            "type": "COLOR",
+            "role": "info",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL",
+              "STROKE_COLOR"
+            ]
+          },
+          {
+            "name": "color/do",
+            "type": "COLOR",
+            "role": "do",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL",
+              "STROKE_COLOR"
+            ]
+          },
+          {
+            "name": "color/dont",
+            "type": "COLOR",
+            "role": "dont",
+            "scopes": [
+              "FRAME_FILL",
+              "SHAPE_FILL",
+              "STROKE_COLOR"
+            ]
+          },
+          {
+            "name": "size/stroke",
+            "type": "FLOAT",
+            "metric": "strokePx",
+            "scopes": [
+              "STROKE_FLOAT"
+            ]
+          },
+          {
+            "name": "size/halo-line",
+            "type": "FLOAT",
+            "metric": "haloStrokePx",
+            "scopes": [
+              "STROKE_FLOAT"
+            ]
+          },
+          {
+            "name": "size/halo",
+            "type": "FLOAT",
+            "metric": "haloOutlinePx",
+            "scopes": [
+              "STROKE_FLOAT"
+            ]
+          },
+          {
+            "name": "size/badge",
+            "type": "FLOAT",
+            "scopes": [
+              "WIDTH_HEIGHT"
+            ],
+            "metric": "badgePx.M"
+          },
+          {
+            "name": "size/badge-s",
+            "type": "FLOAT",
+            "scopes": [
+              "WIDTH_HEIGHT"
+            ],
+            "metric": "badgePx.S"
+          },
+          {
+            "name": "size/badge-l",
+            "type": "FLOAT",
+            "scopes": [
+              "WIDTH_HEIGHT"
+            ],
+            "metric": "badgePx.L"
+          },
+          {
+            "name": "size/stroke-thin",
+            "type": "FLOAT",
+            "scopes": [
+              "STROKE_FLOAT"
+            ],
+            "metric": "strokeThinPx"
+          },
+          {
+            "name": "size/halo-line-thin",
+            "type": "FLOAT",
+            "scopes": [
+              "STROKE_FLOAT"
+            ],
+            "metric": "haloStrokeThinPx"
+          },
+          {
+            "name": "radius/label",
+            "type": "FLOAT",
+            "scopes": [
+              "CORNER_RADIUS"
+            ],
+            "metric": "cornerRadiusPx.label"
+          },
+          {
+            "name": "radius/highlight",
+            "type": "FLOAT",
+            "scopes": [
+              "CORNER_RADIUS"
+            ],
+            "metric": "cornerRadiusPx.highlight"
+          },
+          {
+            "name": "spacing/label-x",
+            "type": "FLOAT",
+            "scopes": [
+              "GAP"
+            ],
+            "metric": "labelPaddingPx.x"
+          },
+          {
+            "name": "spacing/label-y",
+            "type": "FLOAT",
+            "scopes": [
+              "GAP"
+            ],
+            "metric": "labelPaddingPx.y"
+          }
+        ]
+      }
+    ]
+  }
+}

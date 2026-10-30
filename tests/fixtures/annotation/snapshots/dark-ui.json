@@ -1,0 +1,191 @@
+{
+  "name": "dark-ui",
+  "frame": [
+    1440,
+    900
+  ],
+  "tokens": "8b904786053b",
+  "nodes": [
+    {
+      "name": "screenshot",
+      "component": "RECTANGLE",
+      "variant": null,
+      "bbox": [
+        0,
+        0,
+        1440,
+        900
+      ],
+      "markHex": null,
+      "text": []
+    },
+    {
+      "name": "Highlight",
+      "component": "Highlight box",
+      "variant": {
+        "Style": "Solid",
+        "Tone": "Gold"
+      },
+      "bbox": [
+        10,
+        90,
+        280,
+        340
+      ],
+      "markHex": "#FFDC28",
+      "text": []
+    },
+    {
+      "name": "Step 1: the Blocks panel",
+      "component": "Step badge",
+      "variant": {
+        "Tone": "Gold",
+        "Size": "M"
+      },
+      "bbox": [
+        20,
+        36,
+        48,
+        48
+      ],
+      "markHex": "#FFDC28",
+      "text": [
+        "Poppins Bold 28: 1"
+      ]
+    },
+    {
+      "name": "Highlight",
+      "component": "Highlight box",
+      "variant": {
+        "Style": "Solid",
+        "Tone": "Purple"
+      },
+      "bbox": [
+        340,
+        110,
+        760,
+        480
+      ],
+      "markHex": "#3017A1",
+      "text": []
+    },
+    {
+      "name": "Step 2: the page canvas",
+      "component": "Step badge",
+      "variant": {
+        "Tone": "Purple",
+        "Size": "M"
+      },
+      "bbox": [
+        350,
+        52,
+        48,
+        48
+      ],
+      "markHex": "#3017A1",
+      "text": [
+        "Poppins Bold 28: 2"
+      ]
+    },
+    {
+      "name": "Highlight",
+      "component": "Highlight box",
+      "variant": {
+        "Style": "Solid",
+        "Tone": "Gold"
+      },
+      "bbox": [
+        1170,
+        90,
+        160,
+        64
+      ],
+      "markHex": "#FFDC28",
+      "text": []
+    },
+    {
+      "name": "Step 3: the Review button",
+      "component": "Step badge",
+      "variant": {
+        "Tone": "Gold",
+        "Size": "M"
+      },
+      "bbox": [
+        1336,
+        98,
+        48,
+        48
+      ],
+      "markHex": "#FFDC28",
+      "text": [
+        "Poppins Bold 28: 3"
+      ]
+    },
+    {
+      "name": "Label: Blocks panel",
+      "component": "Callout label",
+      "variant": {
+        "Tone": "Gold",
+        "Pointer": "None"
+      },
+      "bbox": [
+        20,
+        460,
+        254,
+        52
+      ],
+      "markHex": "#FFDC28",
+      "text": [
+        "Poppins Bold 28: Blocks panel"
+      ]
+    },
+    {
+      "name": "Label: Review button",
+      "component": "Callout label",
+      "variant": {
+        "Tone": "Purple",
+        "Pointer": "None"
+      },
+      "bbox": [
+        1150,
+        200,
+        273,
+        52
+      ],
+      "markHex": "#3017A1",
+      "text": [
+        "Poppins Bold 28: Review button"
+      ]
+    }
+  ],
+  "checks": [
+    "manifest-shape:pass",
+    "token-identity:pass",
+    "frame-mapping:pass",
+    "provenance:pass",
+    "kit-components:pass",
+    "token-colors:pass",
+    "typography:pass",
+    "targets:pass",
+    "bounds:pass",
+    "collisions:pass",
+    "redaction:pass",
+    "contrast:pass",
+    "grayscale:pass",
+    "background-variant:pass",
+    "display-size:pass",
+    "color-independence:pass",
+    "export:pass",
+    "alt-text:pass"
+  ],
+  "humanReview": [
+    "redaction-declared",
+    "redaction-complete",
+    "alt-task",
+    "render-fidelity"
+  ],
+  "pixels": {
+    "clean": "f6817ddb98fa127f3d881360bff4ecb7cf4b651a8f1af3f591f08caeb91cf7e8",
+    "export": "5fc4c8007156761dab6b10e9e77d991019ade234acb8ab53b4e71f438a079e7b"
+  }
+}

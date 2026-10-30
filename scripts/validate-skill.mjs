@@ -17,6 +17,7 @@
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { resolve, basename, join } from 'node:path';
 import { TOOL_DIR } from './lib/config.mjs';
+import { loadTokens } from './lib/annotation.mjs';
 
 const dir = resolve(process.argv[2] || TOOL_DIR);
 const file = join(dir, 'SKILL.md');
@@ -75,10 +76,26 @@ const REQUIRED = [
   ['Annotation kit', 'the Annotation kit rule'],
   ['docs/how-to/annotate.md', 'the pointer to docs/how-to/annotate.md'],
   ['Never style marks by hand', 'the no hand-styled marks rule'],
-  ['Redact avatars, names, emails, and IDs', 'the redaction rule'],
+  ['Fake or pixelate avatars, names, emails, and IDs', 'the personal-data rule'],
   ['built from Annotation kit instances only', 'the annotated-frame completion item'],
   ['record-annotation.mjs', 'the record-annotation step that the handoff gate needs'],
+  ['figma-plugin/annotation-tokens.json', 'the pointer to the token contract'],
+  ['figma-annotation.mjs', 'the step that reads the annotated frame out of Figma'],
+  ['--human-reviewed', 'the human-review confirmation'],
+  ['annotated/<slug>.png', 'the annotated export location'],
+  ['`review/`', 'the review folder for checks and proof'],
+  ['clean', 'the clean capture, kept apart from the annotated export'],
+  ['Annotation is mandatory for review', 'the rule for when Figma annotation is mandatory'],
+  ['No solid boxes, no blur', 'the rule against solid redaction boxes and blur'],
+  ['Human review, always', 'the list of checks that still need a person'],
 ];
+// Every approved annotation component and role in the token contract must be named in SKILL.md.
+const tokens = loadTokens();
+for (const [role, d] of Object.entries(tokens.taxonomy)) {
+  if (!body.includes(role)) errors.push(`SKILL.md does not name the annotation role "${role}" from the token contract`);
+  for (const c of d.components) if (!body.includes('`' + c + '`')) errors.push(`SKILL.md does not list the approved component \`${c}\` from the token contract`);
+}
+if (/p1-editor-screenshots|p1-screenshot-annotation/.test(body)) errors.push('SKILL.md uses a stale name (p1-editor-screenshots or p1-screenshot-annotation-kit)');
 for (const [phrase, what] of REQUIRED) if (!body.includes(phrase)) errors.push(`SKILL.md is missing ${what} (looked for "${phrase}")`);
 
 for (const w of warnings) console.log(`  ! ${w}`);

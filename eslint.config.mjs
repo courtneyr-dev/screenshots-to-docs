@@ -2,7 +2,7 @@ import js from '@eslint/js';
 import globals from 'globals';
 
 export default [
-  { ignores: ['node_modules/**', 'site/_site/**', 'figma-plugin/code.js'] },
+  { ignores: ['node_modules/**', 'site/_site/**', 'figma-plugin/code.js', 'screenshots/**'] },
   js.configs.recommended,
   {
     files: ['**/*.mjs', '**/*.js'],

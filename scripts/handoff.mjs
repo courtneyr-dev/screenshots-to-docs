@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * p1-editor-screenshots / handoff
+ * screenshots-to-docs / handoff
  *
  * Writes the manual docs handoff note for one or more capture runs, from the run's
  * capture-report.json and figma-plan.json (run figma-plan.mjs first) and the per-run config.
@@ -21,6 +21,7 @@ import { resolve, join } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { compareRuns } from './compare-runs.mjs';
 import { canonicalPath, isInside } from './lib/paths.mjs';
+import { recordProblems, RECORD_FILE } from './lib/annotation.mjs';
 import { loadInventory, validateInventory, formatIssues, checkText, renderDocsHandoff, inventoryCommit } from './lib/inventory.mjs';
 import { TOOL_DIR, loadConfig, applyOverrides, validateConfig, formatValidation, deriveParams, applyParams, expandHome, DEFAULTS } from './lib/config.mjs';
 
@@ -144,41 +145,47 @@ if (values.inventory) {
   ].join('\n');
 }
 
-// Annotation gate: every shot needs an annotated frame before a handoff is written. The docs embed the
-// annotated frame, so a handoff without one sends the docs author a bare capture.
+// Annotation gate: every shot needs a verified, human-reviewed annotated frame before a handoff is written.
+// The docs embed the annotated frame, so a handoff without one sends the docs author a bare capture. A record
+// counts only if its checks passed against the current tokens, its clean capture and export still match their
+// recorded checksums, and a named person confirmed the review (lib/annotation.mjs recordProblems).
 let annotationStatus;
+let annotationArtifacts = '(no annotated exports recorded)';
 {
   const problems = [];
   const done = [];
+  const artifacts = [];
+  const reviewers = new Set();
+  const row = (...c) => `| ${c.join(' | ')} |`;
   for (const run of runs) {
-    const recFile = join(run.dir, 'annotation-record.json');
+    const recFile = join(run.dir, RECORD_FILE);
     const record = existsSync(recFile) ? JSON.parse(readFileSync(recFile, 'utf-8')) : { frames: {} };
     for (const slug of [...new Set(run.plan.rows.map(r => r.slug))]) {
       const f = record.frames?.[slug];
       if (f) {
-        const why = [];
-        if (f.status !== 'complete') why.push('status is not complete');
-        if (!f.annotatedNodeId) why.push('no annotated frame node ID');
-        if (f.cleanNodeId && f.cleanNodeId === f.annotatedNodeId) why.push('the annotated node ID is the clean frame');
-        if (f.kitOnly !== true) why.push('not attested as Annotation kit instances only');
-        if (f.redacted !== true) why.push('not attested as redacted');
+        const why = recordProblems(run.dir, slug, f, run.report);
         if (why.length) problems.push(`${run.plan.runId} / ${slug}: ${why.join('; ')}`);
-        else done.push(`${slug} → ${f.annotatedNodeId}`);
+        else {
+          done.push(`${slug} → ${f.annotatedNodeId}`);
+          reviewers.add(f.humanReview?.confirmedBy);
+          artifacts.push(row(`\`${slug}\``, `\`${f.source.path.split('/').pop()}\` \`${f.source.sha256.slice(0, 12)}\``, `\`${f.export.path}\` \`${f.export.sha256.slice(0, 12)}\` (${f.export.width}x${f.export.height})`, `${f.tokens.schemaVersion} / \`${f.tokens.hash.slice(0, 12)}\``, f.humanReview.confirmedBy));
+        }
       } else if (inventoryAnnotated.has(slug)) {
-        done.push(`${slug} → ${inventoryAnnotated.get(slug)} (inventory)`);
+        done.push(`${slug} → ${inventoryAnnotated.get(slug)} (inventory record only; not machine-verified here)`);
       } else {
         problems.push(`${run.plan.runId} / ${slug}: no annotation recorded`);
       }
     }
   }
+  if (artifacts.length) annotationArtifacts = [row('Shot', 'Clean capture (use where markup is not allowed)', 'Annotated export', 'Token schema / hash', 'Reviewed by'), row('---', '---', '---', '---', '---'), ...artifacts].join('\n');
   if (values['skip-annotation'] !== undefined) {
     if (!values['skip-annotation'].trim()) fail('--skip-annotation needs a reason, for example --skip-annotation "release freeze; annotate after".');
     process.stderr.write(`  ! Annotation skipped: ${values['skip-annotation']}\n`);
     annotationStatus = `SKIPPED by request: ${values['skip-annotation']}. The docs must not embed these images until every shot has an annotated frame.${problems.length ? ' Not annotated: ' + problems.map(p => p.split(': ')[0]).join(', ') + '.' : ''}`;
   } else if (problems.length) {
-    fail(`annotation is required before a handoff, and ${problems.length} shot${problems.length === 1 ? ' is' : 's are'} not ready:\n${problems.map(p => '  - ' + p).join('\n')}\nAnnotate every shot in Figma with the Annotation kit (docs/how-to/annotate.md), then record each one:\n  node scripts/record-annotation.mjs --dir <run folder> --slug <slug> --annotated-node-id <id> --kit-only --redacted\nTo hand off without annotation, pass --skip-annotation "<reason>"; the note will say it was skipped. Nothing was written.`);
+    fail(`annotation is required before a handoff, and ${problems.length} shot${problems.length === 1 ? ' is' : 's are'} not ready:\n${problems.map(p => '  - ' + p).join('\n')}\nAnnotate every shot in Figma with the Annotation kit (docs/how-to/annotate.md), read the frame out with scripts/figma-annotation.mjs, then verify and record each one:\n  node scripts/record-annotation.mjs --dir <run folder> --slug <slug> --manifest <manifest.json> --export <annotated.png> --human-reviewed "<name>"\nTo hand off without annotation, pass --skip-annotation "<reason>"; the note will say it was skipped. Nothing was written.`);
   } else {
-    annotationStatus = `Complete. Every shot has an annotated frame built from Annotation kit instances, with personal data redacted: ${done.join('; ')}.`;
+    annotationStatus = `Complete. Every shot has an annotated frame built from Annotation kit instances, machine-verified against the token contract, with the human-review items confirmed by ${[...reviewers].filter(Boolean).join(', ') || 'the inventory record'}: ${done.join('; ')}.`;
   }
 }
 
@@ -219,6 +226,7 @@ const fields = {
   figmaFileKey: cfg.figma?.fileKey ? `\`${cfg.figma.fileKey}\`` : 'TO FILL',
   figmaPages: runs.map(r => `\`${r.plan.pageName}\``).join('; '),
   annotationStatus,
+  annotationArtifacts,
   approvedPage: values['approved-page'] ? `\`${values['approved-page']}\`` : 'TO FILL: choose one of the pages above',
   shotTable,
   docsMapping,

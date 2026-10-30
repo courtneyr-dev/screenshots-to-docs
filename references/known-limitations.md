@@ -22,7 +22,7 @@
 - **Images go through upload URLs.** `createImageAsync` is blocked in `use_figma`. URLs are single-use, expire in 10 minutes, and accept up to 10 MB per asset and 60 per call.
 - **Minute-resolution run IDs.** Two captures in one minute collide; the second push is rejected as a duplicate.
 - **Seat quota.** A View seat exhausted its MCP tool-call limit during the proof of concept. Each run needs at least three calls.
-- **Annotation is by attestation.** An agent or a person places Annotation kit instances in Figma, and nothing exports the annotated frames. `handoff.mjs` refuses until each shot is recorded with `record-annotation.mjs`, but that tool can't read Figma: it trusts the `--kit-only` and `--redacted` flags, so a reviewer still checks the frames.
+- **Annotation is verified against an extraction, not against live Figma.** `record-annotation.mjs` checks a manifest read out of Figma by `figma-annotation.mjs` and the exported PNG against `annotation-tokens.json`: kit components, token version, geometry, contrast, pixelated personal data, and export pixels. The extraction code and the plugin changes have only run against a mock of the Plugin API; the first live extraction is untested. It can't prove the export looks right, that no undeclared personal data remains, that data declared as fake really is, or that text doesn't overflow (that check is an estimate). The kit stamp, targets, and sensitive regions are plugin data the annotator writes, so they guard against mistakes, not forgery. Those stay with a person, who confirms with `--human-reviewed`. A record taken from an inventory with `annotation_status` complete is still accepted by the handoff on the person's word, and the note says so.
 
 ## Screenshot inventory
 

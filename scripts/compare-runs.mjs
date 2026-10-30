@@ -27,7 +27,7 @@
  */
 
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
-import { inflateSync } from 'node:zlib';
+import { inflateSync, deflateSync, crc32 } from 'node:zlib';
 import { parseArgs } from 'node:util';
 import { join, resolve } from 'node:path';
 
@@ -64,6 +64,33 @@ export function decodePng(buf) {
     }
   }
   return { w, h, bpp, pixels: out };
+}
+
+/** Encode decodePng's { w, h, bpp, pixels } back to an 8-bit RGB (bpp 3) or RGBA (bpp 4) PNG. */
+export function encodePng({ w, h, bpp, pixels }) {
+  if (![3, 4].includes(bpp)) throw new Error(`can't encode ${bpp} bytes per pixel`);
+  const chunk = (type, data) => {
+    const body = Buffer.concat([Buffer.from(type, 'ascii'), data]);
+    const out = Buffer.alloc(12 + data.length);
+    out.writeUInt32BE(data.length, 0);
+    body.copy(out, 4);
+    out.writeUInt32BE(crc32(body) >>> 0, 8 + data.length);
+    return out;
+  };
+  const ihdr = Buffer.alloc(13);
+  ihdr.writeUInt32BE(w, 0);
+  ihdr.writeUInt32BE(h, 4);
+  ihdr[8] = 8;
+  ihdr[9] = bpp === 4 ? 6 : 2;
+  const stride = w * bpp;
+  const raw = Buffer.alloc(h * (stride + 1)); // filter byte 0 (none) on every row
+  for (let y = 0; y < h; y++) pixels.copy(raw, y * (stride + 1) + 1, y * stride, (y + 1) * stride);
+  return Buffer.concat([
+    Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]),
+    chunk('IHDR', ihdr),
+    chunk('IDAT', deflateSync(raw)),
+    chunk('IEND', Buffer.alloc(0)),
+  ]);
 }
 
 export function diffStats(a, b, { block = 16, minDiff = 8 } = {}) {
