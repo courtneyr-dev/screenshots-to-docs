@@ -1,8 +1,8 @@
 {
-  "checked_at": "2026-11-03T13:20:47.472Z",
+  "checked_at": "2026-11-04T13:20:51.278Z",
   "products": {
     "content-publisher-drupal": "1.0.5",
-    "terminus": "4.3.3",
+    "terminus": "4.3.4",
     "content-publisher-wordpress": "1.4.2",
     "wordpress-core": "7.1.4",
     "drupal-core": "11.4.11",
@@ -39,7 +39,7 @@
   },
   "feeds": {
     "pantheon-release-notes": {
-      "last": "2026-10-30T18:23:00.000Z"
+      "last": "2026-11-03T20:25:35.000Z"
     }
   }
 }
