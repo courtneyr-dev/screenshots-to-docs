@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-10T13:20:30.965Z",
+  "checked_at": "2026-11-11T13:20:44.642Z",
   "products": {
     "content-publisher-drupal": "1.0.5",
     "terminus": "4.3.5",
@@ -39,7 +39,7 @@
   },
   "feeds": {
     "pantheon-release-notes": {
-      "last": "2026-11-09T18:24:05.000Z"
+      "last": "2026-11-10T16:39:07.000Z"
     }
   }
 }
