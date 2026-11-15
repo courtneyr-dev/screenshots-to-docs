@@ -71,7 +71,7 @@ the old colors.
    (`s2d` shared plugin data: a bounding box in image pixels, and a selector if you have one). On the frame,
    declare every region of personal data. The protocol is in
    [Annotation kit](../reference/annotation-kit.html#placing-marks-so-they-can-be-verified).
-6. Pick tones by the screenshot beneath: **Purple** works on light and dark; **Gold** only on dark.
+6. Pick tones by the job: **Ink** is the default and works on light and dark. **Yellow** marks the one focal step of the frame (its badge and its outline); don't use it for a second step.
 7. **Give marks room.** Keep 3 px of clear space between the outer edges of two Highlight boxes, halo
    included. A box drawn inside another box clears the outer box's inner stroke edge by 3 px. A Step badge
    sits wholly inside a box or clear of its stroke, and wholly on one surface of the screenshot: never half

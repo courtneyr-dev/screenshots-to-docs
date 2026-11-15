@@ -4,7 +4,7 @@
     1440,
     900
   ],
-  "tokens": "8b904786053b",
+  "tokens": "8bd4eea416ad",
   "nodes": [
     {
       "name": "screenshot",
@@ -24,7 +24,7 @@
       "component": "Highlight box",
       "variant": {
         "Style": "Solid",
-        "Tone": "Purple"
+        "Tone": "Ink"
       },
       "bbox": [
         12,
@@ -32,14 +32,14 @@
         56,
         56
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": []
     },
     {
       "name": "Step 1: the home icon",
       "component": "Step badge",
       "variant": {
-        "Tone": "Purple",
+        "Tone": "Ink",
         "Size": "M"
       },
       "bbox": [
@@ -48,9 +48,9 @@
         48,
         48
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": [
-        "Poppins Bold 28: 1"
+        "Inter Semi Bold 28: 1"
       ]
     },
     {
@@ -58,7 +58,7 @@
       "component": "Highlight box",
       "variant": {
         "Style": "Solid",
-        "Tone": "Purple"
+        "Tone": "Ink"
       },
       "bbox": [
         1372,
@@ -66,14 +66,14 @@
         56,
         56
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": []
     },
     {
       "name": "Step 2: the help icon",
       "component": "Step badge",
       "variant": {
-        "Tone": "Purple",
+        "Tone": "Ink",
         "Size": "M"
       },
       "bbox": [
@@ -82,9 +82,9 @@
         48,
         48
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": [
-        "Poppins Bold 28: 2"
+        "Inter Semi Bold 28: 2"
       ]
     },
     {
@@ -92,7 +92,7 @@
       "component": "Highlight box",
       "variant": {
         "Style": "Solid",
-        "Tone": "Purple"
+        "Tone": "Ink"
       },
       "bbox": [
         1372,
@@ -100,14 +100,14 @@
         56,
         56
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": []
     },
     {
       "name": "Step 3: the account icon",
       "component": "Step badge",
       "variant": {
-        "Tone": "Purple",
+        "Tone": "Ink",
         "Size": "M"
       },
       "bbox": [
@@ -116,27 +116,27 @@
         48,
         48
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": [
-        "Poppins Bold 28: 3"
+        "Inter Semi Bold 28: 3"
       ]
     },
     {
       "name": "Label: Home",
       "component": "Callout label",
       "variant": {
-        "Tone": "Purple",
+        "Tone": "Ink",
         "Pointer": "None"
       },
       "bbox": [
         6,
         830,
-        106,
+        100,
         52
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": [
-        "Poppins Bold 28: Home"
+        "Inter Semi Bold 28: Home"
       ]
     }
   ],
@@ -168,6 +168,6 @@
   ],
   "pixels": {
     "clean": "798206630ccdda79c096bd84895313bae54916dc3f1536db0cd961a1e177eb19",
-    "export": "8c6f1aa7e14f5baeac5b8e1450c8f9cec0ca2115dd441f20ef7b32d2afea9cf9"
+    "export": "1f996bb6d37d5860463999125b8ff736180aae2f01ab10bceafb1f7f02d33a10"
   }
 }

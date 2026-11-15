@@ -51,9 +51,17 @@ export function toneColors(t, tone) {
   return d ? { fill: roleHex(t, d.fill), text: roleHex(t, d.text), halo: roleHex(t, d.halo) } : null;
 }
 
-/** Every color an annotation may use: the roles, plus white. */
+/** Every color an annotation may use: the roles, plus Paper. */
 export function allowedColors(t) {
-  return new Set([...Object.keys(t.roles).map(r => roleHex(t, r)), t.brand.white.hex.toUpperCase()]);
+  return new Set([...Object.keys(t.roles).map(r => roleHex(t, r)), (t.brand.paper || t.brand.white).hex.toUpperCase()]);
+}
+
+/** Font keys ("Inter Semi Bold") a contract allows in annotations: label, body, and a label fallback when the contract lists one. */
+export function allowedFonts(t) {
+  const { label, body } = t.typography;
+  const keys = [`${label.family} ${label.style}`, `${body.family} ${body.style}`];
+  const fallback = label.fallback ? `${label.fallback.family} ${label.fallback.style}` : null;
+  return { keys: fallback ? [...keys, fallback] : keys, fallback };
 }
 
 const rgbOf = hex => { const h = hex.replace('#', ''); return [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16) / 255); };
@@ -148,7 +156,7 @@ export function coverage(target, rects) {
   return covered / area(target);
 }
 
-const CHAR_EM = { 'Poppins Bold': 0.66, 'Inter Bold': 0.6, 'Inter Regular': 0.56 };
+const CHAR_EM = { 'Poppins Bold': 0.66, 'Inter Semi Bold': 0.6, 'Inter Bold': 0.6, 'Inter Regular': 0.56 };
 /** Upper-bound-ish width of a single line of text. A heuristic: Figma does not expose measured overflow. */
 export function estimateTextWidth(chars, size, family, style) {
   return String(chars).length * size * (CHAR_EM[`${family} ${style}`] ?? 0.66);
@@ -409,6 +417,7 @@ export function verifyAnnotation(input) {
   const retired = [];
   const kitProblems = [], typoProblems = [], colorProblems = [];
   let fallbackFonts = false;
+  const fonts = allowedFonts(t);
   const screenshots = m.nodes.filter(n => n.name === 'screenshot' && n.type === 'RECTANGLE');
   if (screenshots.length !== 1) kitProblems.push(`the annotated frame must hold exactly one layer named "screenshot" (found ${screenshots.length})`);
   for (const n of m.nodes) {
@@ -434,16 +443,18 @@ export function verifyAnnotation(input) {
     for (const tx of n.texts || []) {
       const key = `${tx.family} ${tx.style}`;
       if (t.typography.disallowed.includes(tx.family)) typoProblems.push(`"${n.name}" text uses ${tx.family}, which annotations must not use`);
-      else if (!['Poppins Bold', 'Inter Bold', 'Inter Regular'].includes(key)) typoProblems.push(`"${n.name}" text uses ${key}; allowed are Poppins Bold, Inter Regular, and the Inter Bold fallback`);
-      else if (key === 'Inter Bold') fallbackFonts = true;
+      else if (!fonts.keys.includes(key)) typoProblems.push(`"${n.name}" text uses ${key}; allowed are ${fonts.keys.join(' and ')}`);
+      else if (fonts.fallback && key === fonts.fallback) fallbackFonts = true;
       if (tx.fillHex && !allowed.has(tx.fillHex.toUpperCase())) colorProblems.push(`"${n.name}" text is ${tx.fillHex}, which is not a token color`);
     }
     marks.push({ n, comp, role, tone: n.component.variant?.Tone || null, bbox: n.bbox });
   }
   results('kit-components', kitProblems, `${marks.length} marks, all approved kit instances built from the current tokens`);
   results('token-colors', colorProblems, 'every fill, stroke, and text color is a token color');
-  results('typography', typoProblems, 'fonts are Poppins Bold and Inter Regular');
-  if (fallbackFonts) review('font-fallback', 'some text uses the Inter Bold fallback because Poppins was unavailable when the kit was built; rebuild the kit once Poppins loads');
+  results('typography', typoProblems, `fonts are ${fonts.keys.join(' and ')}`);
+  if (fallbackFonts) review('font-fallback', `some text uses the ${fonts.fallback} fallback because ${t.typography.label.family} was unavailable when the kit was built; rebuild the kit once it loads`);
+  // Yellow is rationed: the brand spends it once per surface. The verifier can count Yellow tones; only a person can say it is one step.
+  if (marks.some(x => t.tones[x.tone]?.brandColor === 'yellow')) review('yellow-budget', 'Yellow marks one focal step: its badge and its outline. Confirm no other step in this frame uses Yellow.');
 
   // ---- targets, numbering
   const targets = marks.map(x => x.n.target?.bbox).filter(bboxOk);
@@ -643,7 +654,7 @@ export function verifyAnnotation(input) {
       x.background = klass;
       const tn = t.tones[x.tone];
       if (tn && klass !== 'mixed' && !tn.backgrounds.includes(klass)) tone.push(`"${x.n.name}" uses the ${x.tone} tone on a ${klass} part of the screenshot (mean luminance ${round2(mean)}); ${x.tone} is for ${tn.backgrounds.join(' and ')} regions`);
-      if (tn && klass === 'mixed' && tn.backgrounds.length < 2) tone.push(`"${x.n.name}" straddles light and dark regions; ${x.tone} only works on ${tn.backgrounds.join(' and ')}. Use Purple`);
+      if (tn && klass === 'mixed' && tn.backgrounds.length < 2) tone.push(`"${x.n.name}" straddles light and dark regions; ${x.tone} only works on ${tn.backgrounds.join(' and ')}. Use ${t.backgroundVariants.light.preferredTone}`);
     }
     results('contrast', p, 'text meets WCAG AA; every mark reaches 3:1 against the screenshot through its fill or halo');
     results('grayscale', g, 'every mark stays distinguishable after a grayscale conversion');
@@ -763,14 +774,14 @@ export const CHECK_DOCS = {
   provenance: "The clean capture's checksum matches the inventory's clean asset, and the export is not the clean capture.",
   'kit-components': 'Every layer is an instance of an approved kit component built by the plugin from the current tokens, with a real variant, visible, and with no gradient or image paint. A hand-drawn shape fails.',
   'token-colors': 'Every fill, stroke, and text color is a token color.',
-  typography: 'Text is Poppins Bold or Inter Regular; Aleo and other fonts fail. The Inter Bold fallback passes and is flagged for review.',
+  typography: 'Text is the contract\'s label font (Inter Semi Bold) or body font (Inter Regular); Poppins, Aleo, and every other family fail. A contract that lists a label fallback also passes it, flagged for review.',
   targets: 'Every marker, outline, and arrow has a target (bounding box or selector); markers carry numerals 1 to N with no gaps, named "Step N: the element"; markers sit beside their target, outlines surround it, arrows reach it.',
   bounds: 'Every mark and its halo is inside the image; text is not truncated, clipped by its component, or (by estimate) overflowing its box; a Callout label is at most four words.',
   collisions: 'Markers and labels do not overlap each other or arrows. Outlines and highlights, grown by their halo, keep 3 px of clear space between their outer edges; a mark nested inside another clears its inner stroke edge by 3 px. A marker sits wholly inside a box or clear of its stroke, and does not straddle a background edge in the clean capture (opposite sides of a ring 4 to 14 export px outside the badge differ by more than 40 in median luma). Nothing covers a step target or keep-clear region; outlines are unfilled.',
   redaction: 'No Redact box (Solid or Blur) is in the frame. Each declared sensitive region is either declared as fake data, or pixelated, with padding, in both the export and the clean capture: uniform blocks of at least 7 CSS px (14 px at 2x). A flat color fails as a solid box; text, photos, and blur fail as unredacted.',
   contrast: 'Text meets WCAG AA (3:1 for large text); each mark reaches 3:1 against the screenshot beside it through its fill or its halo, measured from the clean capture.',
   grayscale: 'Each mark still reaches 3:1 after a grayscale conversion.',
-  'background-variant': 'A tone sits only on screenshot regions it is approved for (Gold on dark; Purple on light, dark, or mixed).',
+  'background-variant': 'A tone sits only on screenshot regions it is approved for (Ink, Yellow, Paper, Do, and Dont each list the regions they work on; any tone that lists only one fails on mixed regions).',
   'display-size': 'Text and strokes stay above the minimum size at the docs display width.',
   'color-independence': 'Do and Dont tones are paired with a check or cross marker; steps are carried by numerals, not color.',
   export: 'The export is the frame size times the export scale.',
@@ -783,7 +794,8 @@ export const HUMAN_REVIEW_DOCS = {
   'redaction-fake-data': 'A region is declared as fake data: confirm the values shown are invented (for example "Anita Agency" or jordan.lee@example.com), not a real person\'s.',
   'target-geometry': 'A target has a selector but no bounding box, so its position was not checked.',
   'text-fit': "Text is close to its box width. The overflow check is an estimate, because Figma doesn't expose measured overflow.",
-  'font-fallback': 'Labels use the Inter Bold fallback because Poppins was unavailable when the kit was built.',
+  'font-fallback': 'Labels use the contract\'s label fallback font because the label font was unavailable when the kit was built. Only a contract that lists a fallback raises this.',
+  'yellow-budget': 'A Yellow mark is in the frame. Yellow marks one focal step (its badge and its outline); confirm no other step uses it.',
   'alt-text': 'The alt text is ambiguous (generic step labels, a one-word subject, or annotation words).',
   'alt-task': 'The alt text says what the screen is and what the reader does there. Always required.',
   'render-fidelity': 'The export looks right. The repository measures geometry, tokens, and the pixels it can; it does not render the Figma file. Always required.',

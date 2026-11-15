@@ -2,99 +2,94 @@
   "schemaVersion": 1,
   "name": "Pantheon screenshot annotation tokens",
   "sources": [
-    "Pantheon brand colors and typography, as given in the annotation brief of 2026-10-21 (primary and secondary palettes, Poppins, Inter, Aleo, squared strokes, no gradient backgrounds, no equal-weight Yellow and Black).",
-    "Grays: Grey-1 #333333, Grey-2 #777B86 and #DFDFEC come from the Pantheon Presentation Template color slide. The full documented gray ramp was not available, so only these three are listed and none is used by an annotation role."
+    "2026 Pantheon Brand Guidelines, version 4.0 (Google Slides, pages 31-37 color, 41-43 typography, 70-77 diagrams). The 2023 guidelines and the 2025 presentation template, with Poppins, Aleo, and Purple, are deprecated.",
+    "Pantheon Message House for the AI Era and Pantheon Voice and Tone (October 2026) govern label wording; the Pantheon docs style guide governs docs. Neither sets a color or a font.",
+    "Color rules applied here: Ink and Paper carry the work; Yellow is rationed (one job at a time per surface) and never takes white type; Brick and Sky are reserved, one accent per artifact and never beside Yellow, so no annotation role uses them; hot pink is for live events only; the only permitted gradients are the four light motifs, so annotations use none.",
+    "Typography rules applied here: Inter for body, UI, and labels (Inter Tight is the display face and IBM Plex Serif Italic is the quote face; neither is used in annotations); sentence case everywhere except the uppercase label style.",
+    "Not in the guidelines: annotation colors for Do, Dont, and neutral notes. This contract carries Do and Dont by shape plus Ink and Paper, and drops the old Info blue, until the brand owners approve a color. See docs/reference/annotation-kit.md."
   ],
   "brand": {
-    "yellow": {
-      "hex": "#FFDC28",
+    "ink": {
+      "hex": "#000000",
       "group": "primary"
     },
-    "white": {
+    "paper": {
       "hex": "#FFFFFF",
       "group": "primary"
     },
-    "purple": {
-      "hex": "#3017A1",
+    "yellow": {
+      "hex": "#FFCA28",
       "group": "primary"
     },
-    "black": {
-      "hex": "#23232D",
+    "whiteSmoke": {
+      "hex": "#F3F3F3",
       "group": "primary"
     },
-    "pink": {
-      "hex": "#DE0093",
+    "travertine": {
+      "hex": "#EBE6DC",
       "group": "secondary"
     },
-    "midPurple": {
-      "hex": "#5F41E5",
+    "marble": {
+      "hex": "#8E9094",
       "group": "secondary"
     },
-    "lightPurple": {
-      "hex": "#D0C6FF",
+    "shadow": {
+      "hex": "#1A1A1A",
       "group": "secondary"
     },
-    "green": {
-      "hex": "#218C5F",
+    "brick": {
+      "hex": "#C95A3D",
       "group": "secondary"
     },
-    "blue": {
-      "hex": "#0F62FE",
+    "sky": {
+      "hex": "#B8C9D6",
       "group": "secondary"
-    },
-    "grey1": {
-      "hex": "#333333",
-      "group": "gray"
-    },
-    "grey2": {
-      "hex": "#777B86",
-      "group": "gray"
-    },
-    "greyLight": {
-      "hex": "#DFDFEC",
-      "group": "gray"
     }
   },
   "roles": {
     "mark": {
-      "color": "purple",
-      "note": "Default mark and the main emphasis color. Purple leads when Yellow and Black would compete."
+      "color": "ink",
+      "note": "Default mark and the main emphasis color. Ink and Paper carry the work; Yellow is spent once."
     },
     "halo": {
-      "color": "white",
-      "note": "Outline under every mark so it survives dark screenshot regions."
+      "color": "paper",
+      "note": "Outline under Ink marks so they survive dark screenshot regions."
+    },
+    "haloInk": {
+      "color": "ink",
+      "note": "Outline under Yellow and Paper marks. Yellow and Paper do not separate from a light screenshot on their own; an Ink halo does, and Yellow still reads against it on dark regions."
     },
     "onMark": {
-      "color": "white",
-      "note": "Text on Purple, Ink, Info, Do, and Dont surfaces."
+      "color": "paper",
+      "note": "Text on Ink surfaces."
     },
     "markYellow": {
       "color": "yellow",
-      "note": "Marks on dark screenshot regions only. The white halo does not separate Yellow from a light background."
+      "note": "The one focal step of a frame: its badge and its outline. Yellow is how the brand points; never more than one step per frame."
     },
     "onYellow": {
-      "color": "purple",
-      "note": "Text on Yellow marks. Purple, not Black, so Yellow never sits against Black at equal weight."
+      "color": "ink",
+      "note": "Text on Yellow marks. Ink only; the brand never sets white type on Yellow."
     },
     "ink": {
-      "color": "black",
+      "color": "ink",
       "note": "Low-emphasis notes, key caps, and the dim overlay."
     },
-    "info": {
-      "color": "blue",
-      "note": "Neutral notes."
+    "paper": {
+      "color": "paper",
+      "note": "Neutral notes and the Dont mark: a Paper fill with an Ink halo."
     },
     "do": {
-      "color": "green",
-      "note": "Correct example. Always paired with a check marker; Green and Pink are near-identical in grayscale."
+      "color": "ink",
+      "note": "Correct example. An Ink mark, always paired with a check marker."
     },
     "dont": {
-      "color": "pink",
-      "note": "Mistaken example. Always paired with a cross marker."
+      "color": "paper",
+      "note": "Mistaken example. A Paper mark with an Ink halo, always paired with a cross marker."
     }
   },
   "tones": {
-    "Purple": {
+    "Ink": {
       "fill": "mark",
       "text": "onMark",
       "halo": "halo",
@@ -103,28 +98,20 @@
         "dark"
       ]
     },
-    "Gold": {
+    "Yellow": {
       "fill": "markYellow",
       "text": "onYellow",
-      "halo": "halo",
+      "halo": "haloInk",
       "backgrounds": [
+        "light",
         "dark"
       ],
       "brandColor": "yellow"
     },
-    "Ink": {
-      "fill": "ink",
-      "text": "onMark",
-      "halo": "halo",
-      "backgrounds": [
-        "light",
-        "dark"
-      ]
-    },
-    "Info": {
-      "fill": "info",
-      "text": "onMark",
-      "halo": "halo",
+    "Paper": {
+      "fill": "paper",
+      "text": "ink",
+      "halo": "haloInk",
       "backgrounds": [
         "light",
         "dark"
@@ -142,8 +129,8 @@
     },
     "Dont": {
       "fill": "dont",
-      "text": "onMark",
-      "halo": "halo",
+      "text": "ink",
+      "halo": "haloInk",
       "backgrounds": [
         "light",
         "dark"
@@ -157,13 +144,13 @@
       "note": "Mean WCAG relative luminance of the clean screenshot under a mark. At or above the threshold is light; below is dark."
     },
     "light": {
-      "preferredTone": "Purple",
-      "halo": "white"
+      "preferredTone": "Ink",
+      "halo": "paper"
     },
     "dark": {
-      "preferredTone": "Gold",
-      "halo": "white",
-      "note": "Purple with its white halo also works on dark regions. Gold reads against dark without the halo."
+      "preferredTone": "Ink",
+      "halo": "paper",
+      "note": "Ink with its Paper halo reads on dark regions. Yellow, with its Ink halo, reads on both and is reserved for the one focal step."
     }
   },
   "taxonomy": {
@@ -292,25 +279,18 @@
   },
   "typography": {
     "label": {
-      "family": "Poppins",
-      "style": "Bold",
-      "fallback": {
-        "family": "Inter",
-        "style": "Bold"
-      }
+      "family": "Inter",
+      "style": "Semi Bold"
     },
     "body": {
       "family": "Inter",
-      "style": "Regular",
-      "fallback": {
-        "family": "Inter",
-        "style": "Regular"
-      }
+      "style": "Regular"
     },
     "disallowed": [
+      "Poppins",
       "Aleo"
     ],
-    "fallbackBehavior": "If Poppins cannot load in the Figma file, the kit builder falls back to Inter Bold and warns. A rebuilt kit must be rebuilt again once Poppins is available."
+    "note": "Inter is a free Google font and loads in every Figma file, so there is no fallback. Figma names the style \"Semi Bold\"; the brand guidelines write Semibold."
   },
   "metrics": {
     "referenceFrameWidth": 1440,
@@ -373,39 +353,19 @@
         "name": "Annotation primitives",
         "vars": [
           {
+            "name": "brand/ink",
+            "type": "COLOR",
+            "brand": "ink"
+          },
+          {
+            "name": "brand/paper",
+            "type": "COLOR",
+            "brand": "paper"
+          },
+          {
             "name": "brand/yellow",
             "type": "COLOR",
             "brand": "yellow"
-          },
-          {
-            "name": "brand/white",
-            "type": "COLOR",
-            "brand": "white"
-          },
-          {
-            "name": "brand/purple",
-            "type": "COLOR",
-            "brand": "purple"
-          },
-          {
-            "name": "brand/black",
-            "type": "COLOR",
-            "brand": "black"
-          },
-          {
-            "name": "brand/pink",
-            "type": "COLOR",
-            "brand": "pink"
-          },
-          {
-            "name": "brand/green",
-            "type": "COLOR",
-            "brand": "green"
-          },
-          {
-            "name": "brand/blue",
-            "type": "COLOR",
-            "brand": "blue"
           }
         ]
       },
@@ -432,6 +392,15 @@
             ]
           },
           {
+            "name": "color/halo-ink",
+            "type": "COLOR",
+            "role": "haloInk",
+            "scopes": [
+              "SHAPE_FILL",
+              "STROKE_COLOR"
+            ]
+          },
+          {
             "name": "color/on-mark",
             "type": "COLOR",
             "role": "onMark",
@@ -440,7 +409,7 @@
             ]
           },
           {
-            "name": "color/mark-gold",
+            "name": "color/mark-yellow",
             "type": "COLOR",
             "role": "markYellow",
             "scopes": [
@@ -450,7 +419,7 @@
             ]
           },
           {
-            "name": "color/on-gold",
+            "name": "color/on-yellow",
             "type": "COLOR",
             "role": "onYellow",
             "scopes": [
@@ -464,14 +433,14 @@
             "scopes": [
               "FRAME_FILL",
               "SHAPE_FILL",
-              "TEXT_FILL",
-              "STROKE_COLOR"
+              "STROKE_COLOR",
+              "TEXT_FILL"
             ]
           },
           {
-            "name": "color/info",
+            "name": "color/paper",
             "type": "COLOR",
-            "role": "info",
+            "role": "paper",
             "scopes": [
               "FRAME_FILL",
               "SHAPE_FILL",

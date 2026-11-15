@@ -4,7 +4,7 @@
     1440,
     900
   ],
-  "tokens": "8b904786053b",
+  "tokens": "8bd4eea416ad",
   "nodes": [
     {
       "name": "screenshot",
@@ -24,7 +24,7 @@
       "component": "Highlight box",
       "variant": {
         "Style": "Solid",
-        "Tone": "Purple"
+        "Tone": "Ink"
       },
       "bbox": [
         190,
@@ -32,14 +32,14 @@
         320,
         80
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": []
     },
     {
       "name": "Step 1: the search box",
       "component": "Step badge",
       "variant": {
-        "Tone": "Purple",
+        "Tone": "Ink",
         "Size": "M"
       },
       "bbox": [
@@ -48,9 +48,9 @@
         48,
         48
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": [
-        "Poppins Bold 28: 1"
+        "Inter Semi Bold 28: 1"
       ]
     },
     {
@@ -59,7 +59,7 @@
       "variant": {
         "Shape": "Straight",
         "Head": "End",
-        "Tone": "Purple"
+        "Tone": "Ink"
       },
       "bbox": [
         510,
@@ -67,25 +67,25 @@
         180,
         12
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": []
     },
     {
       "name": "Label: Search box",
       "component": "Callout label",
       "variant": {
-        "Tone": "Purple",
+        "Tone": "Ink",
         "Pointer": "None"
       },
       "bbox": [
         700,
         204,
-        217,
+        200,
         52
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": [
-        "Poppins Bold 28: Search box"
+        "Inter Semi Bold 28: Search box"
       ]
     },
     {
@@ -93,7 +93,7 @@
       "component": "Highlight box",
       "variant": {
         "Style": "Dashed",
-        "Tone": "Purple"
+        "Tone": "Ink"
       },
       "bbox": [
         190,
@@ -101,14 +101,14 @@
         320,
         80
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": []
     },
     {
       "name": "Step 2: the filter list",
       "component": "Step badge",
       "variant": {
-        "Tone": "Purple",
+        "Tone": "Ink",
         "Size": "M"
       },
       "bbox": [
@@ -117,9 +117,9 @@
         48,
         48
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": [
-        "Poppins Bold 28: 2"
+        "Inter Semi Bold 28: 2"
       ]
     },
     {
@@ -127,7 +127,7 @@
       "component": "Highlight box",
       "variant": {
         "Style": "Solid",
-        "Tone": "Purple"
+        "Tone": "Ink"
       },
       "bbox": [
         890,
@@ -135,14 +135,14 @@
         320,
         80
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": []
     },
     {
       "name": "Step 3: the Publish button",
       "component": "Step badge",
       "variant": {
-        "Tone": "Purple",
+        "Tone": "Ink",
         "Size": "M"
       },
       "bbox": [
@@ -151,9 +151,9 @@
         48,
         48
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": [
-        "Poppins Bold 28: 3"
+        "Inter Semi Bold 28: 3"
       ]
     },
     {
@@ -168,9 +168,9 @@
         520,
         128
       ],
-      "markHex": "#23232D",
+      "markHex": "#000000",
       "text": [
-        "Poppins Bold 22: Before you publish",
+        "Inter Semi Bold 22: Before you publish",
         "Inter Regular 22: Changes save to the workstream, not to Live, until you publish."
       ]
     }
@@ -203,6 +203,6 @@
   ],
   "pixels": {
     "clean": "4104869885298f8a86929ffefed5901ce7101b0debced1e0c5e794c98d287041",
-    "export": "48e21d82ab37af07e96d838b0c2cb7bd8101ea18d4bc255036679e396e712482"
+    "export": "36f1c4f5b613df3ea68f51145f675d10a2f897b09c18d8af8d8135356f55de95"
   }
 }

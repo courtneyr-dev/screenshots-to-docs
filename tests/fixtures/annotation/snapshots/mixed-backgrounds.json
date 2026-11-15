@@ -4,7 +4,7 @@
     800,
     600
   ],
-  "tokens": "8b904786053b",
+  "tokens": "8bd4eea416ad",
   "nodes": [
     {
       "name": "screenshot",
@@ -24,7 +24,7 @@
       "component": "Highlight box",
       "variant": {
         "Style": "Solid",
-        "Tone": "Purple"
+        "Tone": "Ink"
       },
       "bbox": [
         330,
@@ -32,14 +32,14 @@
         140,
         70
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": []
     },
     {
       "name": "Step 1: the Switch control",
       "component": "Step badge",
       "variant": {
-        "Tone": "Purple",
+        "Tone": "Ink",
         "Size": "M"
       },
       "bbox": [
@@ -48,9 +48,9 @@
         48,
         48
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": [
-        "Poppins Bold 28: 1"
+        "Inter Semi Bold 28: 1"
       ]
     }
   ],
@@ -82,6 +82,6 @@
   ],
   "pixels": {
     "clean": "c70143126f707f8e1551f069168d48d76a3e56e223aa4544132ea94f6e876574",
-    "export": "dcc6e45ecc1283311722579143dbd3304cc85a382c701c4f0e5ff1a7ff7655d9"
+    "export": "bf8b734f82e1fdfb22d7f7dbe20145c91c6416dc3d79335f4c459aad9903ae3e"
   }
 }

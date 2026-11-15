@@ -4,7 +4,7 @@
     1440,
     900
   ],
-  "tokens": "8b904786053b",
+  "tokens": "8bd4eea416ad",
   "nodes": [
     {
       "name": "screenshot",
@@ -24,7 +24,7 @@
       "component": "Highlight box",
       "variant": {
         "Style": "Solid",
-        "Tone": "Purple"
+        "Tone": "Ink"
       },
       "bbox": [
         40,
@@ -32,14 +32,14 @@
         160,
         56
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": []
     },
     {
       "name": "Step 1: the card 1 action",
       "component": "Step badge",
       "variant": {
-        "Tone": "Purple",
+        "Tone": "Ink",
         "Size": "S"
       },
       "bbox": [
@@ -48,9 +48,9 @@
         32,
         32
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": [
-        "Poppins Bold 19: 1"
+        "Inter Semi Bold 19: 1"
       ]
     },
     {
@@ -58,7 +58,7 @@
       "component": "Highlight box",
       "variant": {
         "Style": "Solid",
-        "Tone": "Purple"
+        "Tone": "Ink"
       },
       "bbox": [
         510,
@@ -66,14 +66,14 @@
         160,
         56
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": []
     },
     {
       "name": "Step 2: the card 2 action",
       "component": "Step badge",
       "variant": {
-        "Tone": "Purple",
+        "Tone": "Ink",
         "Size": "S"
       },
       "bbox": [
@@ -82,9 +82,9 @@
         32,
         32
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": [
-        "Poppins Bold 19: 2"
+        "Inter Semi Bold 19: 2"
       ]
     },
     {
@@ -92,7 +92,7 @@
       "component": "Highlight box",
       "variant": {
         "Style": "Solid",
-        "Tone": "Purple"
+        "Tone": "Ink"
       },
       "bbox": [
         980,
@@ -100,14 +100,14 @@
         160,
         56
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": []
     },
     {
       "name": "Step 3: the card 3 action",
       "component": "Step badge",
       "variant": {
-        "Tone": "Purple",
+        "Tone": "Ink",
         "Size": "S"
       },
       "bbox": [
@@ -116,9 +116,9 @@
         32,
         32
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": [
-        "Poppins Bold 19: 3"
+        "Inter Semi Bold 19: 3"
       ]
     },
     {
@@ -126,7 +126,7 @@
       "component": "Highlight box",
       "variant": {
         "Style": "Dashed",
-        "Tone": "Purple"
+        "Tone": "Ink"
       },
       "bbox": [
         40,
@@ -134,14 +134,14 @@
         160,
         56
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": []
     },
     {
       "name": "Step 4: the card 4 action",
       "component": "Step badge",
       "variant": {
-        "Tone": "Purple",
+        "Tone": "Ink",
         "Size": "S"
       },
       "bbox": [
@@ -150,9 +150,9 @@
         32,
         32
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": [
-        "Poppins Bold 19: 4"
+        "Inter Semi Bold 19: 4"
       ]
     },
     {
@@ -160,7 +160,7 @@
       "component": "Highlight box",
       "variant": {
         "Style": "Dashed",
-        "Tone": "Purple"
+        "Tone": "Ink"
       },
       "bbox": [
         510,
@@ -168,14 +168,14 @@
         160,
         56
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": []
     },
     {
       "name": "Step 5: the card 5 action",
       "component": "Step badge",
       "variant": {
-        "Tone": "Purple",
+        "Tone": "Ink",
         "Size": "S"
       },
       "bbox": [
@@ -184,9 +184,9 @@
         32,
         32
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": [
-        "Poppins Bold 19: 5"
+        "Inter Semi Bold 19: 5"
       ]
     },
     {
@@ -194,7 +194,7 @@
       "component": "Highlight box",
       "variant": {
         "Style": "Dashed",
-        "Tone": "Purple"
+        "Tone": "Ink"
       },
       "bbox": [
         980,
@@ -202,14 +202,14 @@
         160,
         56
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": []
     },
     {
       "name": "Step 6: the card 6 action",
       "component": "Step badge",
       "variant": {
-        "Tone": "Purple",
+        "Tone": "Ink",
         "Size": "S"
       },
       "bbox": [
@@ -218,9 +218,9 @@
         32,
         32
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": [
-        "Poppins Bold 19: 6"
+        "Inter Semi Bold 19: 6"
       ]
     }
   ],
@@ -252,6 +252,6 @@
   ],
   "pixels": {
     "clean": "3a52c6f1bb33e9c47c023f7e459f1c6e13cb5a99378cd1d97e88549093fe9aa5",
-    "export": "992caf783ed595da84aa12e5a21df80412eeacea25b4a3bf75d07bf48ee9c613"
+    "export": "5f97ba516dcc9a9d04e12b1382c49816891b8455375778c9ed1bb689d19f8361"
   }
 }

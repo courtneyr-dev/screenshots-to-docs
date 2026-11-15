@@ -84,14 +84,14 @@ const word = s => ({ characters: s, autoResize: 'WIDTH_AND_HEIGHT', truncation: 
 
 /** Numbered marker. `target` is the bbox of the control it numbers. */
 export function badge(n, x, y, o = {}) {
-  const tone = o.tone || 'Purple', size = o.size || 'M';
+  const tone = o.tone || 'Ink', size = o.size || 'M';
   const d = T.metrics.badgePx[size], fs = { S: 19, M: 28, L: 36 }[size], c = toneColors(T, tone);
   return {
     role: 'marker',
     node: {
       id: nid(), name: `Step ${n}: ${o.label || 'the control'}`, type: 'INSTANCE', bbox: [x, y, d, d], visible: true, opacity: 1,
       component: comp('Step badge', { Tone: tone, Size: size }), fills: [solid(c.fill)], strokes: [solid(c.halo)], markHex: c.fill,
-      texts: [{ ...word(String(n)), family: 'Poppins', style: 'Bold', size: fs, bbox: [x + d / 2 - fs * 0.33, y + d / 2 - fs / 2, fs * 0.66, fs], fillHex: c.text, surfaceHex: c.fill }],
+      texts: [{ ...word(String(n)), family: 'Inter', style: 'Semi Bold', size: fs, bbox: [x + d / 2 - fs * 0.33, y + d / 2 - fs / 2, fs * 0.66, fs], fillHex: c.text, surfaceHex: c.fill }],
       ...(o.target ? { target: { bbox: o.target } } : {}),
     },
     paint(cv, k) { cv.circle((x + d / 2) * k, (y + d / 2) * k, (d / 2 + T.metrics.haloOutlinePx) * k, c.halo); cv.circle((x + d / 2) * k, (y + d / 2) * k, (d / 2) * k, c.fill); },
@@ -100,14 +100,14 @@ export function badge(n, x, y, o = {}) {
 
 /** Callout label sized to its text the way the kit's auto-layout hugs it. */
 export function label(text, x, y, o = {}) {
-  const tone = o.tone || 'Purple', c = toneColors(T, tone), fs = 28;
-  const w = Math.ceil(estimateTextWidth(text, fs, 'Poppins', 'Bold')) + 2 * T.metrics.labelPaddingPx.x, h = 52;
+  const tone = o.tone || 'Ink', c = toneColors(T, tone), fs = 28;
+  const w = Math.ceil(estimateTextWidth(text, fs, 'Inter', 'Semi Bold')) + 2 * T.metrics.labelPaddingPx.x, h = 52;
   return {
     role: 'label',
     node: {
       id: nid(), name: o.name || `Label: ${text}`, type: 'INSTANCE', bbox: [x, y, w, h], visible: true, opacity: 1,
       component: comp('Callout label', { Tone: tone, Pointer: 'None' }), fills: [solid(c.fill)], strokes: [solid(c.halo)], markHex: c.fill,
-      texts: [{ ...word(text), family: 'Poppins', style: 'Bold', size: fs, bbox: [x + 16, y + 8, w - 32, 36], fillHex: c.text, surfaceHex: c.fill }],
+      texts: [{ ...word(text), family: 'Inter', style: 'Semi Bold', size: fs, bbox: [x + 16, y + 8, w - 32, 36], fillHex: c.text, surfaceHex: c.fill }],
     },
     paint(cv, k) { const ho = T.metrics.haloOutlinePx; cv.rect((x - ho) * k, (y - ho) * k, (w + 2 * ho) * k, (h + 2 * ho) * k, c.halo); cv.rect(x * k, y * k, w * k, h * k, c.fill); cv.rect((x + 16) * k, (y + 18) * k, (w - 32) * k, 14 * k, c.text); },
   };
@@ -123,7 +123,7 @@ export function note(title, body, x, y, w, o = {}) {
       id: nid(), name: `Note: ${title}`, type: 'INSTANCE', bbox: [x, y, w, h], visible: true, opacity: 1,
       component: comp('Note box', { Tone: tone }), fills: [solid(c.fill)], strokes: [solid(c.halo)], markHex: c.fill,
       texts: [
-        { characters: title, autoResize: 'WIDTH_AND_HEIGHT', truncation: 'DISABLED', family: 'Poppins', style: 'Bold', size: 22, bbox: [x + 16, y + 16, w - 32, 30], fillHex: c.text, surfaceHex: c.fill },
+        { characters: title, autoResize: 'WIDTH_AND_HEIGHT', truncation: 'DISABLED', family: 'Inter', style: 'Semi Bold', size: 22, bbox: [x + 16, y + 16, w - 32, 30], fillHex: c.text, surfaceHex: c.fill },
         { characters: body, autoResize: 'HEIGHT', truncation: 'DISABLED', family: 'Inter', style: 'Regular', size: 22, bbox: [x + 16, y + 52, w - 32, lines * 30], fillHex: c.text, surfaceHex: c.fill },
       ],
     },
@@ -133,7 +133,7 @@ export function note(title, body, x, y, w, o = {}) {
 
 /** Highlight box around `target` (padded). Unfilled. */
 export function outline(target, o = {}) {
-  const tone = o.tone || 'Purple', c = toneColors(T, tone), pad = o.pad ?? 10, box = grow(target, pad);
+  const tone = o.tone || 'Ink', c = toneColors(T, tone), pad = o.pad ?? 10, box = grow(target, pad);
   return {
     role: 'outline',
     node: {
@@ -146,7 +146,7 @@ export function outline(target, o = {}) {
 }
 
 export function arrow(box, target, o = {}) {
-  const tone = o.tone || 'Purple', c = toneColors(T, tone);
+  const tone = o.tone || 'Ink', c = toneColors(T, tone);
   return {
     role: 'arrow',
     node: { id: nid(), name: o.name || 'Arrow', type: 'INSTANCE', bbox: box, visible: true, opacity: 1, component: comp('Arrow', { Shape: 'Straight', Head: 'End', Tone: tone }), fills: [], strokes: [solid(c.fill), solid(c.halo)], markHex: c.fill, strokeMax: T.metrics.strokePx, target: { bbox: target } },
@@ -156,10 +156,10 @@ export function arrow(box, target, o = {}) {
 
 /** A Redact layer from the retired kit component, for the tests that reject it. */
 export function redact(box, style = 'Solid', o = {}) {
-  const fill = T.brand.black.hex;
+  const fill = T.brand.ink.hex;
   return {
     role: 'retired',
-    node: { id: nid(), name: o.name || `Redact ${style}`, type: 'INSTANCE', bbox: box, visible: true, opacity: 1, component: comp('Redact', { Style: style }), fills: [style === 'Solid' ? solid(fill) : { type: 'SOLID', hex: T.brand.white.hex, opacity: 0.25 }], strokes: [solid(fill)], markHex: fill },
+    node: { id: nid(), name: o.name || `Redact ${style}`, type: 'INSTANCE', bbox: box, visible: true, opacity: 1, component: comp('Redact', { Style: style }), fills: [style === 'Solid' ? solid(fill) : { type: 'SOLID', hex: T.brand.paper.hex, opacity: 0.25 }], strokes: [solid(fill)], markHex: fill },
     paint(cv, k) { if (style === 'Solid') cv.rect(box[0] * k, box[1] * k, box[2] * k, box[3] * k, fill); else cv.rect(box[0] * k, box[1] * k, box[2] * k, box[3] * k, '#C8C8D0'); },
   };
 }
@@ -171,7 +171,7 @@ export function dim(box) {
 
 export function doDont(kind, x, y) {
   const tone = kind, c = toneColors(T, tone);
-  return { role: 'label', node: { id: nid(), name: `${kind} marker`, type: 'INSTANCE', bbox: [x, y, 96, 52], visible: true, opacity: 1, component: comp('Do / Dont marker', { Kind: kind }), fills: [solid(c.fill)], strokes: [solid(c.halo)], markHex: c.fill, texts: [{ ...word(kind === 'Do' ? 'Do' : "Don't"), family: 'Poppins', style: 'Bold', size: 22, bbox: [x + 16, y + 10, 64, 30], fillHex: c.text, surfaceHex: c.fill }] }, paint(cv, k) { cv.rect(x * k, y * k, 96 * k, 52 * k, c.fill); } };
+  return { role: 'label', node: { id: nid(), name: `${kind} marker`, type: 'INSTANCE', bbox: [x, y, 96, 52], visible: true, opacity: 1, component: comp('Do / Dont marker', { Kind: kind }), fills: [solid(c.fill)], strokes: [solid(c.halo)], markHex: c.fill, texts: [{ ...word(kind === 'Do' ? 'Do' : "Don't"), family: 'Inter', style: 'Semi Bold', size: 22, bbox: [x + 16, y + 10, 64, 30], fillHex: c.text, surfaceHex: c.fill }] }, paint(cv, k) { cv.rect(x * k, y * k, 96 * k, 52 * k, c.fill); } };
 }
 
 // ---------------------------------------------------------------- fixtures
@@ -251,10 +251,10 @@ export function fixtures() {
   ], { alt: { text: alt3, subject: 'The P1 editor' } });
 
   out['dark-ui'] = fx('dark-ui', 1440, 900, DARK, desk(DARK, PANEL_DARK, PANEL_DARK), [
-    outline(blocks, { tone: 'Gold' }), badge(1, 20, 36, { tone: 'Gold', label: 'the Blocks panel', target: blocks }),
+    outline(blocks, { tone: 'Yellow' }), badge(1, 20, 36, { tone: 'Yellow', label: 'the Blocks panel', target: blocks }),
     outline(canvas), badge(2, 350, 52, { label: 'the page canvas', target: canvas }),
-    outline(review, { tone: 'Gold' }), badge(3, 1336, 98, { tone: 'Gold', label: 'the Review button', target: review }),
-    label('Blocks panel', 20, 460, { tone: 'Gold' }), label('Review button', 1150, 200),
+    outline(review, { tone: 'Yellow' }), badge(3, 1336, 98, { tone: 'Yellow', label: 'the Review button', target: review }),
+    label('Blocks panel', 20, 460, { tone: 'Yellow' }), label('Review button', 1150, 200),
   ], { alt: { text: alt3, subject: 'The P1 editor' } });
 
   const dense = []; const denseMarks = [];
@@ -267,7 +267,7 @@ export function fixtures() {
 
   const hamburger = [16, 12, 32, 32], row = [16, 120, 358, 72], cta = [16, 760, 358, 56];
   out['narrow-mobile'] = fx('narrow-mobile', 390, 844, WHITE, [[0, 0, 390, 56, INKC], [16, 120, 358, 72, LIGHT], [16, 760, 358, 56, '#E6E6EE']], [
-    badge(1, 60, 12, { size: 'S', tone: 'Gold', label: 'the menu', target: hamburger }),
+    badge(1, 60, 12, { size: 'S', tone: 'Yellow', label: 'the menu', target: hamburger }),
     outline(row), badge(2, 16, 214, { size: 'S', label: 'the first page', target: row }),
     outline(cta), badge(3, 326, 690, { label: 'the Add page button', target: cta }), label('Add page', 16, 690),
   ], { alt: { text: 'The mobile page list with three numbered areas: 1 the menu, 2 the first page, 3 the Add page button.', subject: 'The mobile page list' } });

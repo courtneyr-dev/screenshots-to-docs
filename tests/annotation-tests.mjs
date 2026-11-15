@@ -17,11 +17,11 @@ import { spawnSync } from 'node:child_process';
 import { extractCode } from '../scripts/figma-annotation.mjs';
 import { validateInventory } from '../scripts/lib/inventory.mjs';
 import {
-  loadTokens, tokensIdentity, canonicalJson, contrast, grayOf, luminance, coverage, toneColors, metric, figmaVariables, expectedVariableValues,
-  roleOfComponent, verifyAnnotation, docBlock, withDocBlock, CHECK_DOCS, HUMAN_REVIEW_DOCS, checkAltAgainstSteps, manifestShapeErrors, displayScale, isLargeText, estimateTextWidth,
+  loadTokens, tokensIdentity, canonicalJson, contrast, coverage, toneColors, metric, figmaVariables, expectedVariableValues,
+  roleOfComponent, kitDefs, verifyAnnotation, docBlock, withDocBlock, CHECK_DOCS, HUMAN_REVIEW_DOCS, checkAltAgainstSteps, manifestShapeErrors, displayScale, isLargeText, estimateTextWidth,
   pixelation, decodePng, grow,
 } from '../scripts/lib/annotation.mjs';
-import { T, KIT, fixtures, inputFor, snapshotOf, PASSING, doDont, dim, badge, outline, redact, Canvas, TOKENS_HASH, sha, cleanCanvas, exportCanvas, manifestFor } from './lib/annotation-fixtures.mjs';
+import { T, fixtures, inputFor, snapshotOf, PASSING, doDont, dim, badge, outline, redact, Canvas, TOKENS_HASH, sha, cleanCanvas, exportCanvas, manifestFor } from './lib/annotation-fixtures.mjs';
 
 const ROOT = resolve(dirname(new URL(import.meta.url).pathname), '..');
 const TMP = realpathSync(mkdtempSync(join(tmpdir(), 'annotation-test-')));
@@ -42,11 +42,13 @@ const node = (m, re) => m.nodes.find(n => re.test(n.name));
 
 // =================================================================== token contract
 
-await test('the token file has the brand palette from the brief, with the right group for each color', () => {
-  const want = { yellow: '#FFDC28', white: '#FFFFFF', purple: '#3017A1', black: '#23232D', pink: '#DE0093', midPurple: '#5F41E5', lightPurple: '#D0C6FF', green: '#218C5F', blue: '#0F62FE' };
+await test('the token file has the 2026 brand palette (guidelines v4.0 pp. 33-34), with the right group for each color', () => {
+  const want = { ink: '#000000', paper: '#FFFFFF', yellow: '#FFCA28', whiteSmoke: '#F3F3F3', travertine: '#EBE6DC', marble: '#8E9094', shadow: '#1A1A1A', brick: '#C95A3D', sky: '#B8C9D6' };
+  assert.deepEqual(Object.keys(T.brand).sort(), Object.keys(want).sort(), 'no color outside the named palette');
   for (const [k, hex] of Object.entries(want)) assert.equal(T.brand[k].hex, hex, k);
-  for (const k of ['yellow', 'white', 'purple', 'black']) assert.equal(T.brand[k].group, 'primary');
-  for (const k of ['pink', 'midPurple', 'lightPurple', 'green', 'blue']) assert.equal(T.brand[k].group, 'secondary');
+  for (const k of ['ink', 'paper', 'yellow', 'whiteSmoke']) assert.equal(T.brand[k].group, 'primary');
+  for (const k of ['travertine', 'marble', 'shadow', 'brick', 'sky']) assert.equal(T.brand[k].group, 'secondary');
+  for (const old of ['purple', 'midPurple', 'lightPurple', 'pink', 'green', 'blue', 'white', 'black']) assert.equal(T.brand[old], undefined, `${old} is not a 2026 brand color`);
   assert.equal(T.schemaVersion, 1);
 });
 
@@ -64,13 +66,13 @@ await test('the identity is a stable hash that changes with any token value, and
   const a = tokensIdentity(T), b = tokensIdentity(clone(T));
   assert.equal(a.hash, b.hash);
   assert.match(a.hash, /^[0-9a-f]{64}$/);
-  const edited = clone(T); edited.brand.purple.hex = '#3017A2';
+  const edited = clone(T); edited.brand.yellow.hex = '#FFCA29';
   assert.notEqual(tokensIdentity(edited).hash, a.hash);
   const reordered = Object.fromEntries(Object.entries(clone(T)).reverse());
   assert.equal(canonicalJson(reordered), canonicalJson(T));
 });
 
-await test('every tone meets WCAG AA for its text, and Yellow is never paired with Black', () => {
+await test('every tone meets WCAG AA for its text, and Yellow never takes white type', () => {
   const sizes = new Map();
   const walk = (n, tone) => {
     const m = /Tone=(\w+)/.exec(n.n || ''); const t = m ? m[1] : tone;
@@ -84,26 +86,26 @@ await test('every tone meets WCAG AA for its text, and Yellow is never paired wi
     if (minText === undefined) continue;
     assert.ok(ratio >= T.contrast.textLarge, `${tone} ${ratio.toFixed(2)}:1`);
     if (ratio < T.contrast.textNormal) assert.ok(isLargeText(T, minText, true), `${tone} is ${ratio.toFixed(2)}:1, so its text must be large bold; the smallest is ${minText}px`);
-    assert.ok(!(c.fill === T.brand.yellow.hex && c.text === T.brand.black.hex), `${tone} sets Black on Yellow`);
-    assert.ok(!(c.fill === T.brand.black.hex && c.text === T.brand.yellow.hex), `${tone} sets Yellow on Black`);
+    assert.ok(!(c.fill === T.brand.yellow.hex && c.text === T.brand.paper.hex), `${tone} sets white type on Yellow`);
     assert.ok(contrast(c.fill, c.halo) >= T.contrast.markVersusHalo || T.tones[tone].backgrounds.length === 1, `${tone} mark against its halo`);
   }
-  assert.equal(T.roles.mark.color, 'purple', 'Purple leads');
-  assert.equal(T.roles.onYellow.color, 'purple', 'text on Yellow is Purple, not Black');
+  assert.equal(T.roles.mark.color, 'ink', 'Ink leads');
+  assert.equal(T.roles.onYellow.color, 'ink', 'text on Yellow is Ink, never white');
+  for (const [r, d] of Object.entries(T.roles)) assert.ok(!['brick', 'sky'].includes(d.color), `role ${r} uses a reserved color (one accent per artifact, never beside Yellow)`);
+  assert.equal(T.tones.Yellow.halo, 'haloInk', 'Yellow sits in an Ink halo: Yellow alone is 1.5:1 on white');
 });
 
-await test('Green and Pink collapse in grayscale, so Do and Dont must carry a shape', () => {
-  const g = (a, b) => Math.abs(luminance(grayOf(a)) - luminance(grayOf(b)));
-  assert.ok(g(T.brand.green.hex, T.brand.pink.hex) < 0.06, 'the colors are close in grayscale');
+await test('Do and Dont differ in fill (Ink vs Paper) and still carry a check or cross, so meaning never rides on color alone', () => {
+  assert.notEqual(toneColors(T, 'Do').fill, toneColors(T, 'Dont').fill);
   assert.equal(T.tones.Do.requiresShapeMarker, 'Do');
   assert.equal(T.tones.Dont.requiresShapeMarker, 'Dont');
 });
 
-await test('typography: Poppins Bold for labels, Inter for body, Aleo disallowed, with a fallback', () => {
-  assert.deepEqual([T.typography.label.family, T.typography.label.style], ['Poppins', 'Bold']);
+await test('typography: Inter Semi Bold for labels, Inter Regular for body, Poppins and Aleo disallowed, no fallback', () => {
+  assert.deepEqual([T.typography.label.family, T.typography.label.style], ['Inter', 'Semi Bold']);
   assert.deepEqual([T.typography.body.family, T.typography.body.style], ['Inter', 'Regular']);
-  assert.deepEqual(T.typography.disallowed, ['Aleo']);
-  assert.ok(T.typography.label.fallback.family && T.typography.fallbackBehavior);
+  assert.deepEqual(T.typography.disallowed, ['Poppins', 'Aleo']);
+  assert.equal(T.typography.label.fallback, undefined, 'Inter loads in every Figma file');
 });
 
 await test('stroke scales with the frame: it stays at 2 px or more at the docs width, and the minimum text size holds for the kit', () => {
@@ -141,7 +143,7 @@ await test('the kit has no gradients or images, uses only brand fonts, and squar
   };
   kitJson.components.forEach(walk);
   assert.deepEqual(bad, []);
-  assert.deepEqual([...fonts].sort(), ['Inter Regular', 'Poppins Bold']);
+  assert.deepEqual([...fonts].sort(), ['Inter Regular', 'Inter Semi Bold']);
 });
 
 await test('the kit text is large enough at the docs display width', () => {
@@ -160,17 +162,18 @@ await test('tone variants in the kit are tones the tokens define', () => {
   for (const c of kitJson.components) for (const [k, d] of Object.entries(c.defs || {})) if (k === 'Tone') for (const o of d.variantOptions) assert.ok(T.tones[o] || ['Light'].includes(o), `${c.n} Tone=${o}`);
 });
 
-await test('the built plugin embeds the token hash, the brand colors, and the font fallback; and is current', () => {
+await test('the built plugin embeds the token hash, the brand colors, and the label font; and is current', () => {
   const r = spawnSync(process.execPath, [join(ROOT, 'scripts/build-figma-plugin.mjs'), '--check'], { encoding: 'utf-8' });
   assert.equal(r.status, 0, r.stderr);
   const code = readFileSync(join(ROOT, 'figma-plugin/code.js'), 'utf-8');
   assert.ok(code.includes(TOKENS_HASH), 'code.js carries the token hash');
   assert.ok(code.includes('setSharedPluginData(\'s2d\', \'kit\''), 'components are stamped');
   assert.ok(!code.includes('7952A8') && !/0\.4745098/.test(code), 'the old design-system purple is gone');
+  assert.ok(!/"family":"Poppins"/.test(code) && code.includes('"label":{"family":"Inter","style":"Semi Bold"}'), 'labels are Inter Semi Bold');
   const vars = figmaVariables(T).find(c => c.name === 'Annotation').vars;
   assert.equal(vars.length, T.figmaVariables.collections[1].vars.length);
   const mark = vars.find(v => v.name === 'color/mark');
-  assert.equal(mark.values.Value.alias, 'brand/purple');
+  assert.equal(mark.values.Value.alias, 'brand/ink');
 });
 
 await test('the reference doc shows the current token schema, hash, and every variable', () => {
@@ -190,7 +193,7 @@ await test('the manifest and plugin carry the repository name, not a stale one',
 await test('the generated doc sections go stale when a token changes, and every check and review item is documented', () => {
   const doc = readFileSync(join(ROOT, 'docs/reference/annotation-kit.md'), 'utf-8');
   assert.equal(withDocBlock(doc, docBlock(T)), doc, 'the doc is current');
-  const edited = clone(T); edited.brand.purple.hex = '#3017A2';
+  const edited = clone(T); edited.brand.yellow.hex = '#FFCA29';
   assert.notEqual(withDocBlock(doc, docBlock(edited)), doc, 'a changed token changes the doc');
   assert.throws(() => withDocBlock('no markers here', 'x'), /markers/);
   const ids = new Set(), human = new Set();
@@ -218,12 +221,13 @@ await test('validate-skill fails when SKILL.md drops an approved component, the 
 
 await test('contrast, grayscale, coverage, and the text estimate behave', () => {
   assert.equal(contrast('#000000', '#FFFFFF').toFixed(1), '21.0');
-  assert.ok(Math.abs(contrast(T.brand.purple.hex, T.brand.yellow.hex) - 8.8) < 0.1);
+  assert.ok(Math.abs(contrast(T.brand.ink.hex, T.brand.yellow.hex) - 13.7) < 0.1);
+  assert.ok(Math.abs(contrast(T.brand.paper.hex, T.brand.yellow.hex) - 1.5) < 0.1, 'white on Yellow is 1.5:1, which is why the brand bans it');
   assert.equal(coverage([0, 0, 10, 10], [[0, 0, 10, 5], [0, 5, 10, 5]]), 1);
   assert.equal(coverage([0, 0, 10, 10], [[0, 0, 10, 5]]), 0.5);
   assert.equal(coverage([0, 0, 10, 10], [[20, 20, 5, 5]]), 0);
   assert.equal(coverage([0, 0, 10, 10], [[0, 0, 6, 10], [4, 0, 6, 10]]), 1, 'overlapping rects are not double counted');
-  assert.ok(estimateTextWidth('Blocks panel', 28, 'Poppins', 'Bold') > estimateTextWidth('Blocks panel', 28, 'Inter', 'Regular'));
+  assert.ok(estimateTextWidth('Blocks panel', 28, 'Inter', 'Semi Bold') > estimateTextWidth('Blocks panel', 28, 'Inter', 'Regular'));
 });
 
 // =================================================================== extraction against a mock Plugin API
@@ -258,8 +262,8 @@ function mockFigma(f, manifest) {
   clean.children.push(cleanRect); cleanRect.parent = clean;
   const values = expectedVariableValues(T);
   const vars = Object.entries(values).map(([name, v], i) => ({ id: `V:${i}`, name, valuesByMode: { m1: typeof v === 'string' ? hexRgb(v) : v } }));
-  // One variable is an alias, as in a file the plugin built: color/mark -> brand/purple.
-  const purple = { id: 'V:brand', name: 'brand/purple', valuesByMode: { m1: hexRgb(T.brand.purple.hex) } };
+  // One variable is an alias, as in a file the plugin built: color/mark -> brand/ink.
+  const purple = { id: 'V:brand', name: 'brand/ink', valuesByMode: { m1: hexRgb(T.brand.ink.hex) } };
   vars.find(v => v.name === 'color/mark').valuesByMode.m1 = { type: 'VARIABLE_ALIAS', id: 'V:brand' };
   const all = [...vars, purple];
   const rootData = { tokensHash: manifest.tokens.hash, tokensSchema: String(manifest.tokens.schemaVersion) };
@@ -283,13 +287,14 @@ await test('the extraction code reads a Figma frame into a manifest the verifier
   const extracted = await runExtract(f, input.manifest);
   assert.deepEqual(manifestShapeErrors(extracted), []);
   assert.equal(extracted.tokens.hash, TOKENS_HASH);
-  assert.equal(extracted.kitVariables['color/mark'], T.brand.purple.hex, 'an aliased variable resolves to its value');
+  assert.equal(extracted.kitVariables['color/mark'], T.brand.ink.hex, 'an aliased variable resolves to its value');
   assert.equal(extracted.cleanFrame.screenshot.imageHash, extracted.annotatedFrame.screenshot.imageHash);
   const badge1 = extracted.nodes.find(n => n.name.startsWith('Step 1'));
   assert.equal(badge1.component.set, 'Step badge');
   assert.equal(badge1.component.kitStamp, TOKENS_HASH);
-  assert.equal(badge1.texts[0].family, 'Poppins');
-  assert.equal(badge1.texts[0].surfaceHex, T.brand.purple.hex);
+  assert.equal(badge1.texts[0].family, 'Inter');
+  assert.equal(badge1.texts[0].style, 'Semi Bold');
+  assert.equal(badge1.texts[0].surfaceHex, T.brand.ink.hex);
   assert.deepEqual(badge1.bbox, input.manifest.nodes.find(n => n.name.startsWith('Step 1')).bbox);
   const hl = extracted.nodes.find(n => n.component?.set === 'Highlight box');
   assert.equal(hl.strokeMax, 6, 'the halo stroke is not counted as the mark stroke');
@@ -335,12 +340,12 @@ await test('the fixtures cover light, dark, dense, narrow, long-label, multi, re
   assert.ok(F['mixed-backgrounds'].regions.some(r => r[4] === '#23232D') && F['mixed-backgrounds'].bg === '#FFFFFF');
 });
 
-await test('the dark fixture uses Gold marks on dark regions and the light one never does', () => {
-  assert.ok(F['dark-ui'].marks.some(m => m.node.component.variant.Tone === 'Gold'));
-  assert.ok(!F['light-ui'].marks.some(m => m.node.component.variant.Tone === 'Gold'));
+await test('the dark fixture uses a Yellow focal mark and the light one never does', () => {
+  assert.ok(F['dark-ui'].marks.some(m => m.node.component.variant.Tone === 'Yellow'));
+  assert.ok(!F['light-ui'].marks.some(m => m.node.component.variant.Tone === 'Yellow'));
 });
 
-await test('Purple marks pass on light, dark, and mixed regions; the checks recorded which they were', () => {
+await test('Ink marks pass on light, dark, and mixed regions; the checks recorded which they were', () => {
   for (const n of ['light-ui', 'dark-ui', 'mixed-backgrounds']) assert.equal(verify(n).status, 'pass', n);
 });
 
@@ -363,7 +368,7 @@ const reject = (name, base, mutate, expectIds, opts = {}) => test(`rejects: ${na
   for (const id of expectIds) assert.ok(failedIds(r).includes(id), `${id} should fail; failed: ${failedIds(r).join(', ')}`);
 });
 
-await reject('a hand-drawn shape in place of a kit instance', 'light-ui', m => m.nodes.push({ id: '99:9', name: 'Rectangle 7', type: 'RECTANGLE', bbox: [400, 700, 80, 40], visible: true, opacity: 1, fills: [{ type: 'SOLID', hex: T.brand.purple.hex, opacity: 1 }] }), ['kit-components']);
+await reject('a hand-drawn shape in place of a kit instance', 'light-ui', m => m.nodes.push({ id: '99:9', name: 'Rectangle 7', type: 'RECTANGLE', bbox: [400, 700, 80, 40], visible: true, opacity: 1, fills: [{ type: 'SOLID', hex: T.brand.ink.hex, opacity: 1 }] }), ['kit-components']);
 await reject('an instance of a component the kit does not have', 'light-ui', m => { node(m, /^Label: Blocks/).component.set = 'Sticker'; }, ['kit-components']);
 await reject('an instance with no kit stamp (not from the plugin)', 'light-ui', m => { node(m, /^Step 1/).component.kitStamp = null; }, ['kit-components']);
 await reject('an instance from a kit built with other tokens', 'light-ui', m => { node(m, /^Step 1/).component.kitStamp = 'a'.repeat(64); }, ['kit-components']);
@@ -394,7 +399,7 @@ await reject('truncated text', 'light-ui', m => { node(m, /^Label: Blocks/).text
 await reject('a long callout (eight words)', 'long-label', () => {}, ['bounds']);
 await reject('two labels that overlap', 'light-ui', m => { const a = node(m, /^Label: Blocks/); const b = node(m, /^Label: Review/); b.bbox = [a.bbox[0] + 40, a.bbox[1] + 10, b.bbox[2], b.bbox[3]]; b.texts[0].bbox = [b.bbox[0] + 16, b.bbox[1] + 8, b.bbox[2] - 32, 36]; }, ['collisions']);
 await reject('a label that covers the target of a step', 'light-ui', m => { const a = node(m, /^Label: Blocks/); a.bbox = [40, 200, a.bbox[2], a.bbox[3]]; a.texts[0].bbox = [56, 208, a.bbox[2] - 32, 36]; }, ['collisions']);
-await reject('a filled outline that hides what it marks', 'light-ui', m => { node(m, /^Highlight/).fills = [{ type: 'SOLID', hex: T.brand.purple.hex, opacity: 0.4 }]; }, ['collisions']);
+await reject('a filled outline that hides what it marks', 'light-ui', m => { node(m, /^Highlight/).fills = [{ type: 'SOLID', hex: T.brand.ink.hex, opacity: 0.4 }]; }, ['collisions']);
 await reject('a dim overlay over a target', 'light-ui', m => { m.nodes.push(dim([300, 80, 400, 300]).node); }, ['collisions']);
 await reject('a sensitive region of an unknown kind', 'redacted-pii', m => { m.sensitive[0].kind = 'secret-sauce'; }, ['redaction']);
 
@@ -474,16 +479,19 @@ await rejectCollision('a marker that straddles a background edge in the screensh
 // restamps them with the current tokens so the failures below are the geometry and pixels, not the hash.
 // clean.png is the run's capture with the avatar pixelated at capture resolution (7 CSS px blocks).
 const REG = join(ROOT, 'tests/fixtures/annotation/regressions');
+// Recorded under the 2025 brand (Purple, Poppins). They test geometry and redaction, which the brand change doesn't touch, so they
+// verify against the contract and kit they were recorded with, kept beside them.
+const LEGACY_T = loadTokens(join(REG, 'annotation-tokens.legacy.json')), LEGACY_KIT = kitDefs(join(REG, 'kit.legacy.json'));
 const REG_DPR = { 'translations-sync-1': 2.2, 'create-page-2': 2 }; // from the run's capture-report.json
 function regression(slug, { mutate } = {}) {
   const dir = join(REG, slug);
   const manifest = JSON.parse(readFileSync(join(dir, 'manifest.json'), 'utf-8'));
-  manifest.tokens = tokensIdentity(T);
-  for (const n of manifest.nodes) if (n.component) n.component.kitStamp = TOKENS_HASH;
+  manifest.tokens = tokensIdentity(LEGACY_T);
+  for (const n of manifest.nodes) if (n.component) n.component.kitStamp = tokensIdentity(LEGACY_T).hash;
   const cleanBuf = readFileSync(join(dir, 'clean.png')), exportBuf = readFileSync(join(dir, 'export.png'));
   const clean = { sha256: sha(cleanBuf), dpr: REG_DPR[slug], png: decodePng(cleanBuf) }, exp = { sha256: sha(exportBuf), png: decodePng(exportBuf) };
   if (mutate) mutate(manifest, clean.png, exp.png);
-  return { tokens: T, kit: KIT, manifest, clean: { ...clean, width: clean.png.w, height: clean.png.h }, export: { ...exp, width: exp.png.w, height: exp.png.h } };
+  return { tokens: LEGACY_T, kit: LEGACY_KIT, manifest, clean: { ...clean, width: clean.png.w, height: clean.png.h }, export: { ...exp, width: exp.png.w, height: exp.png.h } };
 }
 
 await test('regression translations-sync-1: box 3 drawn inside box 2 fails collisions, and its Solid Redact fails redaction', () => {
@@ -507,7 +515,7 @@ await test('regression, fixed: translations-sync-1 without box 3 or the Redact l
     mutate(m, clean, exp) {
       m.nodes = m.nodes.filter(n => !/^(Highlight 3|Redact)/.test(n.name));
       // What Figma exports once the pixelated capture is in the frame: the clean region, resampled to 2x.
-      const [x, y, w, h] = grow(m.sensitive[0].bbox, T.styles.redaction.minPaddingPx).map(v => v * 2);
+      const [x, y, w, h] = grow(m.sensitive[0].bbox, LEGACY_T.styles.redaction.minPaddingPx).map(v => v * 2);
       for (let v = y; v < y + h; v++) for (let u = x; u < x + w; u++) {
         const s = (Math.floor(((v + 0.5) * clean.h) / exp.h) * clean.w + Math.floor(((u + 0.5) * clean.w) / exp.w)) * clean.bpp, d = (v * exp.w + u) * exp.bpp;
         for (let c = 0; c < 3; c++) exp.pixels[d + c] = clean.pixels[s + c];
@@ -516,10 +524,19 @@ await test('regression, fixed: translations-sync-1 without box 3 or the Redact l
   }));
   assert.equal(r.status, 'pass', JSON.stringify(r.checks.filter(c => c.status === 'fail')));
 });
-await reject('Gold on a light region', 'light-ui', m => { const n = node(m, /^Step 1/); n.component.variant.Tone = 'Gold'; n.fills = [{ type: 'SOLID', hex: T.brand.yellow.hex, opacity: 1 }]; n.markHex = T.brand.yellow.hex; n.texts[0].fillHex = T.brand.purple.hex; n.texts[0].surfaceHex = T.brand.yellow.hex; }, ['background-variant', 'contrast']);
-await reject('Gold across light and dark regions', 'mixed-backgrounds', m => { const n = node(m, /^Highlight/); n.component.variant.Tone = 'Gold'; n.markHex = T.brand.yellow.hex; n.strokes = [{ type: 'SOLID', hex: T.brand.yellow.hex, opacity: 1 }]; }, ['background-variant']);
-await reject('label text that fails AA', 'light-ui', m => { const n = node(m, /^Label: Blocks/); n.texts[0].fillHex = T.brand.purple.hex; }, ['contrast']);
-await reject('a mark that disappears on its background (and in grayscale)', 'light-ui', m => { for (const x of m.nodes) if (/^Step 1/.test(x.name)) { x.markHex = '#F0F0F8'; x.fills = [{ type: 'SOLID', hex: T.brand.white.hex, opacity: 1 }]; } }, ['contrast']);
+await reject('white type on a Yellow mark', 'light-ui', m => { const n = node(m, /^Step 1/); n.component.variant.Tone = 'Yellow'; n.fills = [{ type: 'SOLID', hex: T.brand.yellow.hex, opacity: 1 }]; n.markHex = T.brand.yellow.hex; n.texts[0].fillHex = T.brand.paper.hex; n.texts[0].surfaceHex = T.brand.yellow.hex; }, ['contrast']);
+await test('rejects: a tone used on a region its contract does not list (data-driven: Yellow limited to dark, then placed on light)', () => {
+  const only = clone(T); only.tones.Yellow.backgrounds = ['dark'];
+  const input = inputFor(F['light-ui'], { mutate: m => { const n = node(m, /^Step 1/); n.component.variant.Tone = 'Yellow'; n.fills = [{ type: 'SOLID', hex: T.brand.yellow.hex, opacity: 1 }]; n.markHex = T.brand.yellow.hex; n.texts[0].fillHex = T.brand.ink.hex; n.texts[0].surfaceHex = T.brand.yellow.hex; } });
+  const r = verifyAnnotation({ ...input, tokens: only });
+  assert.ok(failedIds(r).includes('background-variant'), `failed: ${failedIds(r).join(', ')}`);
+});
+await test('a Yellow mark raises the yellow-budget review item; an Ink-only frame does not', () => {
+  assert.ok(verify('dark-ui').humanReview.some(h => h.id === 'yellow-budget'));
+  assert.ok(!verify('light-ui').humanReview.some(h => h.id === 'yellow-budget'));
+});
+await reject('label text that fails AA', 'light-ui', m => { const n = node(m, /^Label: Blocks/); n.texts[0].fillHex = T.brand.ink.hex; }, ['contrast']);
+await reject('a mark that disappears on its background (and in grayscale)', 'light-ui', m => { for (const x of m.nodes) if (/^Step 1/.test(x.name)) { x.markHex = '#F0F0F8'; x.fills = [{ type: 'SOLID', hex: T.brand.paper.hex, opacity: 1 }]; } }, ['contrast']);
 await reject('text too small at the docs width', 'light-ui', m => { node(m, /^Label: Blocks/).texts[0].size = 14; }, ['display-size']);
 await reject('a stroke too thin for a very wide frame', 'light-ui', m => { m.annotatedFrame.width = 4000; m.cleanFrame.width = 4000; m.cleanFrame.screenshot.width = 4000; m.annotatedFrame.screenshot.width = 4000; }, ['display-size', 'frame-mapping', 'export']);
 await reject('a Do tone without a check or cross', 'light-ui', m => { const n = node(m, /^Step 2/); n.component.variant.Tone = 'Do'; }, ['color-independence']);
@@ -551,10 +568,12 @@ await test('a selector with no bounding box is accepted but flagged for a person
   assert.ok(r.humanReview.some(h => h.id === 'target-geometry'));
 });
 
-await test('the Inter Bold fallback font is flagged for review, not silently accepted', () => {
-  const r = verifyAnnotation(inputFor(F['light-ui'], { mutate: m => { for (const n of m.nodes) for (const t of n.texts || []) if (t.family === 'Poppins') { t.family = 'Inter'; } } }));
-  assert.equal(r.status, 'pass');
-  assert.ok(r.humanReview.some(h => h.id === 'font-fallback'));
+await test('Inter Bold, the old fallback, and Poppins now fail typography: the contract lists no fallback', () => {
+  for (const [family, style] of [['Inter', 'Bold'], ['Poppins', 'Bold']]) {
+    const r = verifyAnnotation(inputFor(F['light-ui'], { mutate: m => { node(m, /^Label: Blocks/).texts[0].family = family; node(m, /^Label: Blocks/).texts[0].style = style; } }));
+    assert.ok(failedIds(r).includes('typography'), `${family} ${style}`);
+    assert.ok(!r.humanReview.some(h => h.id === 'font-fallback'));
+  }
 });
 
 await test('a shot with no declared sensitive regions asks a person to confirm there is no personal data', () => {

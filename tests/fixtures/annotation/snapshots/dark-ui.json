@@ -4,7 +4,7 @@
     1440,
     900
   ],
-  "tokens": "8b904786053b",
+  "tokens": "8bd4eea416ad",
   "nodes": [
     {
       "name": "screenshot",
@@ -24,7 +24,7 @@
       "component": "Highlight box",
       "variant": {
         "Style": "Solid",
-        "Tone": "Gold"
+        "Tone": "Yellow"
       },
       "bbox": [
         10,
@@ -32,14 +32,14 @@
         280,
         340
       ],
-      "markHex": "#FFDC28",
+      "markHex": "#FFCA28",
       "text": []
     },
     {
       "name": "Step 1: the Blocks panel",
       "component": "Step badge",
       "variant": {
-        "Tone": "Gold",
+        "Tone": "Yellow",
         "Size": "M"
       },
       "bbox": [
@@ -48,9 +48,9 @@
         48,
         48
       ],
-      "markHex": "#FFDC28",
+      "markHex": "#FFCA28",
       "text": [
-        "Poppins Bold 28: 1"
+        "Inter Semi Bold 28: 1"
       ]
     },
     {
@@ -58,7 +58,7 @@
       "component": "Highlight box",
       "variant": {
         "Style": "Solid",
-        "Tone": "Purple"
+        "Tone": "Ink"
       },
       "bbox": [
         340,
@@ -66,14 +66,14 @@
         760,
         480
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": []
     },
     {
       "name": "Step 2: the page canvas",
       "component": "Step badge",
       "variant": {
-        "Tone": "Purple",
+        "Tone": "Ink",
         "Size": "M"
       },
       "bbox": [
@@ -82,9 +82,9 @@
         48,
         48
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": [
-        "Poppins Bold 28: 2"
+        "Inter Semi Bold 28: 2"
       ]
     },
     {
@@ -92,7 +92,7 @@
       "component": "Highlight box",
       "variant": {
         "Style": "Solid",
-        "Tone": "Gold"
+        "Tone": "Yellow"
       },
       "bbox": [
         1170,
@@ -100,14 +100,14 @@
         160,
         64
       ],
-      "markHex": "#FFDC28",
+      "markHex": "#FFCA28",
       "text": []
     },
     {
       "name": "Step 3: the Review button",
       "component": "Step badge",
       "variant": {
-        "Tone": "Gold",
+        "Tone": "Yellow",
         "Size": "M"
       },
       "bbox": [
@@ -116,45 +116,45 @@
         48,
         48
       ],
-      "markHex": "#FFDC28",
+      "markHex": "#FFCA28",
       "text": [
-        "Poppins Bold 28: 3"
+        "Inter Semi Bold 28: 3"
       ]
     },
     {
       "name": "Label: Blocks panel",
       "component": "Callout label",
       "variant": {
-        "Tone": "Gold",
+        "Tone": "Yellow",
         "Pointer": "None"
       },
       "bbox": [
         20,
         460,
-        254,
+        234,
         52
       ],
-      "markHex": "#FFDC28",
+      "markHex": "#FFCA28",
       "text": [
-        "Poppins Bold 28: Blocks panel"
+        "Inter Semi Bold 28: Blocks panel"
       ]
     },
     {
       "name": "Label: Review button",
       "component": "Callout label",
       "variant": {
-        "Tone": "Purple",
+        "Tone": "Ink",
         "Pointer": "None"
       },
       "bbox": [
         1150,
         200,
-        273,
+        251,
         52
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": [
-        "Poppins Bold 28: Review button"
+        "Inter Semi Bold 28: Review button"
       ]
     }
   ],
@@ -179,6 +179,7 @@
     "alt-text:pass"
   ],
   "humanReview": [
+    "yellow-budget",
     "redaction-declared",
     "redaction-complete",
     "alt-task",
@@ -186,6 +187,6 @@
   ],
   "pixels": {
     "clean": "f6817ddb98fa127f3d881360bff4ecb7cf4b651a8f1af3f591f08caeb91cf7e8",
-    "export": "5fc4c8007156761dab6b10e9e77d991019ade234acb8ab53b4e71f438a079e7b"
+    "export": "64c259dec7193a759c40639b96819d97eb42e5c08d941ee5d95e5f379e55985c"
   }
 }

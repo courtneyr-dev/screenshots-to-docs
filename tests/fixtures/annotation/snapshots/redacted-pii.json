@@ -4,7 +4,7 @@
     1440,
     900
   ],
-  "tokens": "8b904786053b",
+  "tokens": "8bd4eea416ad",
   "nodes": [
     {
       "name": "screenshot",
@@ -24,7 +24,7 @@
       "component": "Highlight box",
       "variant": {
         "Style": "Solid",
-        "Tone": "Purple"
+        "Tone": "Ink"
       },
       "bbox": [
         30,
@@ -32,14 +32,14 @@
         220,
         64
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": []
     },
     {
       "name": "Step 1: the Settings link",
       "component": "Step badge",
       "variant": {
-        "Tone": "Purple",
+        "Tone": "Ink",
         "Size": "M"
       },
       "bbox": [
@@ -48,9 +48,9 @@
         48,
         48
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": [
-        "Poppins Bold 28: 1"
+        "Inter Semi Bold 28: 1"
       ]
     }
   ],
@@ -82,6 +82,6 @@
   ],
   "pixels": {
     "clean": "52132fdd7e3d2531f050fba9afbed50580933231d182f008dead9b8296611134",
-    "export": "7fd82a0f0d11b42796364338bfc267b6861004ba7c463ffcfb50c3be34044c58"
+    "export": "9b6884511b0adb8662a9d6e8fa5a4f8aae3b234b0fc19474e70f50b0186b38e7"
   }
 }

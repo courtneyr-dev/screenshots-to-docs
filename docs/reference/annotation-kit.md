@@ -10,31 +10,31 @@ The Figma plugin in `figma-plugin/` builds these components and variables in any
 
 ## Components
 
-Each component belongs to one role: marker, outline, highlight, arrow, or label (see the token contract below). There is no redaction component: personal data is faked or pixelated in the capture (see [Personal data](#personal-data)). Tone names are the kit's: **Gold** is the brand Yellow, used on dark parts of a screenshot; **Purple** is the default.
+Each component belongs to one role: marker, outline, highlight, arrow, or label (see the token contract below). There is no redaction component: personal data is faked or pixelated in the capture (see [Personal data](#personal-data)). Tone names are the kit's, from the 2026 brand: **Ink** is the default; **Yellow** (#FFCA28) marks the one focal step of a frame, in an Ink halo, with Ink text; **Paper** is for neutral notes. Do and Dont use Ink and Paper and always carry a check or cross. Yellow is rationed: spend it on one step, and never put white type on it.
 
 ### Step badge
 
-Numbered step marker. Number runs in reading order and matches the numbered step in the article text. Purple is the default; Gold for dark UI; Ink for low emphasis; Do/Dont for correct vs mistaken examples (always with a Do / Dont marker). Size M in a 1440x900 frame; S for dense UI; L for hero shots. Name the layer `Step N: the <element>`.
+Numbered step marker. Number runs in reading order and matches the numbered step in the article text. Ink is the default; Yellow for the one focal step; Do/Dont for correct vs mistaken examples (always with a Do / Dont marker). Size M in a 1440x900 frame; S for dense UI; L for hero shots. Name the layer `Step N: the <element>`.
 
-15 variants. Properties: `Number` text (default "1"); `Tone`: Purple, Gold, Ink, Do, Dont (default Purple); `Size`: S, M, L (default S).
+12 variants. Properties: `Number` text (default "1"); `Tone`: Ink, Yellow, Do, Dont (default Ink); `Size`: S, M, L (default S).
 
 ### Callout label
 
-Short label (1-4 words) naming a UI element in its exact wording. Pointer aims at the element; None when it sits beside a Highlight box. Purple default, Gold on dark UI, Ink low emphasis, Info for neutral notes. Repeat the words in the article text: text in an image is not searchable or translatable. For anything longer than four words, use a Note box.
+Short label (1-4 words) naming a UI element in its exact wording. Pointer aims at the element; None when it sits beside a Highlight box. Ink default, Yellow for the focal step, Paper for neutral notes. Repeat the words in the article text: text in an image is not searchable or translatable. For anything longer than four words, use a Note box.
 
-20 variants. Properties: `Label` text (default "Blocks panel"); `Tone`: Purple, Gold, Ink, Info (default Purple); `Pointer`: None, Left, Right, Up, Down (default None).
+15 variants. Properties: `Label` text (default "Blocks panel"); `Tone`: Ink, Yellow, Paper (default Ink); `Pointer`: None, Left, Right, Up, Down (default None).
 
 ### Highlight box
 
 Outlines the UI area the step is about. Resize to fit; never fill it. Solid for the focus of the step; Dashed for a secondary or optional area. Do/Dont tones pair with Do/Dont badges in comparison images.
 
-8 variants. Properties: `Style`: Solid, Dashed (default Solid); `Tone`: Purple, Gold, Do, Dont (default Purple).
+8 variants. Properties: `Style`: Solid, Dashed (default Solid); `Tone`: Ink, Yellow, Do, Dont (default Ink).
 
 ### Arrow
 
 Points at one UI element. Rotate, flip, and resize the instance. Straight for short pointers; Curved to route around UI; Elbow to come from a margin label. Head=Both only for "move between" or range steps. Keep one arrow per step at most; prefer a Highlight box for areas.
 
-12 variants. Properties: `Shape`: Straight, Curved, Elbow (default Straight); `Head`: End, Both (default End); `Tone`: Purple, Gold (default Purple).
+12 variants. Properties: `Shape`: Straight, Curved, Elbow (default Straight); `Head`: End, Both (default End); `Tone`: Ink, Yellow (default Ink).
 
 ### Key cap
 
@@ -52,13 +52,13 @@ A single component.
 
 Marks the exact spot to click. Use when a Highlight box would be too big (a small icon or menu item). Pair with a Step badge.
 
-2 variants. Properties: `Tone`: Purple, Gold (default Purple).
+2 variants. Properties: `Tone`: Ink, Yellow (default Ink).
 
 ### Note box
 
-A short explanation that must sit on the image (one or two sentences). Use sparingly: anything a reader needs also goes in the article text. Ink default, Info for tips, Purple when it belongs to a numbered step.
+A short explanation that must sit on the image (one or two sentences). Use sparingly: anything a reader needs also goes in the article text. Ink default, Paper for tips.
 
-3 variants. Properties: `Title` text (default "Note"); `Body` text (default "Changes save to the workstream, not to Live, until you publish."); `Show title` on/off (default on); `Tone`: Ink, Info, Purple (default Ink).
+2 variants. Properties: `Title` text (default "Note"); `Body` text (default "Changes save to the workstream, not to Live, until you publish."); `Show title` on/off (default on); `Tone`: Ink, Paper (default Ink).
 
 ### Do / Dont marker
 
@@ -70,13 +70,13 @@ Labels a comparison image as the right or wrong way. Shape (check vs cross) carr
 
 Circles a small round target: an icon, avatar, toggle, or badge. Use Highlight box for rectangular UI.
 
-2 variants. Properties: `Tone`: Purple, Gold (default Purple).
+2 variants. Properties: `Tone`: Ink, Yellow (default Ink).
 
 ### Underline
 
 Underlines a word or field label in the UI when a box would hide nearby text.
 
-2 variants. Properties: `Tone`: Purple, Gold (default Purple).
+2 variants. Properties: `Tone`: Ink, Yellow (default Ink).
 
 ### Cursor
 
@@ -91,7 +91,7 @@ A single component.
 The canonical contract is `figma-plugin/annotation-tokens.json`. Everything below is generated from it by `npm run build:figma-plugin`, and CI fails when this page is stale. Change a value there, run the build, rebuild the kit in Figma with the plugin, and re-annotate: the verifier rejects annotations made with an older kit.
 
 - Schema version 1.
-- Identity hash (SHA-256 of the canonical JSON): `8b904786053b5a3af60bdc689f1b9c274af2140e388fb2e72ae86bb7bddeed9a`
+- Identity hash (SHA-256 of the canonical JSON): `8bd4eea416ad4a8881a5c15bb50ea3a93764d759cef4a1a16cbbc0c831d1c5e0`
 - The plugin stamps this hash on the Figma file and on every kit component. The extraction reads it back, and `record-annotation.mjs` compares it with this repository.
 
 ### Annotation components
@@ -106,35 +106,35 @@ Use only these. Placing a hand-drawn shape, an unlisted component, or a componen
 
 ### Colors
 
-- Primary: yellow `#FFDC28`, white `#FFFFFF`, purple `#3017A1`, black `#23232D`.
-- Secondary: pink `#DE0093`, midPurple `#5F41E5`, lightPurple `#D0C6FF`, green `#218C5F`, blue `#0F62FE`.
-- Gray: grey1 `#333333`, grey2 `#777B86`, greyLight `#DFDFEC`.
+- Primary: ink `#000000`, paper `#FFFFFF`, yellow `#FFCA28`, whiteSmoke `#F3F3F3`.
+- Secondary: travertine `#EBE6DC`, marble `#8E9094`, shadow `#1A1A1A`, brick `#C95A3D`, sky `#B8C9D6`.
+- Gray: .
 
-- Role `mark` is purple `#3017A1`. Default mark and the main emphasis color. Purple leads when Yellow and Black would compete.
-- Role `halo` is white `#FFFFFF`. Outline under every mark so it survives dark screenshot regions.
-- Role `onMark` is white `#FFFFFF`. Text on Purple, Ink, Info, Do, and Dont surfaces.
-- Role `markYellow` is yellow `#FFDC28`. Marks on dark screenshot regions only. The white halo does not separate Yellow from a light background.
-- Role `onYellow` is purple `#3017A1`. Text on Yellow marks. Purple, not Black, so Yellow never sits against Black at equal weight.
-- Role `ink` is black `#23232D`. Low-emphasis notes, key caps, and the dim overlay.
-- Role `info` is blue `#0F62FE`. Neutral notes.
-- Role `do` is green `#218C5F`. Correct example. Always paired with a check marker; Green and Pink are near-identical in grayscale.
-- Role `dont` is pink `#DE0093`. Mistaken example. Always paired with a cross marker.
+- Role `mark` is ink `#000000`. Default mark and the main emphasis color. Ink and Paper carry the work; Yellow is spent once.
+- Role `halo` is paper `#FFFFFF`. Outline under Ink marks so they survive dark screenshot regions.
+- Role `haloInk` is ink `#000000`. Outline under Yellow and Paper marks. Yellow and Paper do not separate from a light screenshot on their own; an Ink halo does, and Yellow still reads against it on dark regions.
+- Role `onMark` is paper `#FFFFFF`. Text on Ink surfaces.
+- Role `markYellow` is yellow `#FFCA28`. The one focal step of a frame: its badge and its outline. Yellow is how the brand points; never more than one step per frame.
+- Role `onYellow` is ink `#000000`. Text on Yellow marks. Ink only; the brand never sets white type on Yellow.
+- Role `ink` is ink `#000000`. Low-emphasis notes, key caps, and the dim overlay.
+- Role `paper` is paper `#FFFFFF`. Neutral notes and the Dont mark: a Paper fill with an Ink halo.
+- Role `do` is ink `#000000`. Correct example. An Ink mark, always paired with a check marker.
+- Role `dont` is paper `#FFFFFF`. Mistaken example. A Paper mark with an Ink halo, always paired with a cross marker.
 
 ### Tones and contrast
 
-- **Purple**: #FFFFFF text on #3017A1 is 11.91:1; mark against halo 11.91:1; for light and dark screenshot regions.
-- **Gold**: #3017A1 text on #FFDC28 is 8.80:1; mark against halo 1.35:1; for dark screenshot regions.
-- **Ink**: #FFFFFF text on #23232D is 15.56:1; mark against halo 15.56:1; for light and dark screenshot regions.
-- **Info**: #FFFFFF text on #0F62FE is 5.00:1; mark against halo 5.00:1; for light and dark screenshot regions.
-- **Do**: #FFFFFF text on #218C5F is 4.22:1; mark against halo 4.22:1; for light and dark screenshot regions; needs a check marker.
-- **Dont**: #FFFFFF text on #DE0093 is 4.64:1; mark against halo 4.64:1; for light and dark screenshot regions; needs a cross marker.
+- **Ink**: #FFFFFF text on #000000 is 21.00:1; mark against halo 21.00:1; for light and dark screenshot regions.
+- **Yellow**: #000000 text on #FFCA28 is 13.73:1; mark against halo 13.73:1; for light and dark screenshot regions.
+- **Paper**: #000000 text on #FFFFFF is 21.00:1; mark against halo 21.00:1; for light and dark screenshot regions.
+- **Do**: #FFFFFF text on #000000 is 21.00:1; mark against halo 21.00:1; for light and dark screenshot regions; needs a check marker.
+- **Dont**: #000000 text on #FFFFFF is 21.00:1; mark against halo 21.00:1; for light and dark screenshot regions; needs a cross marker.
 
 Rules: text 4.5:1, or 3:1 for large text (24 px, or 18.67 px bold). A mark reaches 3:1 against the screenshot beside it through its fill or, failing that, its halo (which must itself reach 3:1 against the fill). Light regions are those whose mean luminance is at least 0.35. Annotated screenshots carry no Pantheon logo. If one is genuinely needed, use an approved lockup with clear space and minimum size, and never recolor, stretch, rotate, distort, or cover it. No gradients as annotation label or component backgrounds.
 
 ### Typography
 
-- Labels and headings: Poppins Bold. Body text: Inter Regular. Not allowed: Aleo.
-- Fallback: If Poppins cannot load in the Figma file, the kit builder falls back to Inter Bold and warns. A rebuilt kit must be rebuilt again once Poppins is available.
+- Labels and headings: Inter Semi Bold. Body text: Inter Regular. Not allowed: Poppins, Aleo.
+- Fallback: undefined
 
 ### Strokes, spacing, and size
 
@@ -150,15 +150,16 @@ Rules: text 4.5:1, or 3:1 for large text (24 px, or 18.67 px bold). A mark reach
 
 Collection **Annotation**, created by the plugin from the tokens. Color variables alias the `brand/*` primitives in the **Annotation primitives** collection.
 
-- `color/mark`: purple #3017A1
-- `color/halo`: white #FFFFFF
-- `color/on-mark`: white #FFFFFF
-- `color/mark-gold`: yellow #FFDC28
-- `color/on-gold`: purple #3017A1
-- `color/ink`: black #23232D
-- `color/info`: blue #0F62FE
-- `color/do`: green #218C5F
-- `color/dont`: pink #DE0093
+- `color/mark`: ink #000000
+- `color/halo`: paper #FFFFFF
+- `color/halo-ink`: ink #000000
+- `color/on-mark`: paper #FFFFFF
+- `color/mark-yellow`: yellow #FFCA28
+- `color/on-yellow`: ink #000000
+- `color/ink`: ink #000000
+- `color/paper`: paper #FFFFFF
+- `color/do`: ink #000000
+- `color/dont`: paper #FFFFFF
 - `size/stroke`: 6
 - `size/halo-line`: 12
 - `size/halo`: 3
@@ -180,14 +181,14 @@ Collection **Annotation**, created by the plugin from the tokens. Color variable
 - `provenance`: The clean capture's checksum matches the inventory's clean asset, and the export is not the clean capture.
 - `kit-components`: Every layer is an instance of an approved kit component built by the plugin from the current tokens, with a real variant, visible, and with no gradient or image paint. A hand-drawn shape fails.
 - `token-colors`: Every fill, stroke, and text color is a token color.
-- `typography`: Text is Poppins Bold or Inter Regular; Aleo and other fonts fail. The Inter Bold fallback passes and is flagged for review.
+- `typography`: Text is the contract's label font (Inter Semi Bold) or body font (Inter Regular); Poppins, Aleo, and every other family fail. A contract that lists a label fallback also passes it, flagged for review.
 - `targets`: Every marker, outline, and arrow has a target (bounding box or selector); markers carry numerals 1 to N with no gaps, named "Step N: the element"; markers sit beside their target, outlines surround it, arrows reach it.
 - `bounds`: Every mark and its halo is inside the image; text is not truncated, clipped by its component, or (by estimate) overflowing its box; a Callout label is at most four words.
 - `collisions`: Markers and labels do not overlap each other or arrows. Outlines and highlights, grown by their halo, keep 3 px of clear space between their outer edges; a mark nested inside another clears its inner stroke edge by 3 px. A marker sits wholly inside a box or clear of its stroke, and does not straddle a background edge in the clean capture (opposite sides of a ring 4 to 14 export px outside the badge differ by more than 40 in median luma). Nothing covers a step target or keep-clear region; outlines are unfilled.
 - `redaction`: No Redact box (Solid or Blur) is in the frame. Each declared sensitive region is either declared as fake data, or pixelated, with padding, in both the export and the clean capture: uniform blocks of at least 7 CSS px (14 px at 2x). A flat color fails as a solid box; text, photos, and blur fail as unredacted.
 - `contrast`: Text meets WCAG AA (3:1 for large text); each mark reaches 3:1 against the screenshot beside it through its fill or its halo, measured from the clean capture.
 - `grayscale`: Each mark still reaches 3:1 after a grayscale conversion.
-- `background-variant`: A tone sits only on screenshot regions it is approved for (Gold on dark; Purple on light, dark, or mixed).
+- `background-variant`: A tone sits only on screenshot regions it is approved for (Ink, Yellow, Paper, Do, and Dont each list the regions they work on; any tone that lists only one fails on mixed regions).
 - `display-size`: Text and strokes stay above the minimum size at the docs display width.
 - `color-independence`: Do and Dont tones are paired with a check or cross marker; steps are carried by numerals, not color.
 - `export`: The export is the frame size times the export scale.
@@ -200,7 +201,8 @@ Collection **Annotation**, created by the plugin from the tokens. Color variable
 - `redaction-fake-data`: A region is declared as fake data: confirm the values shown are invented (for example "Anita Agency" or jordan.lee@example.com), not a real person's.
 - `target-geometry`: A target has a selector but no bounding box, so its position was not checked.
 - `text-fit`: Text is close to its box width. The overflow check is an estimate, because Figma doesn't expose measured overflow.
-- `font-fallback`: Labels use the Inter Bold fallback because Poppins was unavailable when the kit was built.
+- `font-fallback`: Labels use the contract's label fallback font because the label font was unavailable when the kit was built. Only a contract that lists a fallback raises this.
+- `yellow-budget`: A Yellow mark is in the frame. Yellow marks one focal step (its badge and its outline); confirm no other step uses it.
 - `alt-text`: The alt text is ambiguous (generic step labels, a one-word subject, or annotation words).
 - `alt-task`: The alt text says what the screen is and what the reader does there. Always required.
 - `render-fidelity`: The export looks right. The repository measures geometry, tokens, and the pixels it can; it does not render the Figma file. Always required.
@@ -281,5 +283,5 @@ These are not proven by this repository, and the validation file says so for eac
 - Forgery. The kit stamp, the targets, and the sensitive regions are plugin data that whoever annotates can write. They catch mistakes and stale kits, not someone who sets them to get a pass. That is one reason a person confirms every shot.
 - Personal data nobody declared, and whether data declared as fake really is.
 - Text overflow is an estimate from character counts, because Figma does not expose measured overflow.
-- Font availability. If Poppins can't load, the kit builder falls back to Inter Bold and says so; the verifier passes that and flags it.
+- Font availability. Inter is a free Google font and loads in every Figma file, so the kit builder has no fallback; if Inter can't load, the build stops.
 - Whether alt text says what the reader should do. It checks the alt text against the marks and for ambiguity, and asks a person to read it.

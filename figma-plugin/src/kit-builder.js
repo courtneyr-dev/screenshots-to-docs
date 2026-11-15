@@ -7,16 +7,12 @@ async function buildKit(KIT, opts) {
   const suffix = opts.suffix || '';
   const report = { variablesCreated: 0, variablesReused: 0, libraryAliases: 0, localFallbacks: 0, components: 0, nodes: 0, warnings: [] };
 
-  // Fonts come from the token contract: Poppins Bold for labels, Inter Regular for body text. If Poppins
-  // can't load in this file, label text falls back to the contract's fallback font and the run says so.
+  // Fonts come from the token contract: Inter Semi Bold for labels, Inter Regular for body text. Inter is a
+  // free Google font that loads in every Figma file, so there is no fallback: a load failure stops the build.
   const TY = KIT.tokens.typography;
+  const labelFont = { family: TY.label.family, style: TY.label.style };
   await figma.loadFontAsync({ family: TY.body.family, style: TY.body.style });
-  let labelFont = { family: TY.label.family, style: TY.label.style };
-  try { await figma.loadFontAsync(labelFont); } catch (e) {
-    labelFont = { family: TY.label.fallback.family, style: TY.label.fallback.style };
-    await figma.loadFontAsync(labelFont);
-    report.warnings.push('Poppins ' + TY.label.style + ' is not available in this file; label text uses ' + labelFont.family + ' ' + labelFont.style + '. Rebuild the kit once Poppins loads.');
-  }
+  await figma.loadFontAsync(labelFont);
   const fontFor = (family, style) => (family === TY.label.family && style === TY.label.style ? labelFont : { family, style });
 
   // ---- variables ----

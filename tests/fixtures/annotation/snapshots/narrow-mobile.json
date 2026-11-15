@@ -4,7 +4,7 @@
     390,
     844
   ],
-  "tokens": "8b904786053b",
+  "tokens": "8bd4eea416ad",
   "nodes": [
     {
       "name": "screenshot",
@@ -23,7 +23,7 @@
       "name": "Step 1: the menu",
       "component": "Step badge",
       "variant": {
-        "Tone": "Gold",
+        "Tone": "Yellow",
         "Size": "S"
       },
       "bbox": [
@@ -32,9 +32,9 @@
         32,
         32
       ],
-      "markHex": "#FFDC28",
+      "markHex": "#FFCA28",
       "text": [
-        "Poppins Bold 19: 1"
+        "Inter Semi Bold 19: 1"
       ]
     },
     {
@@ -42,7 +42,7 @@
       "component": "Highlight box",
       "variant": {
         "Style": "Solid",
-        "Tone": "Purple"
+        "Tone": "Ink"
       },
       "bbox": [
         6,
@@ -50,14 +50,14 @@
         378,
         92
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": []
     },
     {
       "name": "Step 2: the first page",
       "component": "Step badge",
       "variant": {
-        "Tone": "Purple",
+        "Tone": "Ink",
         "Size": "S"
       },
       "bbox": [
@@ -66,9 +66,9 @@
         32,
         32
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": [
-        "Poppins Bold 19: 2"
+        "Inter Semi Bold 19: 2"
       ]
     },
     {
@@ -76,7 +76,7 @@
       "component": "Highlight box",
       "variant": {
         "Style": "Solid",
-        "Tone": "Purple"
+        "Tone": "Ink"
       },
       "bbox": [
         6,
@@ -84,14 +84,14 @@
         378,
         76
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": []
     },
     {
       "name": "Step 3: the Add page button",
       "component": "Step badge",
       "variant": {
-        "Tone": "Purple",
+        "Tone": "Ink",
         "Size": "M"
       },
       "bbox": [
@@ -100,27 +100,27 @@
         48,
         48
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": [
-        "Poppins Bold 28: 3"
+        "Inter Semi Bold 28: 3"
       ]
     },
     {
       "name": "Label: Add page",
       "component": "Callout label",
       "variant": {
-        "Tone": "Purple",
+        "Tone": "Ink",
         "Pointer": "None"
       },
       "bbox": [
         16,
         690,
-        180,
+        167,
         52
       ],
-      "markHex": "#3017A1",
+      "markHex": "#000000",
       "text": [
-        "Poppins Bold 28: Add page"
+        "Inter Semi Bold 28: Add page"
       ]
     }
   ],
@@ -145,6 +145,7 @@
     "alt-text:pass"
   ],
   "humanReview": [
+    "yellow-budget",
     "redaction-declared",
     "redaction-complete",
     "alt-task",
@@ -152,6 +153,6 @@
   ],
   "pixels": {
     "clean": "faf701fd57e98da94f5edfdb192518932be40112e3648e16fbe6253379dc183b",
-    "export": "987bea1c3ea81af445c808ae8a9545d46d6494866e3cb313dbdd7a1187a2870e"
+    "export": "76b25ce626e7c4f30962030e3079f48c3ce6d22c3495a96a6f2233ba7b11549b"
   }
 }
