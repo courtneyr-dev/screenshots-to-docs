@@ -1,0 +1,474 @@
+{
+ "schema": "screenshots-to-docs/annotation-manifest@1",
+ "extractedAt": "2026-10-24T12:07:56.642Z",
+ "fileKey": "FxFxFxFxFxFxFxFxFxFxFx",
+ "tokens": {
+  "schemaVersion": 1,
+  "hash": "c80fa84b3723b65fc58d0e38de08770096b4114b15392fbb37196bd1b6ef2424"
+ },
+ "cleanFrame": {
+  "id": "132:97",
+  "name": "create-page-2|next",
+  "width": 1440,
+  "height": 820,
+  "screenshot": {
+   "id": "132:97",
+   "width": 1440,
+   "height": 820,
+   "imageHash": "78884e4ea7a0707710bdd94018b291912999a6ce"
+  }
+ },
+ "annotatedFrame": {
+  "id": "138:369",
+  "name": "[create-page-2] \u2014 Create page dialog \u2014 PCC-4473 \u2014 annotated",
+  "width": 1440,
+  "height": 820,
+  "clipsContent": true,
+  "screenshot": {
+   "id": "138:370",
+   "width": 1440,
+   "height": 820,
+   "imageHash": "78884e4ea7a0707710bdd94018b291912999a6ce"
+  }
+ },
+ "nodes": [
+  {
+   "id": "138:370",
+   "name": "screenshot",
+   "type": "RECTANGLE",
+   "bbox": [
+    0,
+    0,
+    1440,
+    820
+   ],
+   "visible": true,
+   "opacity": 1,
+   "rotation": 0,
+   "fills": [
+    {
+     "type": "IMAGE",
+     "imageHash": "78884e4ea7a0707710bdd94018b291912999a6ce"
+    }
+   ]
+  },
+  {
+   "id": "138:371",
+   "name": "Redact: account avatar (initials)",
+   "type": "INSTANCE",
+   "bbox": [
+    1371,
+    4,
+    58,
+    58
+   ],
+   "visible": true,
+   "opacity": 1,
+   "rotation": 0,
+   "fills": [
+    {
+     "type": "SOLID",
+     "hex": "#23232D",
+     "opacity": 1
+    }
+   ],
+   "strokes": [
+    {
+     "type": "SOLID",
+     "hex": "#23232D",
+     "opacity": 1
+    }
+   ],
+   "texts": [],
+   "strokeMax": 2,
+   "component": {
+    "set": "Redact",
+    "name": "Style=Solid",
+    "variant": {
+     "Style": "Solid"
+    },
+    "kitStamp": "c80fa84b3723b65fc58d0e38de08770096b4114b15392fbb37196bd1b6ef2424",
+    "remote": false
+   }
+  },
+  {
+   "id": "138:372",
+   "name": "Highlight 1: Blank page",
+   "type": "INSTANCE",
+   "bbox": [
+    268,
+    185,
+    224,
+    157
+   ],
+   "visible": true,
+   "opacity": 1,
+   "rotation": 0,
+   "fills": [],
+   "strokes": [
+    {
+     "type": "SOLID",
+     "hex": "#FFFFFF",
+     "opacity": 1
+    },
+    {
+     "type": "SOLID",
+     "hex": "#3017A1",
+     "opacity": 1
+    }
+   ],
+   "texts": [],
+   "strokeMax": 6,
+   "markHex": "#3017A1",
+   "component": {
+    "set": "Highlight box",
+    "name": "Style=Solid, Tone=Purple",
+    "variant": {
+     "Style": "Solid",
+     "Tone": "Purple"
+    },
+    "kitStamp": "c80fa84b3723b65fc58d0e38de08770096b4114b15392fbb37196bd1b6ef2424",
+    "remote": false
+   },
+   "target": {
+    "bbox": [
+     272,
+     189,
+     216,
+     149
+    ]
+   }
+  },
+  {
+   "id": "138:375",
+   "name": "Step 1: Blank page",
+   "type": "INSTANCE",
+   "bbox": [
+    232,
+    189,
+    32,
+    32
+   ],
+   "visible": true,
+   "opacity": 1,
+   "rotation": 0,
+   "fills": [
+    {
+     "type": "SOLID",
+     "hex": "#3017A1",
+     "opacity": 1
+    }
+   ],
+   "strokes": [
+    {
+     "type": "SOLID",
+     "hex": "#FFFFFF",
+     "opacity": 1
+    }
+   ],
+   "texts": [
+    {
+     "characters": "1",
+     "family": "Poppins",
+     "style": "Bold",
+     "size": 19,
+     "autoResize": "WIDTH_AND_HEIGHT",
+     "truncation": "DISABLED",
+     "bbox": [
+      244,
+      195.5,
+      8,
+      19
+     ],
+     "fillHex": "#FFFFFF",
+     "surfaceHex": "#3017A1"
+    }
+   ],
+   "strokeMax": 3,
+   "component": {
+    "set": "Step badge",
+    "name": "Tone=Purple, Size=S",
+    "variant": {
+     "Tone": "Purple",
+     "Size": "S"
+    },
+    "kitStamp": "c80fa84b3723b65fc58d0e38de08770096b4114b15392fbb37196bd1b6ef2424",
+    "remote": false
+   },
+   "target": {
+    "bbox": [
+     272,
+     189,
+     216,
+     149
+    ]
+   }
+  },
+  {
+   "id": "138:377",
+   "name": "Highlight 2: the Page title field",
+   "type": "INSTANCE",
+   "bbox": [
+    266,
+    520,
+    452,
+    50
+   ],
+   "visible": true,
+   "opacity": 1,
+   "rotation": 0,
+   "fills": [],
+   "strokes": [
+    {
+     "type": "SOLID",
+     "hex": "#FFFFFF",
+     "opacity": 1
+    },
+    {
+     "type": "SOLID",
+     "hex": "#3017A1",
+     "opacity": 1
+    }
+   ],
+   "texts": [],
+   "strokeMax": 6,
+   "markHex": "#3017A1",
+   "component": {
+    "set": "Highlight box",
+    "name": "Style=Solid, Tone=Purple",
+    "variant": {
+     "Style": "Solid",
+     "Tone": "Purple"
+    },
+    "kitStamp": "c80fa84b3723b65fc58d0e38de08770096b4114b15392fbb37196bd1b6ef2424",
+    "remote": false
+   },
+   "target": {
+    "bbox": [
+     270,
+     524,
+     444,
+     42
+    ]
+   }
+  },
+  {
+   "id": "138:380",
+   "name": "Step 2: the Page title field",
+   "type": "INSTANCE",
+   "bbox": [
+    230,
+    524,
+    32,
+    32
+   ],
+   "visible": true,
+   "opacity": 1,
+   "rotation": 0,
+   "fills": [
+    {
+     "type": "SOLID",
+     "hex": "#3017A1",
+     "opacity": 1
+    }
+   ],
+   "strokes": [
+    {
+     "type": "SOLID",
+     "hex": "#FFFFFF",
+     "opacity": 1
+    }
+   ],
+   "texts": [
+    {
+     "characters": "2",
+     "family": "Poppins",
+     "style": "Bold",
+     "size": 19,
+     "autoResize": "WIDTH_AND_HEIGHT",
+     "truncation": "DISABLED",
+     "bbox": [
+      240.5,
+      530.5,
+      11,
+      19
+     ],
+     "fillHex": "#FFFFFF",
+     "surfaceHex": "#3017A1"
+    }
+   ],
+   "strokeMax": 3,
+   "component": {
+    "set": "Step badge",
+    "name": "Tone=Purple, Size=S",
+    "variant": {
+     "Tone": "Purple",
+     "Size": "S"
+    },
+    "kitStamp": "c80fa84b3723b65fc58d0e38de08770096b4114b15392fbb37196bd1b6ef2424",
+    "remote": false
+   },
+   "target": {
+    "bbox": [
+     270,
+     524,
+     444,
+     42
+    ]
+   }
+  },
+  {
+   "id": "138:382",
+   "name": "Highlight 3: the URL slug field",
+   "type": "INSTANCE",
+   "bbox": [
+    268,
+    600,
+    904,
+    48
+   ],
+   "visible": true,
+   "opacity": 1,
+   "rotation": 0,
+   "fills": [],
+   "strokes": [
+    {
+     "type": "SOLID",
+     "hex": "#FFFFFF",
+     "opacity": 1
+    },
+    {
+     "type": "SOLID",
+     "hex": "#3017A1",
+     "opacity": 1
+    }
+   ],
+   "texts": [],
+   "strokeMax": 6,
+   "markHex": "#3017A1",
+   "component": {
+    "set": "Highlight box",
+    "name": "Style=Solid, Tone=Purple",
+    "variant": {
+     "Style": "Solid",
+     "Tone": "Purple"
+    },
+    "kitStamp": "c80fa84b3723b65fc58d0e38de08770096b4114b15392fbb37196bd1b6ef2424",
+    "remote": false
+   },
+   "target": {
+    "bbox": [
+     272,
+     604,
+     896,
+     40
+    ]
+   }
+  },
+  {
+   "id": "138:385",
+   "name": "Step 3: the URL slug field",
+   "type": "INSTANCE",
+   "bbox": [
+    232,
+    604,
+    32,
+    32
+   ],
+   "visible": true,
+   "opacity": 1,
+   "rotation": 0,
+   "fills": [
+    {
+     "type": "SOLID",
+     "hex": "#3017A1",
+     "opacity": 1
+    }
+   ],
+   "strokes": [
+    {
+     "type": "SOLID",
+     "hex": "#FFFFFF",
+     "opacity": 1
+    }
+   ],
+   "texts": [
+    {
+     "characters": "3",
+     "family": "Poppins",
+     "style": "Bold",
+     "size": 19,
+     "autoResize": "WIDTH_AND_HEIGHT",
+     "truncation": "DISABLED",
+     "bbox": [
+      242,
+      610.5,
+      12,
+      19
+     ],
+     "fillHex": "#FFFFFF",
+     "surfaceHex": "#3017A1"
+    }
+   ],
+   "strokeMax": 3,
+   "component": {
+    "set": "Step badge",
+    "name": "Tone=Purple, Size=S",
+    "variant": {
+     "Tone": "Purple",
+     "Size": "S"
+    },
+    "kitStamp": "c80fa84b3723b65fc58d0e38de08770096b4114b15392fbb37196bd1b6ef2424",
+    "remote": false
+   },
+   "target": {
+    "bbox": [
+     272,
+     604,
+     896,
+     40
+    ]
+   }
+  }
+ ],
+ "sensitive": [
+  {
+   "id": "avatar",
+   "kind": "avatar",
+   "bbox": [
+    1375,
+    8,
+    50,
+    50
+   ],
+   "reason": "account avatar (initials)"
+  }
+ ],
+ "keepClear": [],
+ "kitVariables": {
+  "color/mark": "#3017A1",
+  "color/halo": "#FFFFFF",
+  "color/on-mark": "#FFFFFF",
+  "size/stroke": 6,
+  "size/halo-line": 12,
+  "size/halo": 3,
+  "size/badge": 48,
+  "radius/label": 8,
+  "radius/highlight": 8,
+  "spacing/label-x": 16,
+  "spacing/label-y": 8,
+  "color/mark-gold": "#FFDC28",
+  "color/info": "#0F62FE",
+  "color/do": "#218C5F",
+  "color/dont": "#DE0093",
+  "color/caution": "#B15C16",
+  "color/ink": "#23232D",
+  "color/neutral": "#9C9890",
+  "color/on-gold": "#3017A1",
+  "size/badge-s": 32,
+  "size/badge-l": 64,
+  "size/stroke-thin": 4,
+  "size/halo-line-thin": 8,
+  "color/redact": "#23232D"
+ }
+}

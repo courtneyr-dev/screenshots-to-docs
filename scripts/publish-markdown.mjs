@@ -28,15 +28,16 @@ import { loadInventory, sha256 } from './lib/inventory.mjs';
 const { values } = parseArgs({
   options: {
     inventory: { type: 'string' }, 'assets-dir': { type: 'string' }, repo: { type: 'string' },
-    map: { type: 'string' }, branch: { type: 'string' }, 'dry-run': { type: 'boolean' }, help: { type: 'boolean', short: 'h' },
+    map: { type: 'string' }, variant: { type: 'string', default: 'annotated' }, branch: { type: 'string' }, 'dry-run': { type: 'boolean' }, help: { type: 'boolean', short: 'h' },
   },
 });
 const fail = msg => { console.error(`FAIL: ${msg}`); process.exit(1); };
 if (values.help || !values.inventory || !values['assets-dir'] || !values.repo) {
-  console.log('Usage: node publish-markdown.mjs --inventory <file> --assets-dir <dir> --repo <docs repo> [--map <file>] [--branch <name>] [--dry-run]');
+  console.log('Usage: node publish-markdown.mjs --inventory <file> --assets-dir <dir> --repo <docs repo> [--map <file>] [--variant annotated|clean] [--branch <name>] [--dry-run]\n  --variant clean publishes the unmodified capture, for docs systems that do not allow markup.');
   process.exit(values.help ? 0 : 1);
 }
 
+if (!['annotated', 'clean'].includes(values.variant)) fail('--variant must be annotated or clean');
 const repo = realpathSync(resolve(values.repo));
 const assetsDir = resolve(values['assets-dir']);
 const mapFile = resolve(values.map || join(repo, 'screenshots.map.json'));
@@ -66,11 +67,12 @@ for (const [id, target] of Object.entries(map)) {
   if (r.status === 'retired') fail(`${id} is retired; remove it from the map and the docs`);
   const dest = inRepo(target);
   if (!dest) fail(`${id}: map path "${target}" must be a .png inside the docs repo`);
-  if (!r.asset?.path || !r.asset?.sha256) fail(`${id}: no recorded asset; run record-capture or record-asset first`);
-  const src = join(assetsDir, r.asset.path);
+  const asset = values.variant === 'clean' ? r.clean_asset : r.asset;
+  if (!asset?.path || !asset?.sha256) fail(`${id}: no recorded ${values.variant === 'clean' ? 'clean ' : ''}asset; run record-capture${values.variant === 'clean' ? '' : ' or record-asset'} first`);
+  const src = join(assetsDir, asset.path);
   if (!existsSync(src)) fail(`${id}: asset file ${src} not found`);
   const buf = readFileSync(src);
-  if (sha256(buf) !== r.asset.sha256) fail(`${id}: ${src} does not match the recorded checksum`);
+  if (sha256(buf) !== asset.sha256) fail(`${id}: ${src} does not match the recorded checksum`);
   const alt = (r.content?.alt_text || '').trim();
   if (!alt) fail(`${id}: alt text is missing in the inventory; the docs image needs it`);
   plan.push({ id, release: r.capture?.release, src, buf, dest, alt });

@@ -17,7 +17,7 @@ import { readFileSync, writeFileSync, mkdtempSync, mkdirSync, rmSync, realpathSy
 import { tmpdir } from 'node:os';
 import { join, dirname, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { snippetCode, verifyKitResult, kitComponentNames, tokensIdentity, FIX_STAMP, FIX_VARIABLES } from '../scripts/figma-kit-check.mjs';
+import { snippetCode, verifyKitResult, kitComponentNames, tokensIdentity, FIX_STAMP, FIX_VARIABLES, KIT_FILE } from '../scripts/figma-kit-check.mjs';
 
 const ROOT = resolve(dirname(new URL(import.meta.url).pathname), '..');
 const FX = join(ROOT, 'tests', 'fixtures', 'kit-check');
@@ -89,9 +89,9 @@ function mockFigma(result) {
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 const runSnippet = figma => new AsyncFunction('figma', snippetCode({ componentNames }))(figma);
 
-await test('the snippet only reads: no write calls, and it names all 13 kit components and both collections', () => {
+await test('the snippet only reads: no write calls, and it names every component in kit.json and both collections', () => {
   const code = snippetCode({ componentNames });
-  assert.equal(componentNames.length, 13);
+  assert.equal(componentNames.length, JSON.parse(readFileSync(KIT_FILE, 'utf-8')).components.length);
   for (const n of componentNames) assert.ok(code.includes(JSON.stringify(n)), n);
   assert.ok(code.includes('"Annotation primitives"') && code.includes('"Annotation"'));
   assert.doesNotMatch(code, /\.(set[A-Z]\w*|create\w*|remove|delete|appendChild|insertChild|import\w*)\s*\(/, 'a write or create call');
@@ -111,11 +111,11 @@ await test('the snippet follows alias chains and library variables: the stale mo
 });
 
 await test('the snippet sees a stamp removed from one component, and verification then names it', async () => {
-  const m = clone(good); m.components.find(c => c.name === 'Redact').kits = [null];
+  const m = clone(good); m.components.find(c => c.name === 'Highlight box').kits = [null];
   const out = clone(await runSnippet(mockFigma(m)));
-  assert.deepEqual(out.components.find(c => c.name === 'Redact').kits, [null]);
+  assert.deepEqual(out.components.find(c => c.name === 'Highlight box').kits, [null]);
   const v = verify(out);
-  assert.ok(!v.ok && v.stamp.some(s => s.includes('"Redact"')), v.stamp.join('\n'));
+  assert.ok(!v.ok && v.stamp.some(s => s.includes('"Highlight box"')), v.stamp.join('\n'));
 });
 
 await test('--out writes a snippet that parses as an async function body', () => {

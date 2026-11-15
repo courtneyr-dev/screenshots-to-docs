@@ -1,0 +1,87 @@
+{
+  "name": "mixed-backgrounds",
+  "frame": [
+    800,
+    600
+  ],
+  "tokens": "8bd4eea416ad",
+  "nodes": [
+    {
+      "name": "screenshot",
+      "component": "RECTANGLE",
+      "variant": null,
+      "bbox": [
+        0,
+        0,
+        800,
+        600
+      ],
+      "markHex": null,
+      "text": []
+    },
+    {
+      "name": "Highlight",
+      "component": "Highlight box",
+      "variant": {
+        "Style": "Solid",
+        "Tone": "Ink"
+      },
+      "bbox": [
+        330,
+        240,
+        140,
+        70
+      ],
+      "markHex": "#000000",
+      "text": []
+    },
+    {
+      "name": "Step 1: the Switch control",
+      "component": "Step badge",
+      "variant": {
+        "Tone": "Ink",
+        "Size": "M"
+      },
+      "bbox": [
+        330,
+        186,
+        48,
+        48
+      ],
+      "markHex": "#000000",
+      "text": [
+        "Inter Semi Bold 28: 1"
+      ]
+    }
+  ],
+  "checks": [
+    "manifest-shape:pass",
+    "token-identity:pass",
+    "frame-mapping:pass",
+    "provenance:pass",
+    "kit-components:pass",
+    "token-colors:pass",
+    "typography:pass",
+    "targets:pass",
+    "bounds:pass",
+    "collisions:pass",
+    "redaction:pass",
+    "contrast:pass",
+    "grayscale:pass",
+    "background-variant:pass",
+    "display-size:pass",
+    "color-independence:pass",
+    "export:pass",
+    "alt-text:pass"
+  ],
+  "humanReview": [
+    "redaction-declared",
+    "redaction-complete",
+    "alt-task",
+    "render-fidelity"
+  ],
+  "pixels": {
+    "clean": "c70143126f707f8e1551f069168d48d76a3e56e223aa4544132ea94f6e876574",
+    "export": "bf8b734f82e1fdfb22d7f7dbe20145c91c6416dc3d79335f4c459aad9903ae3e"
+  }
+}

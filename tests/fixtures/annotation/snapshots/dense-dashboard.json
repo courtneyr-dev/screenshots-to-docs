@@ -1,0 +1,257 @@
+{
+  "name": "dense-dashboard",
+  "frame": [
+    1440,
+    900
+  ],
+  "tokens": "8bd4eea416ad",
+  "nodes": [
+    {
+      "name": "screenshot",
+      "component": "RECTANGLE",
+      "variant": null,
+      "bbox": [
+        0,
+        0,
+        1440,
+        900
+      ],
+      "markHex": null,
+      "text": []
+    },
+    {
+      "name": "Highlight",
+      "component": "Highlight box",
+      "variant": {
+        "Style": "Solid",
+        "Tone": "Ink"
+      },
+      "bbox": [
+        40,
+        110,
+        160,
+        56
+      ],
+      "markHex": "#000000",
+      "text": []
+    },
+    {
+      "name": "Step 1: the card 1 action",
+      "component": "Step badge",
+      "variant": {
+        "Tone": "Ink",
+        "Size": "S"
+      },
+      "bbox": [
+        204,
+        122,
+        32,
+        32
+      ],
+      "markHex": "#000000",
+      "text": [
+        "Inter Semi Bold 19: 1"
+      ]
+    },
+    {
+      "name": "Highlight",
+      "component": "Highlight box",
+      "variant": {
+        "Style": "Solid",
+        "Tone": "Ink"
+      },
+      "bbox": [
+        510,
+        110,
+        160,
+        56
+      ],
+      "markHex": "#000000",
+      "text": []
+    },
+    {
+      "name": "Step 2: the card 2 action",
+      "component": "Step badge",
+      "variant": {
+        "Tone": "Ink",
+        "Size": "S"
+      },
+      "bbox": [
+        674,
+        122,
+        32,
+        32
+      ],
+      "markHex": "#000000",
+      "text": [
+        "Inter Semi Bold 19: 2"
+      ]
+    },
+    {
+      "name": "Highlight",
+      "component": "Highlight box",
+      "variant": {
+        "Style": "Solid",
+        "Tone": "Ink"
+      },
+      "bbox": [
+        980,
+        110,
+        160,
+        56
+      ],
+      "markHex": "#000000",
+      "text": []
+    },
+    {
+      "name": "Step 3: the card 3 action",
+      "component": "Step badge",
+      "variant": {
+        "Tone": "Ink",
+        "Size": "S"
+      },
+      "bbox": [
+        1144,
+        122,
+        32,
+        32
+      ],
+      "markHex": "#000000",
+      "text": [
+        "Inter Semi Bold 19: 3"
+      ]
+    },
+    {
+      "name": "Highlight",
+      "component": "Highlight box",
+      "variant": {
+        "Style": "Dashed",
+        "Tone": "Ink"
+      },
+      "bbox": [
+        40,
+        510,
+        160,
+        56
+      ],
+      "markHex": "#000000",
+      "text": []
+    },
+    {
+      "name": "Step 4: the card 4 action",
+      "component": "Step badge",
+      "variant": {
+        "Tone": "Ink",
+        "Size": "S"
+      },
+      "bbox": [
+        204,
+        522,
+        32,
+        32
+      ],
+      "markHex": "#000000",
+      "text": [
+        "Inter Semi Bold 19: 4"
+      ]
+    },
+    {
+      "name": "Highlight",
+      "component": "Highlight box",
+      "variant": {
+        "Style": "Dashed",
+        "Tone": "Ink"
+      },
+      "bbox": [
+        510,
+        510,
+        160,
+        56
+      ],
+      "markHex": "#000000",
+      "text": []
+    },
+    {
+      "name": "Step 5: the card 5 action",
+      "component": "Step badge",
+      "variant": {
+        "Tone": "Ink",
+        "Size": "S"
+      },
+      "bbox": [
+        674,
+        522,
+        32,
+        32
+      ],
+      "markHex": "#000000",
+      "text": [
+        "Inter Semi Bold 19: 5"
+      ]
+    },
+    {
+      "name": "Highlight",
+      "component": "Highlight box",
+      "variant": {
+        "Style": "Dashed",
+        "Tone": "Ink"
+      },
+      "bbox": [
+        980,
+        510,
+        160,
+        56
+      ],
+      "markHex": "#000000",
+      "text": []
+    },
+    {
+      "name": "Step 6: the card 6 action",
+      "component": "Step badge",
+      "variant": {
+        "Tone": "Ink",
+        "Size": "S"
+      },
+      "bbox": [
+        1144,
+        522,
+        32,
+        32
+      ],
+      "markHex": "#000000",
+      "text": [
+        "Inter Semi Bold 19: 6"
+      ]
+    }
+  ],
+  "checks": [
+    "manifest-shape:pass",
+    "token-identity:pass",
+    "frame-mapping:pass",
+    "provenance:pass",
+    "kit-components:pass",
+    "token-colors:pass",
+    "typography:pass",
+    "targets:pass",
+    "bounds:pass",
+    "collisions:pass",
+    "redaction:pass",
+    "contrast:pass",
+    "grayscale:pass",
+    "background-variant:pass",
+    "display-size:pass",
+    "color-independence:pass",
+    "export:pass",
+    "alt-text:pass"
+  ],
+  "humanReview": [
+    "redaction-declared",
+    "redaction-complete",
+    "alt-task",
+    "render-fidelity"
+  ],
+  "pixels": {
+    "clean": "3a52c6f1bb33e9c47c023f7e459f1c6e13cb5a99378cd1d97e88549093fe9aa5",
+    "export": "5f97ba516dcc9a9d04e12b1382c49816891b8455375778c9ed1bb689d19f8361"
+  }
+}

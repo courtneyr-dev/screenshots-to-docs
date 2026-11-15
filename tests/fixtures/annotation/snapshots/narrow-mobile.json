@@ -1,0 +1,158 @@
+{
+  "name": "narrow-mobile",
+  "frame": [
+    390,
+    844
+  ],
+  "tokens": "8bd4eea416ad",
+  "nodes": [
+    {
+      "name": "screenshot",
+      "component": "RECTANGLE",
+      "variant": null,
+      "bbox": [
+        0,
+        0,
+        390,
+        844
+      ],
+      "markHex": null,
+      "text": []
+    },
+    {
+      "name": "Step 1: the menu",
+      "component": "Step badge",
+      "variant": {
+        "Tone": "Yellow",
+        "Size": "S"
+      },
+      "bbox": [
+        60,
+        12,
+        32,
+        32
+      ],
+      "markHex": "#FFCA28",
+      "text": [
+        "Inter Semi Bold 19: 1"
+      ]
+    },
+    {
+      "name": "Highlight",
+      "component": "Highlight box",
+      "variant": {
+        "Style": "Solid",
+        "Tone": "Ink"
+      },
+      "bbox": [
+        6,
+        110,
+        378,
+        92
+      ],
+      "markHex": "#000000",
+      "text": []
+    },
+    {
+      "name": "Step 2: the first page",
+      "component": "Step badge",
+      "variant": {
+        "Tone": "Ink",
+        "Size": "S"
+      },
+      "bbox": [
+        16,
+        214,
+        32,
+        32
+      ],
+      "markHex": "#000000",
+      "text": [
+        "Inter Semi Bold 19: 2"
+      ]
+    },
+    {
+      "name": "Highlight",
+      "component": "Highlight box",
+      "variant": {
+        "Style": "Solid",
+        "Tone": "Ink"
+      },
+      "bbox": [
+        6,
+        750,
+        378,
+        76
+      ],
+      "markHex": "#000000",
+      "text": []
+    },
+    {
+      "name": "Step 3: the Add page button",
+      "component": "Step badge",
+      "variant": {
+        "Tone": "Ink",
+        "Size": "M"
+      },
+      "bbox": [
+        326,
+        690,
+        48,
+        48
+      ],
+      "markHex": "#000000",
+      "text": [
+        "Inter Semi Bold 28: 3"
+      ]
+    },
+    {
+      "name": "Label: Add page",
+      "component": "Callout label",
+      "variant": {
+        "Tone": "Ink",
+        "Pointer": "None"
+      },
+      "bbox": [
+        16,
+        690,
+        167,
+        52
+      ],
+      "markHex": "#000000",
+      "text": [
+        "Inter Semi Bold 28: Add page"
+      ]
+    }
+  ],
+  "checks": [
+    "manifest-shape:pass",
+    "token-identity:pass",
+    "frame-mapping:pass",
+    "provenance:pass",
+    "kit-components:pass",
+    "token-colors:pass",
+    "typography:pass",
+    "targets:pass",
+    "bounds:pass",
+    "collisions:pass",
+    "redaction:pass",
+    "contrast:pass",
+    "grayscale:pass",
+    "background-variant:pass",
+    "display-size:pass",
+    "color-independence:pass",
+    "export:pass",
+    "alt-text:pass"
+  ],
+  "humanReview": [
+    "yellow-budget",
+    "redaction-declared",
+    "redaction-complete",
+    "alt-task",
+    "render-fidelity"
+  ],
+  "pixels": {
+    "clean": "faf701fd57e98da94f5edfdb192518932be40112e3648e16fbe6253379dc183b",
+    "export": "76b25ce626e7c4f30962030e3079f48c3ce6d22c3495a96a6f2233ba7b11549b"
+  }
+}

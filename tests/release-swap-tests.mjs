@@ -315,9 +315,9 @@ await test('the Figma plugin build is current and embeds every kit component', (
   const r = spawnSync(process.execPath, [join(ROOT, 'scripts/build-figma-plugin.mjs'), '--check'], { encoding: 'utf-8' });
   assert.equal(r.status, 0, r.stdout + r.stderr);
   const kit = JSON.parse(readFileSync(join(ROOT, 'figma-plugin/kit.json'), 'utf-8'));
-  assert.deepEqual(kit.components.map(c => c.n), ['Step badge', 'Callout label', 'Highlight box', 'Arrow', 'Key cap', 'Redact', 'Dim overlay', 'Click indicator', 'Note box', 'Do / Dont marker', 'Highlight ellipse', 'Underline', 'Cursor']);
+  assert.deepEqual(kit.components.map(c => c.n), ['Step badge', 'Callout label', 'Highlight box', 'Arrow', 'Key cap', 'Dim overlay', 'Click indicator', 'Note box', 'Do / Dont marker', 'Highlight ellipse', 'Underline', 'Cursor']);
   const variants = kit.components.reduce((n, c) => n + (c.k === 'COMPONENT_SET' ? c.ch.length : 1), 0);
-  assert.equal(variants, 72, '70 variants in 11 sets plus 2 single components');
+  assert.equal(variants, 61, '59 variants in 10 sets plus 2 single components (2026 brand: Purple became Ink, so the old Ink variants and Note box Purple are gone)');
   const manifest = JSON.parse(readFileSync(join(ROOT, 'figma-plugin/manifest.json'), 'utf-8'));
   assert.deepEqual(manifest.networkAccess, { allowedDomains: ['none'] }, 'the plugin makes no network requests');
   assert.equal(manifest.main, 'code.js');

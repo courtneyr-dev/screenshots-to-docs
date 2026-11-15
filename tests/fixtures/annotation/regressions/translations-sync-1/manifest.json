@@ -1,0 +1,474 @@
+{
+ "schema": "screenshots-to-docs/annotation-manifest@1",
+ "extractedAt": "2026-10-24T12:07:55.600Z",
+ "fileKey": "FxFxFxFxFxFxFxFxFxFxFx",
+ "tokens": {
+  "schemaVersion": 1,
+  "hash": "c80fa84b3723b65fc58d0e38de08770096b4114b15392fbb37196bd1b6ef2424"
+ },
+ "cleanFrame": {
+  "id": "132:55",
+  "name": "translations-sync-1|next",
+  "width": 1309,
+  "height": 745,
+  "screenshot": {
+   "id": "132:55",
+   "width": 1309,
+   "height": 745,
+   "imageHash": "30e8e8850523d3ead238dcda75b200e0a5b17b40"
+  }
+ },
+ "annotatedFrame": {
+  "id": "138:259",
+  "name": "[translations-sync-1] \u2014 Locale switcher \u2014 PCC-4465 \u2014 annotated",
+  "width": 1309,
+  "height": 745,
+  "clipsContent": true,
+  "screenshot": {
+   "id": "138:260",
+   "width": 1309,
+   "height": 745,
+   "imageHash": "30e8e8850523d3ead238dcda75b200e0a5b17b40"
+  }
+ },
+ "nodes": [
+  {
+   "id": "138:260",
+   "name": "screenshot",
+   "type": "RECTANGLE",
+   "bbox": [
+    0,
+    0,
+    1309,
+    745
+   ],
+   "visible": true,
+   "opacity": 1,
+   "rotation": 0,
+   "fills": [
+    {
+     "type": "IMAGE",
+     "imageHash": "30e8e8850523d3ead238dcda75b200e0a5b17b40"
+    }
+   ]
+  },
+  {
+   "id": "138:261",
+   "name": "Redact: account avatar (initials)",
+   "type": "INSTANCE",
+   "bbox": [
+    1244,
+    3,
+    56,
+    58
+   ],
+   "visible": true,
+   "opacity": 1,
+   "rotation": 0,
+   "fills": [
+    {
+     "type": "SOLID",
+     "hex": "#23232D",
+     "opacity": 1
+    }
+   ],
+   "strokes": [
+    {
+     "type": "SOLID",
+     "hex": "#23232D",
+     "opacity": 1
+    }
+   ],
+   "texts": [],
+   "strokeMax": 2,
+   "component": {
+    "set": "Redact",
+    "name": "Style=Solid",
+    "variant": {
+     "Style": "Solid"
+    },
+    "kitStamp": "c80fa84b3723b65fc58d0e38de08770096b4114b15392fbb37196bd1b6ef2424",
+    "remote": false
+   }
+  },
+  {
+   "id": "138:262",
+   "name": "Highlight 1: the locale switcher",
+   "type": "INSTANCE",
+   "bbox": [
+    194,
+    70,
+    412,
+    45
+   ],
+   "visible": true,
+   "opacity": 1,
+   "rotation": 0,
+   "fills": [],
+   "strokes": [
+    {
+     "type": "SOLID",
+     "hex": "#FFFFFF",
+     "opacity": 1
+    },
+    {
+     "type": "SOLID",
+     "hex": "#3017A1",
+     "opacity": 1
+    }
+   ],
+   "texts": [],
+   "strokeMax": 6,
+   "markHex": "#3017A1",
+   "component": {
+    "set": "Highlight box",
+    "name": "Style=Solid, Tone=Purple",
+    "variant": {
+     "Style": "Solid",
+     "Tone": "Purple"
+    },
+    "kitStamp": "c80fa84b3723b65fc58d0e38de08770096b4114b15392fbb37196bd1b6ef2424",
+    "remote": false
+   },
+   "target": {
+    "bbox": [
+     198,
+     74,
+     404,
+     37
+    ]
+   }
+  },
+  {
+   "id": "138:265",
+   "name": "Step 1: the locale switcher",
+   "type": "INSTANCE",
+   "bbox": [
+    158,
+    74,
+    32,
+    32
+   ],
+   "visible": true,
+   "opacity": 1,
+   "rotation": 0,
+   "fills": [
+    {
+     "type": "SOLID",
+     "hex": "#3017A1",
+     "opacity": 1
+    }
+   ],
+   "strokes": [
+    {
+     "type": "SOLID",
+     "hex": "#FFFFFF",
+     "opacity": 1
+    }
+   ],
+   "texts": [
+    {
+     "characters": "1",
+     "family": "Poppins",
+     "style": "Bold",
+     "size": 19,
+     "autoResize": "WIDTH_AND_HEIGHT",
+     "truncation": "DISABLED",
+     "bbox": [
+      170,
+      80.5,
+      8,
+      19
+     ],
+     "fillHex": "#FFFFFF",
+     "surfaceHex": "#3017A1"
+    }
+   ],
+   "strokeMax": 3,
+   "component": {
+    "set": "Step badge",
+    "name": "Tone=Purple, Size=S",
+    "variant": {
+     "Tone": "Purple",
+     "Size": "S"
+    },
+    "kitStamp": "c80fa84b3723b65fc58d0e38de08770096b4114b15392fbb37196bd1b6ef2424",
+    "remote": false
+   },
+   "target": {
+    "bbox": [
+     198,
+     74,
+     404,
+     37
+    ]
+   }
+  },
+  {
+   "id": "138:267",
+   "name": "Highlight 2: Source changed with the change count",
+   "type": "INSTANCE",
+   "bbox": [
+    258,
+    315,
+    299,
+    62
+   ],
+   "visible": true,
+   "opacity": 1,
+   "rotation": 0,
+   "fills": [],
+   "strokes": [
+    {
+     "type": "SOLID",
+     "hex": "#FFFFFF",
+     "opacity": 1
+    },
+    {
+     "type": "SOLID",
+     "hex": "#3017A1",
+     "opacity": 1
+    }
+   ],
+   "texts": [],
+   "strokeMax": 6,
+   "markHex": "#3017A1",
+   "component": {
+    "set": "Highlight box",
+    "name": "Style=Solid, Tone=Purple",
+    "variant": {
+     "Style": "Solid",
+     "Tone": "Purple"
+    },
+    "kitStamp": "c80fa84b3723b65fc58d0e38de08770096b4114b15392fbb37196bd1b6ef2424",
+    "remote": false
+   },
+   "target": {
+    "bbox": [
+     262,
+     319,
+     291,
+     54
+    ]
+   }
+  },
+  {
+   "id": "138:270",
+   "name": "Step 2: Source changed with the change count",
+   "type": "INSTANCE",
+   "bbox": [
+    222,
+    319,
+    32,
+    32
+   ],
+   "visible": true,
+   "opacity": 1,
+   "rotation": 0,
+   "fills": [
+    {
+     "type": "SOLID",
+     "hex": "#3017A1",
+     "opacity": 1
+    }
+   ],
+   "strokes": [
+    {
+     "type": "SOLID",
+     "hex": "#FFFFFF",
+     "opacity": 1
+    }
+   ],
+   "texts": [
+    {
+     "characters": "2",
+     "family": "Poppins",
+     "style": "Bold",
+     "size": 19,
+     "autoResize": "WIDTH_AND_HEIGHT",
+     "truncation": "DISABLED",
+     "bbox": [
+      232.5,
+      325.5,
+      11,
+      19
+     ],
+     "fillHex": "#FFFFFF",
+     "surfaceHex": "#3017A1"
+    }
+   ],
+   "strokeMax": 3,
+   "component": {
+    "set": "Step badge",
+    "name": "Tone=Purple, Size=S",
+    "variant": {
+     "Tone": "Purple",
+     "Size": "S"
+    },
+    "kitStamp": "c80fa84b3723b65fc58d0e38de08770096b4114b15392fbb37196bd1b6ef2424",
+    "remote": false
+   },
+   "target": {
+    "bbox": [
+     262,
+     319,
+     291,
+     54
+    ]
+   }
+  },
+  {
+   "id": "138:272",
+   "name": "Highlight 3: Review changes",
+   "type": "INSTANCE",
+   "bbox": [
+    462,
+    348,
+    123,
+    29
+   ],
+   "visible": true,
+   "opacity": 1,
+   "rotation": 0,
+   "fills": [],
+   "strokes": [
+    {
+     "type": "SOLID",
+     "hex": "#FFFFFF",
+     "opacity": 1
+    },
+    {
+     "type": "SOLID",
+     "hex": "#3017A1",
+     "opacity": 1
+    }
+   ],
+   "texts": [],
+   "strokeMax": 6,
+   "markHex": "#3017A1",
+   "component": {
+    "set": "Highlight box",
+    "name": "Style=Solid, Tone=Purple",
+    "variant": {
+     "Style": "Solid",
+     "Tone": "Purple"
+    },
+    "kitStamp": "c80fa84b3723b65fc58d0e38de08770096b4114b15392fbb37196bd1b6ef2424",
+    "remote": false
+   },
+   "target": {
+    "bbox": [
+     466,
+     352,
+     115,
+     21
+    ]
+   }
+  },
+  {
+   "id": "138:275",
+   "name": "Step 3: Review changes",
+   "type": "INSTANCE",
+   "bbox": [
+    589,
+    352,
+    32,
+    32
+   ],
+   "visible": true,
+   "opacity": 1,
+   "rotation": 0,
+   "fills": [
+    {
+     "type": "SOLID",
+     "hex": "#3017A1",
+     "opacity": 1
+    }
+   ],
+   "strokes": [
+    {
+     "type": "SOLID",
+     "hex": "#FFFFFF",
+     "opacity": 1
+    }
+   ],
+   "texts": [
+    {
+     "characters": "3",
+     "family": "Poppins",
+     "style": "Bold",
+     "size": 19,
+     "autoResize": "WIDTH_AND_HEIGHT",
+     "truncation": "DISABLED",
+     "bbox": [
+      599,
+      358.5,
+      12,
+      19
+     ],
+     "fillHex": "#FFFFFF",
+     "surfaceHex": "#3017A1"
+    }
+   ],
+   "strokeMax": 3,
+   "component": {
+    "set": "Step badge",
+    "name": "Tone=Purple, Size=S",
+    "variant": {
+     "Tone": "Purple",
+     "Size": "S"
+    },
+    "kitStamp": "c80fa84b3723b65fc58d0e38de08770096b4114b15392fbb37196bd1b6ef2424",
+    "remote": false
+   },
+   "target": {
+    "bbox": [
+     466,
+     352,
+     115,
+     21
+    ]
+   }
+  }
+ ],
+ "sensitive": [
+  {
+   "id": "avatar",
+   "kind": "avatar",
+   "bbox": [
+    1248,
+    7,
+    48,
+    50
+   ],
+   "reason": "account avatar (initials)"
+  }
+ ],
+ "keepClear": [],
+ "kitVariables": {
+  "color/mark": "#3017A1",
+  "color/halo": "#FFFFFF",
+  "color/on-mark": "#FFFFFF",
+  "size/stroke": 6,
+  "size/halo-line": 12,
+  "size/halo": 3,
+  "size/badge": 48,
+  "radius/label": 8,
+  "radius/highlight": 8,
+  "spacing/label-x": 16,
+  "spacing/label-y": 8,
+  "color/mark-gold": "#FFDC28",
+  "color/info": "#0F62FE",
+  "color/do": "#218C5F",
+  "color/dont": "#DE0093",
+  "color/caution": "#B15C16",
+  "color/ink": "#23232D",
+  "color/neutral": "#9C9890",
+  "color/on-gold": "#3017A1",
+  "size/badge-s": 32,
+  "size/badge-l": 64,
+  "size/stroke-thin": 4,
+  "size/halo-line-thin": 8,
+  "color/redact": "#23232D"
+ }
+}

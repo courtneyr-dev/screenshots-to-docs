@@ -1,0 +1,208 @@
+{
+  "name": "multi-annotation",
+  "frame": [
+    1440,
+    900
+  ],
+  "tokens": "8bd4eea416ad",
+  "nodes": [
+    {
+      "name": "screenshot",
+      "component": "RECTANGLE",
+      "variant": null,
+      "bbox": [
+        0,
+        0,
+        1440,
+        900
+      ],
+      "markHex": null,
+      "text": []
+    },
+    {
+      "name": "Highlight",
+      "component": "Highlight box",
+      "variant": {
+        "Style": "Solid",
+        "Tone": "Ink"
+      },
+      "bbox": [
+        190,
+        190,
+        320,
+        80
+      ],
+      "markHex": "#000000",
+      "text": []
+    },
+    {
+      "name": "Step 1: the search box",
+      "component": "Step badge",
+      "variant": {
+        "Tone": "Ink",
+        "Size": "M"
+      },
+      "bbox": [
+        200,
+        128,
+        48,
+        48
+      ],
+      "markHex": "#000000",
+      "text": [
+        "Inter Semi Bold 28: 1"
+      ]
+    },
+    {
+      "name": "Arrow",
+      "component": "Arrow",
+      "variant": {
+        "Shape": "Straight",
+        "Head": "End",
+        "Tone": "Ink"
+      },
+      "bbox": [
+        510,
+        224,
+        180,
+        12
+      ],
+      "markHex": "#000000",
+      "text": []
+    },
+    {
+      "name": "Label: Search box",
+      "component": "Callout label",
+      "variant": {
+        "Tone": "Ink",
+        "Pointer": "None"
+      },
+      "bbox": [
+        700,
+        204,
+        200,
+        52
+      ],
+      "markHex": "#000000",
+      "text": [
+        "Inter Semi Bold 28: Search box"
+      ]
+    },
+    {
+      "name": "Highlight",
+      "component": "Highlight box",
+      "variant": {
+        "Style": "Dashed",
+        "Tone": "Ink"
+      },
+      "bbox": [
+        190,
+        390,
+        320,
+        80
+      ],
+      "markHex": "#000000",
+      "text": []
+    },
+    {
+      "name": "Step 2: the filter list",
+      "component": "Step badge",
+      "variant": {
+        "Tone": "Ink",
+        "Size": "M"
+      },
+      "bbox": [
+        200,
+        330,
+        48,
+        48
+      ],
+      "markHex": "#000000",
+      "text": [
+        "Inter Semi Bold 28: 2"
+      ]
+    },
+    {
+      "name": "Highlight",
+      "component": "Highlight box",
+      "variant": {
+        "Style": "Solid",
+        "Tone": "Ink"
+      },
+      "bbox": [
+        890,
+        390,
+        320,
+        80
+      ],
+      "markHex": "#000000",
+      "text": []
+    },
+    {
+      "name": "Step 3: the Publish button",
+      "component": "Step badge",
+      "variant": {
+        "Tone": "Ink",
+        "Size": "M"
+      },
+      "bbox": [
+        1216,
+        406,
+        48,
+        48
+      ],
+      "markHex": "#000000",
+      "text": [
+        "Inter Semi Bold 28: 3"
+      ]
+    },
+    {
+      "name": "Note: Before you publish",
+      "component": "Note box",
+      "variant": {
+        "Tone": "Ink"
+      },
+      "bbox": [
+        200,
+        560,
+        520,
+        128
+      ],
+      "markHex": "#000000",
+      "text": [
+        "Inter Semi Bold 22: Before you publish",
+        "Inter Regular 22: Changes save to the workstream, not to Live, until you publish."
+      ]
+    }
+  ],
+  "checks": [
+    "manifest-shape:pass",
+    "token-identity:pass",
+    "frame-mapping:pass",
+    "provenance:pass",
+    "kit-components:pass",
+    "token-colors:pass",
+    "typography:pass",
+    "targets:pass",
+    "bounds:pass",
+    "collisions:pass",
+    "redaction:pass",
+    "contrast:pass",
+    "grayscale:pass",
+    "background-variant:pass",
+    "display-size:pass",
+    "color-independence:pass",
+    "export:pass",
+    "alt-text:pass"
+  ],
+  "humanReview": [
+    "redaction-declared",
+    "redaction-complete",
+    "alt-task",
+    "render-fidelity"
+  ],
+  "pixels": {
+    "clean": "4104869885298f8a86929ffefed5901ce7101b0debced1e0c5e794c98d287041",
+    "export": "36f1c4f5b613df3ea68f51145f675d10a2f897b09c18d8af8d8135356f55de95"
+  }
+}

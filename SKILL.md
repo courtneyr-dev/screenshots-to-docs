@@ -16,8 +16,28 @@ Nothing here is tied to one person or project. Each run takes its settings from 
 Every run does all three. Don't ask whether to do them and don't offer to skip them. If a person says to skip one for a run, follow that and write the skip in the handoff note.
 
 1. **Push the run to Figma** (workflow step 6), to the saved `figma.fileKey`. Ask only when no file key is saved, or the saved file isn't the person's or team's agreed review file, because a push adds a page to a shared file.
-2. **Annotate every shot in Figma with the Annotation kit** (workflow step 7): one annotated frame per shot, built from kit instances only (Highlight box, Step badge, Callout label, Redact). Never style marks by hand: no custom colors, boxes, or legends. Read `docs/how-to/annotate.md` and `docs/reference/annotation-kit.md` first. An agent annotates with `use_figma` by default; a person reviews.
-3. **Redact avatars, names, emails, and IDs** on every shot, with the kit's Redact component.
+2. **Annotate every shot in Figma with the Annotation kit** (workflow step 7): one annotated frame per shot, built from kit instances only (the "Annotation contract" below lists them). Never style marks by hand: no custom colors, boxes, or legends. Read `docs/how-to/annotate.md` and `docs/reference/annotation-kit.md` first. An agent annotates with `use_figma` by default; a person reviews.
+3. **Fake or pixelate avatars, names, emails, and IDs** on every shot, before it goes to Figma, and declare each region so the verifier can check it. No solid boxes, no blur.
+
+## Annotation contract
+
+One contract, `figma-plugin/annotation-tokens.json`, defines the colors, fonts, strokes, sizes, and contrast rules. `scripts/lib/annotation.mjs` enforces it; `docs/reference/annotation-kit.md` documents it. Don't restate token values in a run or a doc.
+
+- **Two images per shot, kept apart.** The _clean_ capture is the screenshot as `capture.mjs` wrote it, with personal data already faked or pixelated and no marks; use it where a docs system doesn't allow markup. The _annotated_ export is the instructional version, saved to `annotated/<slug>.png`. Checks and proof go to `review/`. The annotated image never replaces the clean one: the inventory keeps both (`clean_asset` and `asset`), and `record-asset` refuses an export identical to the capture.
+- **Annotation is mandatory for review.** Every shot that goes to a docs review or a docs destination has an annotated frame, including shots whose destination will publish the clean image: the annotated frame is how a reviewer sees what each step refers to.
+- **Allowed components, nothing else:** marker `Step badge`; outline `Highlight box`, `Highlight ellipse`, `Underline`, `Click indicator`; highlight `Dim overlay`; arrow `Arrow`, `Cursor`; label `Callout label` (four words at most), `Note box`, `Key cap`, `Do / Dont marker`. The old `Redact` component is retired: a Redact layer fails verification. A hand-drawn shape or a component from another kit fails verification.
+- **Brand tokens, from the contract only (2026 brand):** Ink is the default mark; Yellow marks the one focal step of a frame, in an Ink halo, with Ink text, and never takes white type; Inter Semi Bold for labels and Inter Regular for body text, never Poppins or Aleo; no gradients; no Pantheon logo on a screenshot. Do and Dont tones always come with a check or cross marker.
+- **Light and dark regions.** Ink, with its Paper halo, works on both, and so does Yellow with its Ink halo. Spend Yellow once per frame, on the focal step; a person confirms that (`yellow-budget`). The verifier measures the clean pixels beside each mark.
+- **Personal data.** Declare every region (`sensitive` plugin data on the frame, or `--sensitive <file>`). Then, in this order of preference:
+
+  1. **Fake data.** Replace the data in the page before capture with plausible fake data: names like "Anita Agency", emails like jordan.lee@example.com, avatars with fake initials (a brief's `evaluateBefore`, or a sandbox seeded with sample users). Declare the region with `"method": "fake-data"`; a person confirms the values are invented.
+  2. **Pixelate.** Otherwise pixelate each declared region, plus 4 px of padding, in the capture PNG itself, before `figma-plan.mjs` and the upload: `node scripts/pixelate.mjs --in <capture.png> --sensitive <regions.json> --dpr <dpr> --in-place`. Blocks are 14 px, raised to at least 7 CSS px at the capture's dpr (16 px at 2.2), and each block is the average of the pixels under it. Keep the unredacted original out of the run folder and out of anything delivered.
+
+  No solid boxes, no blur. A box reads as a broken screenshot, and blur can be reversed. The verifier fails a Redact layer, a region that is one flat color or a plain box, and a region whose pixels in the export or the clean capture are not uniform blocks.
+
+- **Before handoff, record each shot** (workflow step 7): the extraction reads the frame out of Figma, and `record-annotation.mjs` records the frame IDs, the clean capture's checksum, the export's size and checksum, the token schema and hash, and every check result.
+- **Automated** (`review/<slug>.validation.json`): kit components and variants, token colors and fonts, token version and hash, frame mapping and same-image proof, targets and numbering, bounds and clipping, collisions (marks overlapping each other, outlines closer than 3 px or nested across a stroke, badges on an outline stroke or across a background edge) and covered content, pixelated or fake-data personal data in the export and the clean capture, WCAG AA contrast, grayscale, light and dark fit, display size, color-independent meaning, export size, alt text against the marks.
+- **Human review, always:** that no personal data remains outside the declared regions, that the export looks right, and that the alt text says what the reader does. Also any item the validation file lists, such as a region declared as fake data or an ambiguous alt text. A person confirms with `--human-reviewed "<name>"`.
 
 ## What this skill does not do
 
@@ -136,14 +156,16 @@ For a first delivery or a release-critical refresh, capture a second time (wait 
 
 ### 7. Annotate and hand off
 
-Annotate every shot in Figma with the Annotation kit. This is required and is never offered as a choice: an agent places kit instances with `use_figma` (`docs/how-to/annotate.md`, `docs/reference/annotation-kit.md`), and a person reviews and adjusts. Hand-styled marks are a defect. Before extracting from or annotating in a Figma file you haven't checked this session, run the kit check (`scripts/figma-kit-check.mjs`, `docs/how-to/annotate.md`): an older kit has the wrong colors and nothing else flags it. Record each annotated frame, then generate the handoff note and fill in its `TO FILL` lines:
+Annotate every shot in Figma with the Annotation kit. This is required and is never offered as a choice: an agent places kit instances with `use_figma` (`docs/how-to/annotate.md`, `docs/reference/annotation-kit.md`), sets each mark's target, and a person reviews and adjusts. Hand-styled marks are a defect. Before extracting from or annotating in a Figma file you haven't checked this session, run the kit check (`scripts/figma-kit-check.mjs`, `docs/how-to/annotate.md`): an older kit has the wrong colors and nothing else flags it. Then read each annotated frame out of Figma, verify it, and record it:
 
 ```bash
-node scripts/record-annotation.mjs --dir <out>/run1 --slug <shot> --annotated-node-id <id> --kit-only --redacted   # once per shot
+node scripts/figma-annotation.mjs --clean-node-id <id> --annotated-node-id <id> --out extract.js   # run extract.js with use_figma; save the JSON as manifest.json
+node scripts/record-annotation.mjs --dir <out>/run1 --slug <shot> --manifest manifest.json --export annotated.png   # once per shot
+node scripts/record-annotation.mjs --dir <out>/run1 --slug <shot> --manifest manifest.json --export annotated.png --human-reviewed "<name>"   # after a person has read review/<shot>.validation.json and opened the export
 node scripts/handoff.mjs --config p1-editor.config.json --dir <out>/run1 --release "<release or change>"
 ```
 
-`record-annotation.mjs` is an attestation that the marks are kit instances only and personal data is redacted; pass the flags only if that's true. `handoff.mjs` refuses to write the note until every shot is recorded (or has an inventory record with `annotation_status` complete). A person can pass `--skip-annotation "<reason>"` to hand off anyway; the note then says the annotation was skipped.
+`record-annotation.mjs` checks the manifest and export against the token contract, writes the proof to `review/`, copies the export to `annotated/`, and leaves the clean capture alone. It no longer accepts `--kit-only` or `--redacted`: those were claims. `handoff.mjs` refuses to write the note until every shot is `complete`: verified, reviewed by a named person, with the clean capture, export, and token hash still matching the record. A person can pass `--skip-annotation "<reason>"` to hand off anyway; the note then says the annotation was skipped.
 
 It writes the note to `docs.handoffDir`. For a refresh, add `--previous <earlier run>` to list what changed (`references/release-refresh.md`). Don't say screenshots reached the P1 docs unless that export was verified (`references/docs-handoff.md`): the Google Docs swap in `references/release-swap.md` replaces images already in a doc; the first insertion and every publish are still manual.
 
@@ -174,7 +196,7 @@ Close the debugging Chrome, then remove the profile and capture folders with `no
 - Block shots prove the block instance (selected overlay matches the block, panel names its type or the overlay's label) and fail on a neighbor.
 - A shot that shows a config `forbiddenNames` entry fails and saves no PNG; with `--final` (or `final: true`) a shot with the Next.js dev overlay fails too (`references/configuration.md`).
 - `compare-runs.mjs` compares two runs and ignores isolated pixel noise; `cleanup.mjs` and the `--out-dir` guard keep captures and profiles out of commits.
-- `npm test` runs the regression and portability suite against local fixtures, with mutation checks. It needs Chrome but no P1, Figma, or Google access. `node scripts/validate-skill.mjs` checks this file; `node scripts/check-identity.mjs` checks commit and file emails. CI runs all three on changes to this folder.
+- `npm test` runs the regression and portability suite against local fixtures, with mutation checks, plus the annotation suite (`tests/annotation-tests.mjs`: token contract, kit agreement, extraction against a mock Plugin API, verifier fixtures and snapshots, invalid-annotation matrix, gate). It needs Chrome but no P1, Figma, or Google access. `node scripts/validate-skill.mjs` checks this file; `node scripts/check-identity.mjs` checks commit and file emails. CI runs all three on changes to this folder.
 
 ## Completion checklist
 
@@ -186,8 +208,9 @@ Close the debugging Chrome, then remove the profile and capture folders with `no
 - [ ] Six distinct, inspected PNGs from the delivered run (or the skipped ones reported); report shows all captured.
 - [ ] Figma page has one image-filled rectangle per shot, unique names, transparent wrappers.
 - [ ] Every shot has an annotated frame the size of the image, built from Annotation kit instances only, named `[<id>] — <title> — <release> — annotated`, with step layers named `Step N: the <element>`.
-- [ ] Avatars, names, emails, and IDs are redacted in every annotated frame.
-- [ ] Every annotated frame is recorded with `scripts/record-annotation.mjs`, and the handoff note says `Annotation: Complete` (or states why it was skipped).
+- [ ] Avatars, names, emails, and IDs are declared, and faked or pixelated in the capture (no boxes, no blur), in every annotated frame.
+- [ ] Every annotated frame is verified and recorded with `scripts/record-annotation.mjs`, a named person confirmed the human-review items, and the handoff note says `Annotation: Complete` (or states why it was skipped).
+- [ ] The clean capture and the annotated export are both kept: `annotated/`, `review/`, and the clean PNG in the run folder; the note lists both with their checksums.
 - [ ] Duplicate-run re-run rejected; one page per run ID.
 - [ ] Handoff note written; no claim of automated Google Docs export.
 - [ ] Known limitations recorded.

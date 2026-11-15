@@ -37,8 +37,8 @@ cd "$SKILL" || exit 1
 [ -d node_modules ] || { echo "Run: bash scripts/setup.sh (in $SKILL)"; exit 1; }
 
 echo "== static"
-for f in capture capture-window preflight chrome handoff record-annotation compare-runs cleanup validate-skill check-identity figma-plan figma-upload make-gallery routes verify-site inventory publish-markdown draft-alt figma-export gdocs-manifest setup build-figma-plugin watch figma-kit-check export-frame; do t "node --check scripts/$f.mjs" node --check "scripts/$f.mjs"; done
-for f in config presets release-sources watch; do t "node --check scripts/lib/$f.mjs" node --check "scripts/lib/$f.mjs"; done
+for f in capture capture-window preflight chrome handoff record-annotation compare-runs cleanup validate-skill check-identity figma-plan figma-upload make-gallery routes verify-site inventory publish-markdown draft-alt figma-export figma-annotation gdocs-manifest setup build-figma-plugin watch pixelate figma-kit-check export-frame; do t "node --check scripts/$f.mjs" node --check "scripts/$f.mjs"; done
+for f in config presets release-sources watch annotation; do t "node --check scripts/lib/$f.mjs" node --check "scripts/lib/$f.mjs"; done
 t "JSON files parse" python3 -c "
 import json,glob
 for p in glob.glob('briefs/*.json')+glob.glob('scripts/presets/*.json')+glob.glob('watchlists/*.json')+glob.glob('templates/*.json')+glob.glob('examples/**/*.json',recursive=True)+glob.glob('$FX/*.json')+['package.json']: json.load(open(p))"
@@ -256,22 +256,25 @@ EOF
 t "json handoff format parses" bash -c "node scripts/handoff.mjs --skip-annotation test-fixture --config '$TMP/cfg.json' --set docs.format=json --dir '$TMP/named' --release 'QA release' >'$TMP/hj.log' 2>&1 && python3 -c \"import json,glob;d=json.load(open(glob.glob('$TMP/notes/handoff-*.json')[0]));assert d['release']=='QA release' and d['workstream']=='qa-workstream'\""
 t "handoff needs a release name" bash -c "node scripts/handoff.mjs --skip-annotation test-fixture --config '$TMP/cfg.json' --dir '$TMP/named' >/dev/null 2>&1; [ \$? -eq 1 ]"
 t "handoff refuses a directory inside the tool folder" bash -c "node scripts/handoff.mjs --skip-annotation test-fixture --config '$TMP/cfg.json' --set docs.handoffDir='$ROOT/notes' --dir '$TMP/named' --release x >'$TMP/hb.log' 2>&1; [ \$? -eq 1 ] && grep -q 'inside this tool' '$TMP/hb.log' && [ ! -e '$ROOT/notes' ]"
-echo "== annotation gate: a handoff needs an annotated frame for every shot"
-rm -rf "$TMP/gate" "$TMP/gnotes"; cp -R "$TMP/named" "$TMP/gate"; rm -f "$TMP/gate/annotation-record.json"
+echo "== annotation gate: a handoff needs a verified, reviewed annotated frame for every shot"
+rm -rf "$TMP/gate" "$TMP/gnotes" "$TMP/gann"; cp -R "$TMP/named" "$TMP/gate"; rm -f "$TMP/gate/annotation-record.json"
 GATE_SLUGS=$(python3 -c "import json;print(' '.join(dict.fromkeys(r['slug'] for r in json.load(open('$TMP/gate/figma-plan.json'))['rows'])))")
 GATE_FIRST=${GATE_SLUGS%% *}
+for s in $GATE_SLUGS; do node tests/fixtures/annotation/gate-helper.mjs --dir "$TMP/gate" --slug "$s" --out "$TMP/gann" || echo "gate helper failed for $s"; done
 gate_h() { node scripts/handoff.mjs --config "$TMP/cfg.json" --set docs.handoffDir="$TMP/gnotes" --dir "$TMP/gate" --release 'QA release' "$@"; }
+gate_r() { node scripts/record-annotation.mjs --dir "$TMP/gate" --slug "$1" --manifest "$TMP/gann/$1.manifest.json" --export "$TMP/gann/$1.png" "${@:2}"; }
 t "handoff refuses when no shot is annotated, says how to record one, and writes nothing" bash -c "$(declare -f gate_h); TMP='$TMP'; gate_h >'$TMP/g1.log' 2>&1; [ \$? -eq 1 ] && grep -q 'annotation is required' '$TMP/g1.log' && grep -q 'record-annotation.mjs' '$TMP/g1.log' && [ ! -e '$TMP/gnotes' ]"
-t "record-annotation refuses without the kit-only and redacted attestations" bash -c "node scripts/record-annotation.mjs --dir '$TMP/gate' --slug $GATE_FIRST --annotated-node-id 87:2 >/dev/null 2>&1; [ \$? -eq 1 ]"
-t "record-annotation refuses an annotated node ID that equals the clean node ID" bash -c "node scripts/record-annotation.mjs --dir '$TMP/gate' --slug $GATE_FIRST --annotated-node-id 87:2 --clean-node-id 87:2 --kit-only --redacted >/dev/null 2>&1; [ \$? -eq 1 ]"
-t "record-annotation refuses a slug that is not in the run" bash -c "node scripts/record-annotation.mjs --dir '$TMP/gate' --slug not-a-shot --annotated-node-id 87:2 --kit-only --redacted >/dev/null 2>&1; [ \$? -eq 1 ]"
-t "handoff still refuses while any shot is unrecorded" bash -c "node scripts/record-annotation.mjs --dir '$TMP/gate' --slug $GATE_FIRST --annotated-node-id 87:2 --clean-node-id 84:13 --kit-only --redacted >/dev/null 2>&1; set -- $GATE_SLUGS; [ \$# -lt 2 ] && exit 0; $(declare -f gate_h); TMP='$TMP'; gate_h >/dev/null 2>&1; [ \$? -eq 1 ]"
-t "handoff passes once every shot is recorded, and the note lists the annotated frames" bash -c "for s in $GATE_SLUGS; do node scripts/record-annotation.mjs --dir '$TMP/gate' --slug \$s --annotated-node-id 88:2 --kit-only --redacted >/dev/null || exit 1; done; $(declare -f gate_h); TMP='$TMP'; gate_h >/dev/null 2>&1 && grep -q 'Annotation: Complete' '$TMP'/gnotes/handoff-*.md && grep -q '88:2' '$TMP'/gnotes/handoff-*.md"
-t "a record that is not attested as redacted is refused" bash -c "python3 - <<PY
+t "record-annotation rejects the old --kit-only and --redacted claims" bash -c "node scripts/record-annotation.mjs --dir '$TMP/gate' --slug $GATE_FIRST --manifest '$TMP/gann/$GATE_FIRST.manifest.json' --export '$TMP/gann/$GATE_FIRST.png' --kit-only --redacted >'$TMP/g0.log' 2>&1; [ \$? -eq 1 ] && grep -q 'claims' '$TMP/g0.log'"
+t "record-annotation refuses an export that is the clean capture file" bash -c "node scripts/record-annotation.mjs --dir '$TMP/gate' --slug $GATE_FIRST --manifest '$TMP/gann/$GATE_FIRST.manifest.json' --export '$TMP/gate/$GATE_FIRST.png' >/dev/null 2>&1; [ \$? -eq 1 ]"
+t "record-annotation refuses a slug that is not in the run" bash -c "node scripts/record-annotation.mjs --dir '$TMP/gate' --slug not-a-shot --manifest '$TMP/gann/$GATE_FIRST.manifest.json' --export '$TMP/gann/$GATE_FIRST.png' >/dev/null 2>&1; [ \$? -eq 1 ]"
+t "record-annotation verifies a real capture, keeps the clean PNG, and puts the export and proof in annotated/ and review/" bash -c "before=\$(shasum -a 256 '$TMP/gate/$GATE_FIRST.png' | cut -d' ' -f1); $(declare -f gate_r); TMP='$TMP'; gate_r $GATE_FIRST >'$TMP/g3.log' 2>&1 && grep -q 'pending-human-review' '$TMP/g3.log' && [ \$(shasum -a 256 '$TMP/gate/$GATE_FIRST.png' | cut -d' ' -f1) = \$before ] && [ -f '$TMP/gate/annotated/$GATE_FIRST.png' ] && [ -f '$TMP/gate/review/$GATE_FIRST.validation.json' ]"
+t "handoff refuses a verified shot until a named person has reviewed it" bash -c "$(declare -f gate_h); TMP='$TMP'; gate_h >'$TMP/g4.log' 2>&1; [ \$? -eq 1 ] && grep -q 'human review' '$TMP/g4.log'"
+t "handoff passes once every shot is verified and reviewed, and the note lists clean and annotated images" bash -c "for s in $GATE_SLUGS; do $(declare -f gate_r); TMP='$TMP'; gate_r \$s --human-reviewed 'QA Reviewer' >/dev/null || exit 1; done; $(declare -f gate_h); TMP='$TMP'; gate_h >/dev/null 2>&1 && grep -q 'Annotation: Complete' '$TMP'/gnotes/handoff-*.md && grep -q '87:2' '$TMP'/gnotes/handoff-*.md && grep -q 'Clean and annotated images' '$TMP'/gnotes/handoff-*.md && grep -q 'annotated/' '$TMP'/gnotes/handoff-*.md"
+t "a record made against other tokens is refused as stale" bash -c "python3 - <<PY
 import json
-p='$TMP/gate/annotation-record.json'; d=json.load(open(p)); d['frames']['$GATE_FIRST']['redacted']=False; json.dump(d,open(p,'w'))
+p='$TMP/gate/annotation-record.json'; d=json.load(open(p)); d['frames']['$GATE_FIRST']['tokens']['hash']='f'*64; json.dump(d,open(p,'w'))
 PY
-$(declare -f gate_h); TMP='$TMP'; gate_h >'$TMP/g2.log' 2>&1; [ \$? -eq 1 ] && grep -q 'not attested as redacted' '$TMP/g2.log'"
+$(declare -f gate_h); TMP='$TMP'; gate_h >'$TMP/g2.log' 2>&1; [ \$? -eq 1 ] && grep -q 'stale' '$TMP/g2.log'"
 t "--skip-annotation needs a reason" bash -c "$(declare -f gate_h); TMP='$TMP'; gate_h --skip-annotation '' >/dev/null 2>&1; [ \$? -eq 1 ]"
 t "--skip-annotation with a reason writes the note and says the annotation was skipped" bash -c "rm -rf '$TMP/gnotes'; rm -f '$TMP/gate/annotation-record.json'; $(declare -f gate_h); TMP='$TMP'; gate_h --skip-annotation 'release freeze' >/dev/null 2>&1 && grep -q 'Annotation: SKIPPED by request: release freeze' '$TMP'/gnotes/handoff-*.md"
 
@@ -319,6 +322,22 @@ inv_pass=$(grep -c '^PASS  ' "$TMP/inventory-tests.log"); inv_fail=$(grep -c '^F
 echo "      inventory tests: $inv_pass passed, $inv_fail failed (names: node tests/inventory-tests.mjs)"
 pass=$((pass + inv_pass)); fail=$((fail + inv_fail))
 [ "$inv_pass" -gt 0 ] || { echo "FAIL  the inventory tests did not run"; fail=$((fail + 1)); }
+
+echo "== annotation system: token contract, kit agreement, extraction, verifier fixtures, gate"
+node tests/annotation-tests.mjs >"$TMP/annotation-tests.log" 2>&1
+grep -E '^(PASS|FAIL)  |^        ' "$TMP/annotation-tests.log" | grep -v '^PASS  ' | head -40
+an_pass=$(grep -c '^PASS  ' "$TMP/annotation-tests.log"); an_fail=$(grep -c '^FAIL  ' "$TMP/annotation-tests.log")
+echo "      annotation tests: $an_pass passed, $an_fail failed (names: node tests/annotation-tests.mjs)"
+pass=$((pass + an_pass)); fail=$((fail + an_fail))
+[ "$an_pass" -gt 0 ] || { echo "FAIL  the annotation tests did not run"; fail=$((fail + 1)); }
+
+echo "== pixelation: sensitive regions pass the validator's redaction check, nothing else changes"
+node tests/pixelate-tests.mjs >"$TMP/pixelate-tests.log" 2>&1
+grep -E '^(PASS|FAIL)  |^        ' "$TMP/pixelate-tests.log" | grep -v '^PASS  ' | head -20
+px_pass=$(grep -c '^PASS  ' "$TMP/pixelate-tests.log"); px_fail=$(grep -c '^FAIL  ' "$TMP/pixelate-tests.log")
+echo "      pixelate tests: $px_pass passed, $px_fail failed (names: node tests/pixelate-tests.mjs)"
+pass=$((pass + px_pass)); fail=$((fail + px_fail))
+[ "$px_pass" -gt 0 ] || { echo "FAIL  the pixelate tests did not run"; fail=$((fail + 1)); }
 
 echo "== upload URLs: screenshots only go to Figma upload hosts"
 node tests/upload-url-tests.mjs >"$TMP/upload-url-tests.log" 2>&1

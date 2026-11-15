@@ -9,7 +9,8 @@
  *   node draft-alt.mjs --marks marks.json --subject "<what the screen is>" [--id <id> --inventory <file> --apply]
  *
  * marks.json: a list of layer names, { "marks": [...] }, or a Figma REST GET /v1/files/:key/nodes response.
- * Without --apply it prints the draft only. --apply saves it with `inventory.mjs set-alt`, which runs the
+ * An ambiguous draft (generic step labels, a one-word subject, annotation words) is flagged, and --apply refuses it
+ * until a person has read it and passes --human-reviewed "<name>". Without --apply it prints the draft only. --apply saves it with `inventory.mjs set-alt`, which runs the
  * inventory's alt text checks. See references/release-swap.md.
  */
 
@@ -17,6 +18,7 @@ import { readFileSync } from 'node:fs';
 import { parseArgs } from 'node:util';
 import { resolve, join, dirname } from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { checkAltAgainstSteps } from './lib/annotation.mjs';
 
 const WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'];
 const STEP_RE = /^Step (\d+):\s*(.+?)\s*$/;
@@ -60,18 +62,24 @@ export function draftAlt(steps, subject) {
 if (import.meta.url === `file://${process.argv[1]}`) {
   const { values } = parseArgs({ options: {
     marks: { type: 'string' }, subject: { type: 'string' }, id: { type: 'string' }, inventory: { type: 'string' },
-    apply: { type: 'boolean' }, help: { type: 'boolean', short: 'h' },
+    apply: { type: 'boolean' }, 'human-reviewed': { type: 'string' }, help: { type: 'boolean', short: 'h' },
   } });
   const fail = msg => { console.error(`FAIL: ${msg}`); process.exit(1); };
   if (values.help || !values.marks) {
-    console.log('Usage: node draft-alt.mjs --marks marks.json --subject "<what the screen is>" [--id <id> --inventory <file> --apply]');
+    console.log('Usage: node draft-alt.mjs --marks marks.json --subject "<what the screen is>" [--id <id> --inventory <file> --apply [--human-reviewed "<name>"]]');
     process.exit(values.help ? 0 : 1);
   }
-  let text;
-  try { text = draftAlt(stepsFrom(layerNames(JSON.parse(readFileSync(resolve(values.marks), 'utf-8')))), values.subject); } catch (e) { fail(e.message); }
+  let text, check;
+  try {
+    const steps = stepsFrom(layerNames(JSON.parse(readFileSync(resolve(values.marks), 'utf-8'))));
+    text = draftAlt(steps, values.subject);
+    check = checkAltAgainstSteps(text, steps, values.subject);
+  } catch (e) { fail(e.message); }
   console.log(text);
+  if (check.status !== 'pass') for (const r of check.reasons) console.error(`  ! needs a person to read it: ${r}`);
   if (values.apply) {
     if (!values.id) fail('--apply needs --id');
+    if (check.status !== 'pass' && !values['human-reviewed']?.trim()) fail('this draft is ambiguous (see above). Read it against the image, fix the step names or --subject, or pass --human-reviewed "<name>" to accept it as it is. Nothing was saved.');
     const args = [join(dirname(new URL(import.meta.url).pathname), 'inventory.mjs'), 'set-alt', '--id', values.id, '--text', text];
     if (values.inventory) args.push('--inventory', values.inventory);
     const r = spawnSync(process.execPath, args, { stdio: 'inherit' });

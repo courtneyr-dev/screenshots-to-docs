@@ -6,45 +6,41 @@ nav_order: 5
 
 # Annotation kit
 
-The Figma plugin in `figma-plugin/` builds these components and variables in any design file. This page is generated from `figma-plugin/kit.json`, the same data the plugin uses.
+The Figma plugin in `figma-plugin/` builds these components and variables in any design file. The components come from `figma-plugin/kit.json`. Colors, fonts, sizes, and the rules below come from one contract, `figma-plugin/annotation-tokens.json`, which the verifier in `scripts/lib/annotation.mjs` enforces. Don't copy token values anywhere else; point at the contract.
 
 ## Components
 
+Each component belongs to one role: marker, outline, highlight, arrow, or label (see the token contract below). There is no redaction component: personal data is faked or pixelated in the capture (see [Personal data](#personal-data)). Tone names are the kit's, from the 2026 brand: **Ink** is the default; **Yellow** (#FFCA28) marks the one focal step of a frame, in an Ink halo, with Ink text; **Paper** is for neutral notes. Do and Dont use Ink and Paper and always carry a check or cross. Yellow is rationed: spend it on one step, and never put white type on it.
+
 ### Step badge
 
-Numbered step marker. Number runs in reading order and matches the numbered step in the article text. Purple is the default; Gold for dark UI; Ink for low emphasis; Do/Dont for correct vs mistaken examples. Size M in a 1440x900 frame; S for dense UI; L for hero shots.
+Numbered step marker. Number runs in reading order and matches the numbered step in the article text. Ink is the default; Yellow for the one focal step; Do/Dont for correct vs mistaken examples (always with a Do / Dont marker). Size M in a 1440x900 frame; S for dense UI; L for hero shots. Name the layer `Step N: the <element>`.
 
-15 variants. Properties: `Number` text (default "1"); `Tone`: Purple, Gold, Ink, Do, Dont (default Purple); `Size`: S, M, L (default S).
+12 variants. Properties: `Number` text (default "1"); `Tone`: Ink, Yellow, Do, Dont (default Ink); `Size`: S, M, L (default S).
 
 ### Callout label
 
-Short label (1-4 words) naming a UI element in its exact wording. Pointer aims at the element; None when it sits beside a Highlight box. Purple default, Gold on dark UI, Ink low emphasis, Info for neutral notes. Repeat the words in the article text: text in an image is not searchable or translatable.
+Short label (1-4 words) naming a UI element in its exact wording. Pointer aims at the element; None when it sits beside a Highlight box. Ink default, Yellow for the focal step, Paper for neutral notes. Repeat the words in the article text: text in an image is not searchable or translatable. For anything longer than four words, use a Note box.
 
-20 variants. Properties: `Label` text (default "Blocks panel"); `Tone`: Purple, Gold, Ink, Info (default Purple); `Pointer`: None, Left, Right, Up, Down (default None).
+15 variants. Properties: `Label` text (default "Blocks panel"); `Tone`: Ink, Yellow, Paper (default Ink); `Pointer`: None, Left, Right, Up, Down (default None).
 
 ### Highlight box
 
 Outlines the UI area the step is about. Resize to fit; never fill it. Solid for the focus of the step; Dashed for a secondary or optional area. Do/Dont tones pair with Do/Dont badges in comparison images.
 
-8 variants. Properties: `Style`: Solid, Dashed (default Solid); `Tone`: Purple, Gold, Do, Dont (default Purple).
+8 variants. Properties: `Style`: Solid, Dashed (default Solid); `Tone`: Ink, Yellow, Do, Dont (default Ink).
 
 ### Arrow
 
 Points at one UI element. Rotate, flip, and resize the instance. Straight for short pointers; Curved to route around UI; Elbow to come from a margin label. Head=Both only for "move between" or range steps. Keep one arrow per step at most; prefer a Highlight box for areas.
 
-12 variants. Properties: `Shape`: Straight, Curved, Elbow (default Straight); `Head`: End, Both (default End); `Tone`: Purple, Gold (default Purple).
+12 variants. Properties: `Shape`: Straight, Curved, Elbow (default Straight); `Head`: End, Both (default End); `Tone`: Ink, Yellow (default Ink).
 
 ### Key cap
 
 One keyboard key. Combine instances for shortcuts (Shift + 2). Use the key name as macOS shows it; mention Windows equivalents in the text, not the image.
 
 2 variants. Properties: `Key` text (default "Shift"); `Tone`: Light, Ink (default Light).
-
-### Redact
-
-Hides personal or sensitive data: names, emails, avatars, IDs, tokens. Pantheon docs style forbids personal information in screenshots. Blur keeps the layout readable; Solid when blur might still leak text. Prefer re-capturing with sample data.
-
-2 variants. Properties: `Style`: Blur, Solid (default Blur).
 
 ### Dim overlay
 
@@ -56,13 +52,13 @@ A single component.
 
 Marks the exact spot to click. Use when a Highlight box would be too big (a small icon or menu item). Pair with a Step badge.
 
-2 variants. Properties: `Tone`: Purple, Gold (default Purple).
+2 variants. Properties: `Tone`: Ink, Yellow (default Ink).
 
 ### Note box
 
-A short explanation that must sit on the image (one or two sentences). Use sparingly: anything a reader needs also goes in the article text. Ink default, Info for tips, Purple when it belongs to a numbered step.
+A short explanation that must sit on the image (one or two sentences). Use sparingly: anything a reader needs also goes in the article text. Ink default, Paper for tips.
 
-3 variants. Properties: `Title` text (default "Note"); `Body` text (default "Changes save to the workstream, not to Live, until you publish."); `Show title` on/off (default on); `Tone`: Ink, Info, Purple (default Ink).
+2 variants. Properties: `Title` text (default "Note"); `Body` text (default "Changes save to the workstream, not to Live, until you publish."); `Show title` on/off (default on); `Tone`: Ink, Paper (default Ink).
 
 ### Do / Dont marker
 
@@ -74,13 +70,13 @@ Labels a comparison image as the right or wrong way. Shape (check vs cross) carr
 
 Circles a small round target: an icon, avatar, toggle, or badge. Use Highlight box for rectangular UI.
 
-2 variants. Properties: `Tone`: Purple, Gold (default Purple).
+2 variants. Properties: `Tone`: Ink, Yellow (default Ink).
 
 ### Underline
 
 Underlines a word or field label in the UI when a box would hide nearby text.
 
-2 variants. Properties: `Tone`: Purple, Gold (default Purple).
+2 variants. Properties: `Tone`: Ink, Yellow (default Ink).
 
 ### Cursor
 
@@ -88,32 +84,204 @@ A mouse pointer for when the capture did not record one. Place its tip on the cl
 
 A single component.
 
-## Variables
+<!-- tokens:begin (generated by npm run build:figma-plugin; do not edit) -->
 
-Collection **Annotation**. Colors alias the Pantheon Design System library when it is enabled for the file; otherwise the plugin creates the same values locally.
+## Token contract
 
-| Variable              | Value                                   | Notes                                                                                                                                                   |
-| --------------------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `color/mark`          | #7952A8 (PDS `primitive/discovery/600`) | PDS discovery/600 #7952A8. Main mark color. White text 5.86:1; vs white 5.86:1, vs #F3F3F5 5.29:1; needs the white halo on dark UI (2.99:1 vs #241612). |
-| `color/halo`          | #FFFFFF                                 | White outline that keeps marks visible on dark screenshots.                                                                                             |
-| `color/on-mark`       | #FFFFFF                                 | Text on badges and labels.                                                                                                                              |
-| `size/stroke`         | 6                                       | Arrow and highlight stroke in a 1440x900 frame (about 3 px on an 800 px docs column).                                                                   |
-| `size/halo-line`      | 12                                      | Halo stroke drawn under arrows and highlights: stroke + 2x halo.                                                                                        |
-| `size/halo`           | 3                                       | Halo outline on badges and labels.                                                                                                                      |
-| `size/badge`          | 48                                      | Step badge diameter.                                                                                                                                    |
-| `radius/label`        | 8                                       | —                                                                                                                                                       |
-| `radius/highlight`    | 8                                       | —                                                                                                                                                       |
-| `spacing/label-x`     | 16                                      | —                                                                                                                                                       |
-| `spacing/label-y`     | 8                                       | —                                                                                                                                                       |
-| `color/mark-gold`     | #FFCA28 (PDS `primitive/brand/500`)     | PDS brand/500 #FFCA28. For marks on dark UI. Use color/on-gold text (5.96:1).                                                                           |
-| `color/info`          | #207DDE (PDS `primitive/info/600`)      | PDS info/600 #207DDE. Neutral notes.                                                                                                                    |
-| `color/do`            | #3C6C0F (PDS `primitive/success/700`)   | PDS success/700 #3C6C0F. Correct examples. White text 6.28:1.                                                                                           |
-| `color/dont`          | #BE3232 (PDS `primitive/critical/600`)  | PDS critical/600 #BE3232. Mistakes to avoid. White text 5.69:1.                                                                                         |
-| `color/caution`       | #B15C16 (PDS `primitive/warning/700`)   | PDS warning/700 #B15C16. Warnings. White text 4.76:1.                                                                                                   |
-| `color/ink`           | #4A4844 (PDS `primitive/warm/900`)      | PDS warm/900 #4A4844. Dark notes, key caps, dimming. White text 9.12:1.                                                                                 |
-| `color/neutral`       | #9C9890 (PDS `primitive/warm/600`)      | PDS warm/600 #9C9890. Redaction blocks.                                                                                                                 |
-| `color/on-gold`       | #4A4844 (PDS `primitive/warm/900`)      | Text on gold marks (5.96:1).                                                                                                                            |
-| `size/badge-s`        | 32                                      | Small step badge.                                                                                                                                       |
-| `size/badge-l`        | 64                                      | Large step badge.                                                                                                                                       |
-| `size/stroke-thin`    | 4                                       | Thin marks: underlines, small boxes.                                                                                                                    |
-| `size/halo-line-thin` | 8                                       | Halo under thin marks.                                                                                                                                  |
+The canonical contract is `figma-plugin/annotation-tokens.json`. Everything below is generated from it by `npm run build:figma-plugin`, and CI fails when this page is stale. Change a value there, run the build, rebuild the kit in Figma with the plugin, and re-annotate: the verifier rejects annotations made with an older kit.
+
+- Schema version 1.
+- Identity hash (SHA-256 of the canonical JSON): `8bd4eea416ad4a8881a5c15bb50ea3a93764d759cef4a1a16cbbc0c831d1c5e0`
+- The plugin stamps this hash on the Figma file and on every kit component. The extraction reads it back, and `record-annotation.mjs` compares it with this repository.
+
+### Annotation components
+
+- **marker**: Numbered marker: identifies an ordered user action. Components: `Step badge`.
+- **outline**: Outline: identifies a control or region without obscuring it. Never filled. Components: `Highlight box`, `Highlight ellipse`, `Underline`, `Click indicator`.
+- **highlight**: Highlight: emphasizes a larger target area by dimming what surrounds it. Never placed over the target. Components: `Dim overlay`.
+- **arrow**: Arrow: connects explanatory text to a target. Components: `Arrow`, `Cursor`.
+- **label**: Label: explains purpose or expected action. Components: `Callout label`, `Note box`, `Key cap`, `Do / Dont marker`.
+
+Use only these. Placing a hand-drawn shape, an unlisted component, or a component from another kit fails `kit-components`.
+
+### Colors
+
+- Primary: ink `#000000`, paper `#FFFFFF`, yellow `#FFCA28`, whiteSmoke `#F3F3F3`.
+- Secondary: travertine `#EBE6DC`, marble `#8E9094`, shadow `#1A1A1A`, brick `#C95A3D`, sky `#B8C9D6`.
+- Gray: .
+
+- Role `mark` is ink `#000000`. Default mark and the main emphasis color. Ink and Paper carry the work; Yellow is spent once.
+- Role `halo` is paper `#FFFFFF`. Outline under Ink marks so they survive dark screenshot regions.
+- Role `haloInk` is ink `#000000`. Outline under Yellow and Paper marks. Yellow and Paper do not separate from a light screenshot on their own; an Ink halo does, and Yellow still reads against it on dark regions.
+- Role `onMark` is paper `#FFFFFF`. Text on Ink surfaces.
+- Role `markYellow` is yellow `#FFCA28`. The one focal step of a frame: its badge and its outline. Yellow is how the brand points; never more than one step per frame.
+- Role `onYellow` is ink `#000000`. Text on Yellow marks. Ink only; the brand never sets white type on Yellow.
+- Role `ink` is ink `#000000`. Low-emphasis notes, key caps, and the dim overlay.
+- Role `paper` is paper `#FFFFFF`. Neutral notes and the Dont mark: a Paper fill with an Ink halo.
+- Role `do` is ink `#000000`. Correct example. An Ink mark, always paired with a check marker.
+- Role `dont` is paper `#FFFFFF`. Mistaken example. A Paper mark with an Ink halo, always paired with a cross marker.
+
+### Tones and contrast
+
+- **Ink**: #FFFFFF text on #000000 is 21.00:1; mark against halo 21.00:1; for light and dark screenshot regions.
+- **Yellow**: #000000 text on #FFCA28 is 13.73:1; mark against halo 13.73:1; for light and dark screenshot regions.
+- **Paper**: #000000 text on #FFFFFF is 21.00:1; mark against halo 21.00:1; for light and dark screenshot regions.
+- **Do**: #FFFFFF text on #000000 is 21.00:1; mark against halo 21.00:1; for light and dark screenshot regions; needs a check marker.
+- **Dont**: #000000 text on #FFFFFF is 21.00:1; mark against halo 21.00:1; for light and dark screenshot regions; needs a cross marker.
+
+Rules: text 4.5:1, or 3:1 for large text (24 px, or 18.67 px bold). A mark reaches 3:1 against the screenshot beside it through its fill or, failing that, its halo (which must itself reach 3:1 against the fill). Light regions are those whose mean luminance is at least 0.35. Annotated screenshots carry no Pantheon logo. If one is genuinely needed, use an approved lockup with clear space and minimum size, and never recolor, stretch, rotate, distort, or cover it. No gradients as annotation label or component backgrounds.
+
+### Typography
+
+- Labels and headings: Inter Semi Bold. Body text: Inter Regular. Not allowed: Poppins, Aleo.
+- Fallback: undefined
+
+### Strokes, spacing, and size
+
+- Strokes are authored for a 1440 px wide frame: 6 px mark stroke, 12 px halo stroke, 3 px halo outline. Strokes are authored for a 1440 px wide frame. At the docs display width a stroke must still render at 2 px or more, so on a wider frame the stroke scales up by frameWidth / displayWidth.
+- Strokes and arrowheads: square caps and miter joins; The kit Arrow component's head (Head=End, or Both for ranges). It is not redrawn per run.
+- Badges: S 32 px, M 48 px, L 64 px. Label padding 16 by 8 px; corner radius 8 px (labels) and 8 px (outlines).
+- Minimum rendered size at the 800 px docs width: 12 px label text, 10 px numerals, 12 px body text, 2 px strokes. Rendered size is the authored size times min(1, docsColumnWidthPx / frameWidth). Export at 2x.
+- A Callout label holds at most 4 words. Use Note box (Inter Regular body) for anything over four words.
+- Spacing between marks: Two outlines or highlights keep 3 px of clear space between their outer edges (halo included). A mark nested inside another clears the outer mark's inner stroke edge by the same amount. A marker sits wholly inside a box or clear of its stroke. A badge must not straddle a background edge (half on a dialog, half on the dimmed backdrop). The median luma (Rec. 601, 0-255) of opposite sides of the ring may differ by at most 40; pixels within 40 of the mark color are ignored. The ring runs 4 to 14 px at the export scale, measured from the badge edge on the clean capture.
+- Personal data: Replace personal data with plausible fake data in the page before capture (preferred). Otherwise pixelate each declared region in the capture itself, before it goes to Figma, and keep the unredacted original out of anything delivered. Solid boxes and blur are not allowed: a box reads as a broken screenshot, and blur can be reversed. Methods: `fake-data` (preferred) or `pixelate`. Pixelate at the capture stage in blocks of at least 7 CSS px (14 px at 2x), with 4 px of padding around the declared region. Shrink the region with bilinear filtering, then enlarge it with nearest neighbor, so each block is one color averaged from the unredacted pixels under it. Retired components: `Redact`. Kinds: text, name, email, id, token, url, path, avatar, image.
+
+### Variables
+
+Collection **Annotation**, created by the plugin from the tokens. Color variables alias the `brand/*` primitives in the **Annotation primitives** collection.
+
+- `color/mark`: ink #000000
+- `color/halo`: paper #FFFFFF
+- `color/halo-ink`: ink #000000
+- `color/on-mark`: paper #FFFFFF
+- `color/mark-yellow`: yellow #FFCA28
+- `color/on-yellow`: ink #000000
+- `color/ink`: ink #000000
+- `color/paper`: paper #FFFFFF
+- `color/do`: ink #000000
+- `color/dont`: paper #FFFFFF
+- `size/stroke`: 6
+- `size/halo-line`: 12
+- `size/halo`: 3
+- `size/badge`: 48
+- `size/badge-s`: 32
+- `size/badge-l`: 64
+- `size/stroke-thin`: 4
+- `size/halo-line-thin`: 8
+- `radius/label`: 8
+- `radius/highlight`: 8
+- `spacing/label-x`: 16
+- `spacing/label-y`: 8
+
+### What the verifier checks
+
+- `manifest-shape`: The extracted manifest has the fields every other check reads.
+- `token-identity`: The Figma file's kit was built from this repository's token schema and hash, and its variables still hold the token values (a hand-edited variable fails).
+- `frame-mapping`: The annotated frame is not the clean frame, is the size Figma draws the capture (the pixels of the PNG divided by its dpr), and shows the same image (same Figma image hash); frame names and the clean node ID match the inventory when one is given.
+- `provenance`: The clean capture's checksum matches the inventory's clean asset, and the export is not the clean capture.
+- `kit-components`: Every layer is an instance of an approved kit component built by the plugin from the current tokens, with a real variant, visible, and with no gradient or image paint. A hand-drawn shape fails.
+- `token-colors`: Every fill, stroke, and text color is a token color.
+- `typography`: Text is the contract's label font (Inter Semi Bold) or body font (Inter Regular); Poppins, Aleo, and every other family fail. A contract that lists a label fallback also passes it, flagged for review.
+- `targets`: Every marker, outline, and arrow has a target (bounding box or selector); markers carry numerals 1 to N with no gaps, named "Step N: the element"; markers sit beside their target, outlines surround it, arrows reach it.
+- `bounds`: Every mark and its halo is inside the image; text is not truncated, clipped by its component, or (by estimate) overflowing its box; a Callout label is at most four words.
+- `collisions`: Markers and labels do not overlap each other or arrows. Outlines and highlights, grown by their halo, keep 3 px of clear space between their outer edges; a mark nested inside another clears its inner stroke edge by 3 px. A marker sits wholly inside a box or clear of its stroke, and does not straddle a background edge in the clean capture (opposite sides of a ring 4 to 14 export px outside the badge differ by more than 40 in median luma). Nothing covers a step target or keep-clear region; outlines are unfilled.
+- `redaction`: No Redact box (Solid or Blur) is in the frame. Each declared sensitive region is either declared as fake data, or pixelated, with padding, in both the export and the clean capture: uniform blocks of at least 7 CSS px (14 px at 2x). A flat color fails as a solid box; text, photos, and blur fail as unredacted.
+- `contrast`: Text meets WCAG AA (3:1 for large text); each mark reaches 3:1 against the screenshot beside it through its fill or its halo, measured from the clean capture.
+- `grayscale`: Each mark still reaches 3:1 after a grayscale conversion.
+- `background-variant`: A tone sits only on screenshot regions it is approved for (Ink, Yellow, Paper, Do, and Dont each list the regions they work on; any tone that lists only one fails on mixed regions).
+- `display-size`: Text and strokes stay above the minimum size at the docs display width.
+- `color-independence`: Do and Dont tones are paired with a check or cross marker; steps are carried by numerals, not color.
+- `export`: The export is the frame size times the export scale.
+- `alt-text`: The alt text names every step in order and does not describe colored shapes; ambiguous text goes to a person.
+
+### What a person still reviews
+
+- `redaction-complete`: No personal, credential, or customer data remains outside the declared regions. Nothing can detect data nobody declared. Always required.
+- `redaction-declared`: No sensitive regions were declared: confirm the shot shows none.
+- `redaction-fake-data`: A region is declared as fake data: confirm the values shown are invented (for example "Anita Agency" or jordan.lee@example.com), not a real person's.
+- `target-geometry`: A target has a selector but no bounding box, so its position was not checked.
+- `text-fit`: Text is close to its box width. The overflow check is an estimate, because Figma doesn't expose measured overflow.
+- `font-fallback`: Labels use the contract's label fallback font because the label font was unavailable when the kit was built. Only a contract that lists a fallback raises this.
+- `yellow-budget`: A Yellow mark is in the frame. Yellow marks one focal step (its badge and its outline); confirm no other step uses it.
+- `alt-text`: The alt text is ambiguous (generic step labels, a one-word subject, or annotation words).
+- `alt-task`: The alt text says what the screen is and what the reader does there. Always required.
+- `render-fidelity`: The export looks right. The repository measures geometry, tokens, and the pixels it can; it does not render the Figma file. Always required.
+
+<!-- tokens:end -->
+
+## Personal data
+
+Pantheon docs style forbids personal information in screenshots. Handle it before the capture reaches Figma, and declare every region (below) so the verifier can check it.
+
+1. **Fake data, preferred.** Replace the data in the page before capture: names like "Anita Agency", emails like jordan.lee@example.com, avatars with fake initials. Declare the region with `"method": "fake-data"`. Nothing in the pixels can prove a value is invented, so a person confirms it (`redaction-fake-data`).
+2. **Pixelate, otherwise.** Pixelate the region, plus 4 px of padding, in the capture PNG before `figma-plan.mjs` uploads it. Blocks are at least 7 CSS px: 14 image px at 2x, or 7 times the capture's dpr. Shrink the region with bilinear filtering, then enlarge it with nearest neighbor. Keep the unredacted original out of the run folder and out of anything delivered; the clean capture is published too.
+
+Not allowed: solid boxes, which read as a broken screenshot, and blur, which can be reversed. The kit's old `Redact` component (Solid and Blur variants) is retired, and a Redact layer fails `redaction`.
+
+How `redaction` tells pixelation apart, in the export and the clean capture: it finds every column and row where neighboring pixels differ. Pixelation puts those edges on a shared grid, in bands at most 3 px wide (edges soften when Figma resamples a capture taken at another dpr) and at least 7 CSS px apart, with more than two edges across the region. Text, photos, and blur put edges everywhere. A region whose unpadded area is one color is a solid box; one with a single edge on each side is a plain box.
+
+## Placing marks so they can be verified
+
+The verifier reads the annotated frame out of Figma (`node scripts/figma-annotation.mjs`, run with `use_figma`). It can only check what the frame says about itself, so each mark carries its target as shared plugin data, in the `s2d` namespace:
+
+```js
+// On each Step badge, Highlight box, and Arrow instance: what it points at, in image pixels.
+badge.setSharedPluginData(
+  "s2d",
+  "target",
+  JSON.stringify({
+    bbox: [x, y, w, h],
+    selector: "[data-testid=blocks-panel]",
+  }),
+);
+
+// On the annotated frame: personal data (pixelated in the capture, or fake), and areas no mark may cover.
+frame.setSharedPluginData(
+  "s2d",
+  "sensitive",
+  JSON.stringify([
+    { id: "email", kind: "email", bbox: [x, y, w, h], reason: "account email" },
+    {
+      id: "name",
+      kind: "name",
+      method: "fake-data",
+      bbox: [x, y, w, h],
+      reason: "replaced with Anita Agency",
+    },
+  ]),
+);
+frame.setSharedPluginData(
+  "s2d",
+  "keepClear",
+  JSON.stringify([{ id: "save", bbox: [x, y, w, h] }]),
+);
+```
+
+- `bbox` is `[x, y, width, height]` in the screenshot's own pixels. A `selector` alone is accepted but is not position-checked and goes to a person.
+- `kind` is one of `text`, `name`, `email`, `id`, `token`, `url`, `path`, `avatar`, `image`.
+- `method` is `pixelate` (the default) or `fake-data`. A pixelated region is checked in the export and the clean capture; a fake-data region goes to a person, who confirms the values are invented.
+- Declared sensitive regions can also come from outside Figma: `record-annotation.mjs --sensitive <file>`.
+- The annotated frame is the size Figma draws the capture (the pixels of the PNG divided by its dpr, so 1440 by 900 for a 2880 by 1800 capture) and holds one layer named `screenshot` with the same image as the clean frame. Everything else is a kit instance.
+- Export the frame as PNG at 2x, then record it:
+
+```bash
+node scripts/figma-annotation.mjs --clean-node-id <id> --annotated-node-id <id> --out extract.js
+# run extract.js with use_figma; save the returned JSON as manifest.json
+node scripts/record-annotation.mjs --dir <out>/run1 --slug <shot> --manifest manifest.json --export annotated.png
+```
+
+The run folder keeps three things apart: the clean capture stays where `capture.mjs` wrote it; the annotated export is copied to `annotated/<slug>.png`; the manifest and every check result go to `review/<slug>.manifest.json` and `review/<slug>.validation.json`. The record in `annotation-record.json` stores the clean capture's checksum, both frame IDs, the export's size and checksum, and the token schema and hash. When the checks pass, read the validation file, open the export, and re-run with `--human-reviewed "<your name>"`. The handoff refuses a shot until then, and again if the capture, the export, or the tokens change afterward.
+
+Use the clean capture where a docs system doesn't allow markup, and the annotated export where it does. In the inventory, `clean_asset` holds the capture and `asset` holds what the docs embed; `publish-markdown.mjs --variant clean` publishes the clean one.
+
+## Limits
+
+These are not proven by this repository, and the validation file says so for each shot:
+
+- A live Figma file. The extraction code and the plugin changes were exercised against a mock of the Plugin API, not Figma. Treat the first live extraction as a test of `absoluteBoundingBox` (stroke handling), variable aliases, and `getMainComponentAsync`.
+- Whether the export looks right. The repository measures geometry, tokens, pixels beside marks, and pixels in declared regions. It does not render the Figma file, and it does not compare pixels elsewhere in the export with the capture.
+- Forgery. The kit stamp, the targets, and the sensitive regions are plugin data that whoever annotates can write. They catch mistakes and stale kits, not someone who sets them to get a pass. That is one reason a person confirms every shot.
+- Personal data nobody declared, and whether data declared as fake really is.
+- Text overflow is an estimate from character counts, because Figma does not expose measured overflow.
+- Font availability. Inter is a free Google font and loads in every Figma file, so the kit builder has no fallback; if Inter can't load, the build stops.
+- Whether alt text says what the reader should do. It checks the alt text against the marks and for ambiguity, and asks a person to read it.

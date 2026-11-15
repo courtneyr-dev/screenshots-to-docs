@@ -1,0 +1,53 @@
+{
+  "slug": "translations-sync-1",
+  "cleanId": "132:55",
+  "title": "Locale switcher",
+  "release": "PCC-4465",
+  "w": 1309,
+  "h": 745,
+  "marks": [
+    {
+      "n": 1,
+      "label": "the locale switcher",
+      "bbox": [
+        198,
+        74,
+        404,
+        37
+      ]
+    },
+    {
+      "n": 2,
+      "label": "Source changed",
+      "bbox": [
+        424,
+        322,
+        127,
+        20
+      ]
+    },
+    {
+      "n": 3,
+      "label": "Review changes",
+      "bbox": [
+        470,
+        354,
+        108,
+        17
+      ]
+    }
+  ],
+  "sensitive": [
+    {
+      "id": "avatar",
+      "kind": "avatar",
+      "bbox": [
+        1248,
+        7,
+        48,
+        50
+      ],
+      "reason": "account avatar (initials)"
+    }
+  ]
+}

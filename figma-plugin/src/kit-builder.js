@@ -7,7 +7,13 @@ async function buildKit(KIT, opts) {
   const suffix = opts.suffix || '';
   const report = { variablesCreated: 0, variablesReused: 0, libraryAliases: 0, localFallbacks: 0, components: 0, nodes: 0, warnings: [] };
 
-  for (const style of ['Regular', 'Semi Bold', 'Bold']) await figma.loadFontAsync({ family: 'Inter', style });
+  // Fonts come from the token contract: Inter Semi Bold for labels, Inter Regular for body text. Inter is a
+  // free Google font that loads in every Figma file, so there is no fallback: a load failure stops the build.
+  const TY = KIT.tokens.typography;
+  const labelFont = { family: TY.label.family, style: TY.label.style };
+  await figma.loadFontAsync({ family: TY.body.family, style: TY.body.style });
+  await figma.loadFontAsync(labelFont);
+  const fontFor = (family, style) => (family === TY.label.family && style === TY.label.style ? labelFont : { family, style });
 
   // ---- variables ----
   const collections = await figma.variables.getLocalVariableCollectionsAsync();
@@ -111,7 +117,7 @@ async function buildKit(KIT, opts) {
     if (frameLike(spec.k)) { node.fills = []; node.clipsContent = !!spec.clip; }
     if (spec.k === 'TEXT') {
       const [chars, family, fstyle, size, ha, va, auto] = spec.tx;
-      node.fontName = { family, style: fstyle };
+      node.fontName = fontFor(family, fstyle);
       node.fontSize = size;
       node.characters = chars;
       node.textAlignHorizontal = ha; node.textAlignVertical = va;
@@ -227,10 +233,15 @@ async function buildKit(KIT, opts) {
     if (only && !only.has(spec.n)) continue;
     const top = await buildTop(spec);
     top.x = spec.g[0]; top.y = spec.g[1];
+    // The extraction reads this stamp to prove an annotation instance comes from a kit built from these tokens.
+    top.setSharedPluginData('s2d', 'kit', KIT.tokens.hash);
     created.push(top);
   }
   for (const [node, refs] of propRefs) node.componentPropertyReferences = refs;
 
+  figma.root.setSharedPluginData('s2d', 'tokensHash', KIT.tokens.hash);
+  figma.root.setSharedPluginData('s2d', 'tokensSchema', String(KIT.tokens.schemaVersion));
+  report.tokens = KIT.tokens.hash;
   report.page = page.name;
   report.pageId = page.id;
   report.created = created.map(n => n.name);

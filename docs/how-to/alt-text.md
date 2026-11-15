@@ -48,6 +48,10 @@ image.
    `--apply` saves it through `set-alt`, which refuses generic or placeholder text. When the record already
    has that text, nothing changes.
 
+   If the draft is ambiguous, `draft-alt` says why and refuses `--apply`: a step labeled just "button", a
+   one-word subject, two steps with the same label, or annotation words such as "arrow" or "badge". Fix the
+   step names or `--subject`, or read it against the image and add `--human-reviewed "<name>"`.
+
 To change alt text by hand: `node scripts/inventory.mjs set-alt --id <id> --text "<alt text>"`. On a verified
 record, update the published doc first, check it, and add `--verified-at <time of that check>`.
 

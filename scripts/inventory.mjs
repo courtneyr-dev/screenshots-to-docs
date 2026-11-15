@@ -32,7 +32,7 @@ import { parseArgs } from 'node:util';
 import { resolve, join, dirname } from 'node:path';
 import {
   loadInventory, writeInventory, validateInventory, formatIssues, listRecords, prerequisites, generateBrief,
-  assetPath, pngInfo, sha256, altFingerprint, transitionError, inventoryCommit, inventoryAtRef,
+  assetPath, cleanAssetPath, pngInfo, sha256, altFingerprint, transitionError, inventoryCommit, inventoryAtRef,
   renderDocsHandoff, lookup, releaseReport, mappingFor, frameName, STATUSES, RELEASE_RE,
   releaseCheck, reopenForRelease, parseVersion, compareVersions, traceInventory, renderTrace,
 } from './lib/inventory.mjs';
@@ -478,10 +478,22 @@ function ingest(r, srcFile, capturedAt, source) {
   const release = r.capture?.release;
   if (!release || !RELEASE_RE.test(release)) fail(`${r.screenshot_id}: set capture.release before recording an asset`);
   const rel = assetPath(r.screenshot_id, release);
-  if (values['assets-dir']) {
-    const dest = join(resolve(values['assets-dir']), rel);
-    mkdirSync(dirname(dest), { recursive: true });
-    writeFileSync(dest, buf);
+  const cleanRel = cleanAssetPath(r.screenshot_id, release);
+  const dest = values['assets-dir'] ? join(resolve(values['assets-dir']), rel) : null;
+  const cleanDest = values['assets-dir'] ? join(resolve(values['assets-dir']), cleanRel) : null;
+  const put = (file, data) => { mkdirSync(dirname(file), { recursive: true }); writeFileSync(file, data); };
+  if (source === 'capture') {
+    // The capture is the clean screenshot. Keep it under its own path so a later annotated export can't replace it.
+    r.clean_asset = { path: cleanRel, sha256: sha256(buf), width: info.width, height: info.height, captured_at: capturedAt, source: 'capture' };
+    if (dest) { put(dest, buf); put(cleanDest, buf); }
+  } else {
+    if (r.clean_asset?.sha256 === sha256(buf)) fail(`${r.screenshot_id}: ${srcFile} is byte-identical to the clean capture. Export the annotated frame, not the clean one.`);
+    if (!r.clean_asset && r.asset?.source === 'capture') {
+      // A record captured before clean_asset existed: keep the capture before the export takes its place.
+      r.clean_asset = { ...r.asset, path: cleanRel, source: 'capture' };
+      if (dest && existsSync(dest) && sha256(readFileSync(dest)) === r.asset.sha256) put(cleanDest, readFileSync(dest));
+    }
+    if (dest) put(dest, buf);
   }
   r.asset = { path: rel, sha256: sha256(buf), width: info.width, height: info.height, captured_at: capturedAt, source };
 }

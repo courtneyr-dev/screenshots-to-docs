@@ -98,12 +98,13 @@ Then follow `figma-review.md`: run `figma-page.js` with `use_figma`, request upl
 
 - Build the annotated frame beside the clean one: a copy of the image rectangle only, named
   `[<id>] — <title> — <release> — annotated`.
-- Drag marks from the kit's Assets panel: Highlight box, Step badge, Callout, Arrow, Redact for names
-  and avatars. Every mark is nested inside the annotated frame so it exports with the image.
+- Drag marks from the kit's Assets panel: Highlight box, Step badge, Callout, Arrow. Every mark is nested
+  inside the annotated frame so it exports with the image. Personal data is already faked or pixelated in
+  the capture: never draw a box over it.
 - **Name each step layer the way it should be read**: `Step 1: the Blocks panel`, not `Step 1: Blocks`.
   The alt text is drafted from these names.
 - When the UI didn't change, copy the previous release's annotated frame and swap in the new image;
-  check every redaction still covers what it should.
+  check the new image is the faked or pixelated capture.
 
 ```bash
 inv record-figma --id <id> --evidence uploaded --file-url <file url> --page-name "<run page>" \

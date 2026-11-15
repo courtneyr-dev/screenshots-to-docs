@@ -32,12 +32,13 @@ const SHA_RE = /^[0-9a-f]{64}$/;
 const COMMIT_RE = /^[0-9a-f]{7,40}$/;
 
 const KEYS = {
-  record: ['screenshot_id', 'product', 'title', 'status', 'release_status', 'priority', 'owner', 'reviewer', 'source', 'capture', 'content', 'figma', 'asset', 'publication', 'history', 'retired_at', 'retired_reason', 'notes'],
+  record: ['screenshot_id', 'product', 'title', 'status', 'release_status', 'priority', 'owner', 'reviewer', 'source', 'capture', 'content', 'figma', 'asset', 'clean_asset', 'publication', 'history', 'retired_at', 'retired_reason', 'notes'],
   source: ['type', 'docs_url', 'docs_document_id', 'docs_heading', 'request_url', 'reason'],
   capture: ['project', 'workstream', 'page', 'release', 'state', 'actions', 'checks', 'constraints'],
   content: ['caption', 'alt_text', 'annotations'],
   figma: ['evidence', 'not_used_reason', 'file_url', 'page_name', 'frame_name', 'annotated_frame_name', 'node_id', 'annotated_node_id', 'version_name', 'branch_url', 'dev_resource_urls', 'manifest_commit', 'annotation_status'],
   asset: ['path', 'sha256', 'width', 'height', 'captured_at', 'source'],
+  clean_asset: ['path', 'sha256', 'width', 'height', 'captured_at', 'source'],
   publication: ['docs_image_slot', 'published_url', 'published_sha256', 'alt_text_fingerprint', 'inserted_at', 'verified_at', 'verified_release', 'verified_asset_sha256', 'verification_notes'],
 };
 
@@ -52,6 +53,8 @@ export function altFingerprint(alt) {
 }
 
 export const assetPath = (id, release) => `screenshots/${id}/${release}.png`;
+/** The unmodified capture, kept beside the docs asset. A Figma export never replaces it. */
+export const cleanAssetPath = (id, release) => `screenshots/${id}/${release}.clean.png`;
 
 export function shortTitle(r) {
   if (r.title) return r.title;
@@ -289,7 +292,7 @@ export function publicationHealth(r) {
 
 function shapeErrors(r, add) {
   for (const k of Object.keys(r)) if (!KEYS.record.includes(k)) add('', `unknown field "${k}"`);
-  for (const sec of ['source', 'capture', 'content', 'figma', 'asset', 'publication']) {
+  for (const sec of ['source', 'capture', 'content', 'figma', 'asset', 'clean_asset', 'publication']) {
     const v = r[sec];
     if (v === undefined) continue;
     if (!v || typeof v !== 'object' || Array.isArray(v)) { add(sec, `${sec} must be an object`); continue; }
@@ -332,6 +335,13 @@ export function validateInventory(doc, { previous = null } = {}) {
     if (r.figma?.annotation_status !== undefined && !ANNOTATION_STATUS.includes(r.figma.annotation_status)) err('figma.annotation_status', `figma.annotation_status must be one of ${ANNOTATION_STATUS.join('|')}`);
     // The annotated frame is a separate node; recording the clean frame's ID here would send the docs author to the wrong frame.
     if (r.figma?.annotated_node_id !== undefined && (!nonEmpty(r.figma.annotated_node_id) || r.figma.annotated_node_id === r.figma.node_id)) err('figma.annotated_node_id', 'figma.annotated_node_id must be the annotated frame\'s node ID, not empty and not the clean frame\'s node_id');
+    if (r.clean_asset !== undefined) {
+      const ca = r.clean_asset;
+      if (ca?.source !== 'capture') err('clean_asset.source', 'clean_asset.source must be "capture": it is the unmodified screenshot');
+      if (!SHA_RE.test(ca?.sha256 || '')) err('clean_asset.sha256', 'clean_asset.sha256 must be a 64-character hex checksum');
+      if (nonEmpty(r.capture?.release) && ca?.path !== cleanAssetPath(r.screenshot_id, r.capture.release)) err('clean_asset.path', `clean_asset.path must be ${cleanAssetPath(r.screenshot_id, r.capture.release)}`);
+      if (r.asset?.source === 'figma_export' && ca?.sha256 && ca.sha256 === r.asset.sha256) err('asset.sha256', 'the annotated export has the same checksum as the clean capture: it carries no annotations');
+    }
     if (r.source?.type !== undefined && !SOURCE_TYPES.includes(r.source.type)) err('source.type', `source.type must be one of ${SOURCE_TYPES.join('|')}`);
 
     // Secrets, tokens, customer data, and unresolved placeholders anywhere in the record.
@@ -519,6 +529,7 @@ export function mappingFor(r, { inventory = null } = {}) {
       dev_resource_urls: f.dev_resource_urls || [], manifest_commit: f.manifest_commit || null,
       annotation_status: f.annotation_status || 'none',
     },
+    clean_asset: r.clean_asset ? { path: r.clean_asset.path, sha256: r.clean_asset.sha256 } : null,
     asset: { path: a.path || assetPath(r.screenshot_id, r.capture?.release || '<release>'), sha256: a.sha256 || null, width: a.width ?? null, height: a.height ?? null, captured_at: a.captured_at || null, source: a.source || null },
     docs: { ...composeAnchor(r), required_reviewer: r.reviewer || null },
     content: { caption: ct.caption ?? null, alt_text: ct.alt_text ?? null, alt_text_fingerprint: ct.alt_text ? altFingerprint(ct.alt_text) : null },

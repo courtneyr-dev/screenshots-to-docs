@@ -40,7 +40,10 @@ site: a test doc connected to a public collection would publish to the public si
 
 ## Personal data in screenshots
 
-Redact names, emails, avatars, and IDs with the kit's Redact component before export. The inventory rejects
-records whose text looks like a token, key, signed URL, or a personal email address.
+Replace names, emails, avatars, and IDs with plausible fake data before capture, or pixelate them in the
+capture itself before it goes to Figma, in blocks of at least 7 CSS px. No solid boxes and no blur: a box reads
+as a broken screenshot, and blur can be reversed. Keep the unredacted original out of anything delivered,
+because the clean capture is published too. The inventory rejects records whose text looks like a token, key,
+signed URL, or a personal email address.
 
 More detail: [safety reference]({{ site.github.repository_url }}/blob/main/references/safety.md).

@@ -1,0 +1,53 @@
+{
+  "slug": "create-page-2",
+  "cleanId": "132:97",
+  "title": "Create page dialog",
+  "release": "PCC-4473",
+  "w": 1440,
+  "h": 820,
+  "marks": [
+    {
+      "n": 1,
+      "label": "Blank page",
+      "bbox": [
+        272,
+        189,
+        216,
+        149
+      ]
+    },
+    {
+      "n": 2,
+      "label": "the Page title field",
+      "bbox": [
+        270,
+        524,
+        444,
+        42
+      ]
+    },
+    {
+      "n": 3,
+      "label": "the URL slug field",
+      "bbox": [
+        272,
+        604,
+        896,
+        40
+      ]
+    }
+  ],
+  "sensitive": [
+    {
+      "id": "avatar",
+      "kind": "avatar",
+      "bbox": [
+        1375,
+        8,
+        50,
+        50
+      ],
+      "reason": "account avatar (initials)"
+    }
+  ]
+}

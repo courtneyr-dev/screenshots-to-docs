@@ -1,0 +1,87 @@
+{
+  "name": "redacted-pii",
+  "frame": [
+    1440,
+    900
+  ],
+  "tokens": "8bd4eea416ad",
+  "nodes": [
+    {
+      "name": "screenshot",
+      "component": "RECTANGLE",
+      "variant": null,
+      "bbox": [
+        0,
+        0,
+        1440,
+        900
+      ],
+      "markHex": null,
+      "text": []
+    },
+    {
+      "name": "Highlight",
+      "component": "Highlight box",
+      "variant": {
+        "Style": "Solid",
+        "Tone": "Ink"
+      },
+      "bbox": [
+        30,
+        290,
+        220,
+        64
+      ],
+      "markHex": "#000000",
+      "text": []
+    },
+    {
+      "name": "Step 1: the Settings link",
+      "component": "Step badge",
+      "variant": {
+        "Tone": "Ink",
+        "Size": "M"
+      },
+      "bbox": [
+        40,
+        236,
+        48,
+        48
+      ],
+      "markHex": "#000000",
+      "text": [
+        "Inter Semi Bold 28: 1"
+      ]
+    }
+  ],
+  "checks": [
+    "manifest-shape:pass",
+    "token-identity:pass",
+    "frame-mapping:pass",
+    "provenance:pass",
+    "kit-components:pass",
+    "token-colors:pass",
+    "typography:pass",
+    "targets:pass",
+    "bounds:pass",
+    "collisions:pass",
+    "redaction:pass",
+    "contrast:pass",
+    "grayscale:pass",
+    "background-variant:pass",
+    "display-size:pass",
+    "color-independence:pass",
+    "export:pass",
+    "alt-text:pass"
+  ],
+  "humanReview": [
+    "redaction-fake-data",
+    "redaction-complete",
+    "alt-task",
+    "render-fidelity"
+  ],
+  "pixels": {
+    "clean": "52132fdd7e3d2531f050fba9afbed50580933231d182f008dead9b8296611134",
+    "export": "9b6884511b0adb8662a9d6e8fa5a4f8aae3b234b0fc19474e70f50b0186b38e7"
+  }
+}

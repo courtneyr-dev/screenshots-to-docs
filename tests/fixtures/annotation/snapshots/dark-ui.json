@@ -1,0 +1,192 @@
+{
+  "name": "dark-ui",
+  "frame": [
+    1440,
+    900
+  ],
+  "tokens": "8bd4eea416ad",
+  "nodes": [
+    {
+      "name": "screenshot",
+      "component": "RECTANGLE",
+      "variant": null,
+      "bbox": [
+        0,
+        0,
+        1440,
+        900
+      ],
+      "markHex": null,
+      "text": []
+    },
+    {
+      "name": "Highlight",
+      "component": "Highlight box",
+      "variant": {
+        "Style": "Solid",
+        "Tone": "Yellow"
+      },
+      "bbox": [
+        10,
+        90,
+        280,
+        340
+      ],
+      "markHex": "#FFCA28",
+      "text": []
+    },
+    {
+      "name": "Step 1: the Blocks panel",
+      "component": "Step badge",
+      "variant": {
+        "Tone": "Yellow",
+        "Size": "M"
+      },
+      "bbox": [
+        20,
+        36,
+        48,
+        48
+      ],
+      "markHex": "#FFCA28",
+      "text": [
+        "Inter Semi Bold 28: 1"
+      ]
+    },
+    {
+      "name": "Highlight",
+      "component": "Highlight box",
+      "variant": {
+        "Style": "Solid",
+        "Tone": "Ink"
+      },
+      "bbox": [
+        340,
+        110,
+        760,
+        480
+      ],
+      "markHex": "#000000",
+      "text": []
+    },
+    {
+      "name": "Step 2: the page canvas",
+      "component": "Step badge",
+      "variant": {
+        "Tone": "Ink",
+        "Size": "M"
+      },
+      "bbox": [
+        350,
+        52,
+        48,
+        48
+      ],
+      "markHex": "#000000",
+      "text": [
+        "Inter Semi Bold 28: 2"
+      ]
+    },
+    {
+      "name": "Highlight",
+      "component": "Highlight box",
+      "variant": {
+        "Style": "Solid",
+        "Tone": "Yellow"
+      },
+      "bbox": [
+        1170,
+        90,
+        160,
+        64
+      ],
+      "markHex": "#FFCA28",
+      "text": []
+    },
+    {
+      "name": "Step 3: the Review button",
+      "component": "Step badge",
+      "variant": {
+        "Tone": "Yellow",
+        "Size": "M"
+      },
+      "bbox": [
+        1336,
+        98,
+        48,
+        48
+      ],
+      "markHex": "#FFCA28",
+      "text": [
+        "Inter Semi Bold 28: 3"
+      ]
+    },
+    {
+      "name": "Label: Blocks panel",
+      "component": "Callout label",
+      "variant": {
+        "Tone": "Yellow",
+        "Pointer": "None"
+      },
+      "bbox": [
+        20,
+        460,
+        234,
+        52
+      ],
+      "markHex": "#FFCA28",
+      "text": [
+        "Inter Semi Bold 28: Blocks panel"
+      ]
+    },
+    {
+      "name": "Label: Review button",
+      "component": "Callout label",
+      "variant": {
+        "Tone": "Ink",
+        "Pointer": "None"
+      },
+      "bbox": [
+        1150,
+        200,
+        251,
+        52
+      ],
+      "markHex": "#000000",
+      "text": [
+        "Inter Semi Bold 28: Review button"
+      ]
+    }
+  ],
+  "checks": [
+    "manifest-shape:pass",
+    "token-identity:pass",
+    "frame-mapping:pass",
+    "provenance:pass",
+    "kit-components:pass",
+    "token-colors:pass",
+    "typography:pass",
+    "targets:pass",
+    "bounds:pass",
+    "collisions:pass",
+    "redaction:pass",
+    "contrast:pass",
+    "grayscale:pass",
+    "background-variant:pass",
+    "display-size:pass",
+    "color-independence:pass",
+    "export:pass",
+    "alt-text:pass"
+  ],
+  "humanReview": [
+    "yellow-budget",
+    "redaction-declared",
+    "redaction-complete",
+    "alt-task",
+    "render-fidelity"
+  ],
+  "pixels": {
+    "clean": "f6817ddb98fa127f3d881360bff4ecb7cf4b651a8f1af3f591f08caeb91cf7e8",
+    "export": "64c259dec7193a759c40639b96819d97eb42e5c08d941ee5d95e5f379e55985c"
+  }
+}
