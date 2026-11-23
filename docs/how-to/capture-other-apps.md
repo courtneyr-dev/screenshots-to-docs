@@ -37,6 +37,13 @@ Each preset has a starter brief in `briefs/<preset>.json` and an example config 
    Studio shows the admin username and password. Its MCP tool returns the password base64-encoded: decode
    it before you sign in.
 
+   An agent run can't use `read -s WP_PASSWORD && export WP_PASSWORD`, and each shell call starts with a
+   clean environment, so an `export` in one call is gone in the next: set the variables in the same command
+   that runs `capture.mjs`. Don't print the credentials. `studio start` prints the admin password in plain
+   text, so run it with its output discarded (`studio start --skip-browser >/dev/null 2>&1`). If the agent
+   can't get the password without printing it, set `"signIn": "chrome"` and have the person sign in, as
+   described below.
+
 2. Write a config:
 
    ```json
@@ -82,7 +89,23 @@ Each preset has a starter brief in `briefs/<preset>.json` and an example config 
    </div>
 
 For a production site with single sign-on or two-factor authentication, add `"signIn": "chrome"` and the
-`chrome` settings, and sign in yourself in the dedicated Chrome, as for P1.
+`chrome` settings, and sign in yourself in the dedicated Chrome, as for P1. Use the same setting on a local
+site when the agent can't read the password: `chrome.mjs` opens the preset's login page, and the person
+signs in there. A sign-in in any other browser doesn't carry over, because the session cookie lives in the
+dedicated Chrome's profile.
+
+### Reuse an existing local site
+
+Prefer a new site. To reuse one that other tests have used:
+
+1. Stop the site, copy `wp-content/database/.ht.sqlite`, and check the copy with `shasum -a 256`. Studio
+   sites run on SQLite, so `wp db export` fails with `mysqldump: No such file or directory`. Keep the copy
+   outside the scratch folder, and write down what you change so you can restore it.
+2. Make the pages neutral before the capture: the site title, the user's display name, and an `example.com`
+   email address, then the theme the doc expects. Deactivate plugins that print notices or add menu items.
+   A must-use plugin can't be deactivated, so hide its menu item with the brief's `evaluateBefore`.
+3. At cleanup (step 8), stop the site, copy the backup over `.ht.sqlite`, delete any plugin you copied in,
+   and start the site again.
 
 ## Drupal admin
 
