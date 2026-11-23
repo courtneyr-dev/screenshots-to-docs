@@ -157,6 +157,21 @@ assert len(d['shots'])==6 and '[data-puck-component^=Qa-]' in blob and 'QaBlock'
 EOF
 t "chrome.mjs prints the launch command with the configured profile and port" bash -c "node scripts/chrome.mjs --config '$TMP/cfg.json' >'$TMP/ch.log' 2>&1; [ \$? -eq 0 ] && grep -q -- '--remote-debugging-port=9555' '$TMP/ch.log' && grep -q '$TMP/qa-profile' '$TMP/ch.log' && grep -q 'http://localhost:3000/p1' '$TMP/ch.log' && ! grep -q 9222 '$TMP/ch.log'"
 t "chrome.mjs --check exits 1 when nothing listens on the configured port" bash -c "node scripts/chrome.mjs --config '$TMP/cfg.json' --check >/dev/null 2>&1; [ \$? -eq 1 ]"
+cat >"$TMP/wp.json" <<EOF
+{"topic":"wp-test","preset":"wordpress-admin","baseUrl":"http://localhost:8881","signIn":"chrome","chrome":{"profileDir":"$TMP/wp-profile","cdpPort":9556}}
+EOF
+: >"$TMP/cft-chrome"; chmod +x "$TMP/cft-chrome"
+node scripts/chrome.mjs --config "$TMP/wp.json" >"$TMP/wpch1.log" 2>&1
+CHROME_BIN="$TMP/cft-chrome" node scripts/chrome.mjs --config "$TMP/wp.json" >"$TMP/wpch2.log" 2>&1
+HOME="$TMP/nohome" CHROME_BIN= node scripts/chrome.mjs --config "$TMP/wp.json" >"$TMP/wpch3.log" 2>&1
+t "chrome.mjs opens the login page of a preset with a sign-in form, and prefers Chrome for Testing when one is set or installed" python3 - "$TMP" <<'EOF'
+import sys
+tmp=sys.argv[1]
+a=open(tmp+'/wpch1.log').read(); b=open(tmp+'/wpch2.log').read(); c=open(tmp+'/wpch3.log').read()
+assert 'http://localhost:8881/wp-login.php' in a and 'sign in to the app' in a
+assert 'nohup "'+tmp+'/cft-chrome"' in b and 'open -na "Google Chrome"' not in b
+assert 'no Chrome for Testing found' in c and 'open -na "Google Chrome"' in c
+EOF
 
 echo "== action validation (no browser opens)"
 python3 - "$TMP" <<'EOF'
