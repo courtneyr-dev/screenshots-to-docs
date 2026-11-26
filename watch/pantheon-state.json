@@ -1,11 +1,11 @@
 {
-  "checked_at": "2026-11-25T13:21:41.713Z",
+  "checked_at": "2026-11-26T13:21:40.162Z",
   "products": {
     "content-publisher-drupal": "1.0.5",
     "terminus": "4.3.5",
     "content-publisher-wordpress": "1.4.3",
     "wordpress-core": "7.1.5",
-    "drupal-core": "11.4.13",
+    "drupal-core": "11.4.14",
     "push-to-pantheon": "0.9.7",
     "terminus-build-tools": "3.0.11",
     "pantheon-advanced-page-cache": "2.1.2",
@@ -39,7 +39,7 @@
   },
   "feeds": {
     "pantheon-release-notes": {
-      "last": "2026-11-24T15:38:59.000Z"
+      "last": "2026-11-25T20:03:44.000Z"
     }
   }
 }
