@@ -60,7 +60,7 @@ Actions for the P1 editor (the /p1 route by default). Selectors come from the ed
 
 ## wordpress-admin
 
-WordPress admin (wp-admin), the block editor, and the Site Editor. Signs in at /wp-login.php with WP_USER and WP_PASSWORD from the environment, for a local or test site; for a production site with SSO or two-factor, set "signIn": "chrome" in the config and sign in yourself in the dedicated Chrome. Hides admin notices, update counts, and the editor's welcome guide, so shots don't depend on what a plugin printed that day. Adapted from the wp-screenshots skill. Selectors checked against WordPress 6.8 on 2026-10-08.
+WordPress admin (wp-admin), the block editor, and the Site Editor. Signs in at /wp-login.php with WP_USER and WP_PASSWORD from the environment, for a local or test site; for a production site with SSO or two-factor, set "signIn": "chrome" in the config and sign in yourself in the dedicated Chrome. Hides admin notices, update counts, and the editor's welcome guide, so shots don't depend on what a plugin printed that day. Adapted from the wp-screenshots skill. Selectors checked against WordPress 6.8 on 2026-10-08. The editor and Site Editor selectors move between releases (7.2 changed the editor's Options menu), so on any other version run the first shot as a validation shot before a full run.
 
 **Settings:** none beyond `topic` and `baseUrl`.
 

@@ -7,7 +7,7 @@ description: "Use when creating or refreshing docs screenshots of a web app for 
 
 Capture trustworthy screenshots of a web app, put each run in Figma for manual annotation, and hand the docs author a note they can act on without having run the capture.
 
-**Targets.** The config's `preset` picks the app: `p1-editor` (the default; the workflow below describes it), `wordpress-admin`, `drupal-admin`, `content-publisher`, `pantheon-dashboard`, `gdocs-addon`, `word-addin`, or `public-site`. Each preset in `scripts/presets/` declares the settings it needs, how the person signs in, CSS that hides notices and banners, and named checks; each has a starter brief in `briefs/` and an example config in `examples/`. A form sign-in reads the username and password from environment variables the person exports; never ask for, print, or write those values. Release detection takes `--source` (`npm:`, `github:`, `wordpress`, `drupal`, `page:`) or the preset's default. Details: `docs/reference/presets.md` and `docs/how-to/capture-other-apps.md`.
+**Targets.** The config's `preset` picks the app: `p1-editor` (the default; the workflow below describes it), `wordpress-admin`, `drupal-admin`, `content-publisher`, `pantheon-dashboard`, `gdocs-addon`, `word-addin`, or `public-site`. Each preset in `scripts/presets/` declares the settings it needs, how the person signs in, CSS that hides notices and banners, and named checks; each has a starter brief in `briefs/` and an example config in `examples/`. A form sign-in reads the username and password from environment variables the person exports; never ask for, print, or write those values. Release detection takes `--source` (`npm:`, `github:`, `wordpress`, `drupal`, `page:`) or the preset's default. Details: `docs/reference/presets.md` and `docs/how-to/capture-other-apps.md`. Steps 1 to 5, Prerequisites, Safety rules 1 and 2, and the checklist lines about P1 and Google describe `p1-editor`. For any other preset, take setup, sign-in and the brief from `docs/how-to/capture-other-apps.md` first. The "Always do" rules, steps 6 to 8 and cleanup apply unchanged. Run the validation shot with `--only <first slug in the brief>`: `editor-shell` exists only in the P1 brief.
 
 Nothing here is tied to one person or project. Each run takes its settings from a config file: for the P1 editor, the P1 base URL, project name, workstream, page, Chrome profile and debugging port, Figma destination and naming, and where the handoff note goes (`references/configuration.md`). The workflow was proven end to end once, on a demo project; the record is in `references/poc-results.md`, and the shape of its config is in `examples/proof-of-concept/`, with placeholders, as an example only.
 
@@ -66,10 +66,10 @@ Details and reasons are in `references/safety.md`.
 
 ## Prerequisites
 
-- Node 18 or later (CI uses 20), npm, and Google Chrome. `bash scripts/setup.sh` checks them and runs `npm ci`. First time here? `references/contributor-setup.md`.
+- Node 18 or later (CI uses 20), npm, and Chrome for Testing or Google Chrome (`scripts/chrome.mjs` prints a Chrome for Testing command when one is installed). `bash scripts/setup.sh` checks them and runs `npm ci`. First time here? `references/contributor-setup.md`.
 - A P1 site running at an origin you can reach. A local production build (`next build && next start`) is best for final shots. A hosted origin behind a bot challenge won't work.
 - The P1 MCP, to look up projects, workstreams, pages, and block types.
-- Figma (always used): the Figma MCP (`use_figma`, `upload_assets`, `get_screenshot`), edit access to a design file, and its file key. Load the `figma:figma-use` skill before the first `use_figma` call. A run uses at least three Figma calls.
+- Figma (always used): the Figma MCP (`use_figma`, `upload_assets`, `get_screenshot`), edit access to a design file, and its file key. Call `create_session` for the file key, and load the `figma:figma-use` skill, before the first `use_figma` call. A run uses at least three Figma calls.
 
 ## Workflow
 

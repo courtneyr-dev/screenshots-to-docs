@@ -12,8 +12,27 @@
  */
 
 import { parseArgs } from 'node:util';
-import { resolve } from 'node:path';
+import { existsSync, readdirSync } from 'node:fs';
+import { homedir } from 'node:os';
+import { join, resolve } from 'node:path';
 import { loadConfig, applyOverrides, validateConfig, formatValidation, expandHome, presetNameOf, signInModeOf, targetParams } from './lib/config.mjs';
+import { loadPreset } from './lib/presets.mjs';
+
+// Chrome for Testing, if installed. A fresh profile in branded Chrome makes macOS ask to switch the default
+// browser, and --no-default-browser-check doesn't stop it, so prefer this build (CHROME_BIN overrides).
+function chromeForTesting() {
+  if (process.env.CHROME_BIN && existsSync(process.env.CHROME_BIN)) return process.env.CHROME_BIN;
+  const root = join(homedir(), 'Library/Caches/ms-playwright');
+  if (!existsSync(root)) return null;
+  const builds = readdirSync(root).filter(n => /^chromium-\d+$/.test(n)).sort((a, b) => parseInt(b.slice(9), 10) - parseInt(a.slice(9), 10));
+  for (const b of builds) {
+    for (const arch of ['chrome-mac-arm64', 'chrome-mac-x64']) {
+      const p = join(root, b, arch, 'Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing');
+      if (existsSync(p)) return p;
+    }
+  }
+  return null;
+}
 
 const { values } = parseArgs({
   options: {
@@ -49,7 +68,9 @@ if (chromeProblems.length) {
 
 const port = cfg.chrome.cdpPort;
 const profile = resolve(expandHome(cfg.chrome.profileDir));
-const start = `${cfg.baseUrl.replace(/\/+$/, '')}${presetNameOf(cfg) === 'p1-editor' ? targetParams(cfg).editorRoute : '/'}`;
+// P1 opens its editor route; a preset with a sign-in form (such as wordpress-admin) opens its login page.
+const startPath = presetNameOf(cfg) === 'p1-editor' ? targetParams(cfg).editorRoute : (loadPreset(presetNameOf(cfg)).signIn?.login?.url || '/');
+const start = `${cfg.baseUrl.replace(/\/+$/, '')}${startPath}`;
 const q = s => `"${s.replace(/(["\\$`])/g, '\\$1')}"`;
 
 if (values.check) {
@@ -64,10 +85,15 @@ if (values.check) {
   }
 }
 
-console.log(`Start the dedicated Chrome with this profile and debugging port, then sign in to Google in that window yourself.
+const cft = chromeForTesting();
+const macCommand = cft
+  ? `nohup ${q(cft)} --no-first-run --no-default-browser-check --remote-debugging-port=${port} --user-data-dir=${q(profile)} ${q(start)} >/dev/null 2>&1 &`
+  : `open -na "Google Chrome" --args --no-first-run --no-default-browser-check --remote-debugging-port=${port} --user-data-dir=${q(profile)} ${q(start)}`;
 
-macOS:
-  open -na "Google Chrome" --args --no-first-run --no-default-browser-check --remote-debugging-port=${port} --user-data-dir=${q(profile)} ${q(start)}
+console.log(`Start the dedicated Chrome with this profile and debugging port, then sign in to the app in that window yourself.
+
+macOS${cft ? ' (Chrome for Testing, so macOS does not ask to change your default browser)' : ' (no Chrome for Testing found: this opens Google Chrome, and a fresh profile may make macOS ask to change your default browser; install one with `npx playwright install chromium`, or set CHROME_BIN)'}:
+  ${macCommand}
 
 Linux:
   google-chrome --no-first-run --no-default-browser-check --remote-debugging-port=${port} --user-data-dir=${q(profile)} ${q(start)}
